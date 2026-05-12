@@ -1,5 +1,25 @@
 /* TRUSTUS — main.js */
 
+/* ---- Services Dropdown (click toggle) ---- */
+document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+  const trigger = dropdown.querySelector('.nav-link');
+  const menu    = dropdown.querySelector('.nav-dropdown-menu');
+  if (!trigger || !menu) return;
+
+  trigger.addEventListener('click', e => {
+    e.preventDefault();
+    const isOpen = dropdown.classList.contains('open');
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    if (!isOpen) dropdown.classList.add('open');
+  });
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+
 /* ---- Mobile Nav ---- */
 const hamburger  = document.getElementById('hamburger');
 const mobileNav  = document.getElementById('mobileNav');
