@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About TRUSTUS Group — Our Story and Values</title>
+  <meta name="description" content="TRUSTUS Group is a CQC-registered adult social care provider operating BrightLife Home Care, Stanmore Supported Living and Monica Supported Living across the UK." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    /* -- Page-hero (inner pages) ------------------------------------- */
+    .page-hero {
+      position: relative;
+      padding: 100px 0 72px;
+      background: #1e3a2f;
+      overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: .22;
+    }
+    .page-hero .container { position: relative; z-index: 1; }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .85rem;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 20px;
+    }
+    .breadcrumb a { color: rgba(255,255,255,.7); text-decoration: none; }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb-sep { opacity: .5; }
+    .page-hero h1 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      max-width: 680px;
+      margin-bottom: 20px;
+    }
+    .page-hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.82);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* -- Values grid ------------------------------------------------- */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media (max-width: 900px) { .values-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .values-grid { grid-template-columns: 1fr; } }
+
+    .value-card {
+      background: #fff;
+      border: 1px solid #e8ede9;
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .value-card:hover {
+      box-shadow: 0 12px 32px rgba(61,106,90,.12);
+      transform: translateY(-3px);
+    }
+    .value-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #eef4f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .value-card-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: #3D6A5A;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .value-card h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #162011;
+      margin-bottom: 8px;
+    }
+    .value-card p {
+      font-size: .92rem;
+      color: #4a5568;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* -- Stats bar (stand-alone section override) -------------------- */
+    .stats-bar {
+      background: #3D6A5A;
+      padding: 60px 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-num {
+      display: block;
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      display: block;
+      font-size: .9rem;
+      color: rgba(255,255,255,.75);
+      font-weight: 500;
+    }
+
+    /* -- Accreditations badges --------------------------------------- */
+    .accred-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .accred-badge {
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.25);
+      border-radius: 14px;
+      padding: 28px 40px;
+      text-align: center;
+      min-width: 180px;
+      backdrop-filter: blur(4px);
+      transition: background .25s;
+    }
+    .accred-badge:hover { background: rgba(255,255,255,.2); }
+    .accred-badge-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,.18);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .accred-badge-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: #fff;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .accred-badge h4 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 4px;
+    }
+    .accred-badge p {
+      font-size: .8rem;
+      color: rgba(255,255,255,.7);
+      margin: 0;
+    }
+
+    /* -- Section photo (ensure consistent sizing) -------------------- */
+    .section-photo {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 480px;
+    }
+    .section-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* -- Check-list -------------------------------------------------- */
+    .check-list {
+      list-style: none;
+      padding: 0;
+      margin: 28px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: .97rem;
+      color: #2d3748;
+      line-height: 1.6;
+    }
+    .check-list li .check-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #eef4f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .check-list li .check-icon svg {
+      width: 13px;
+      height: 13px;
+      stroke: #3D6A5A;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HELP BAR -->
+<div class="help-bar">
+  <div class="container">
+    <div class="help-bar-inner">
+      <div class="help-bar-left">Adult social care across the UK &mdash; We&rsquo;re here to help, 24/7</div>
+      <div class="help-bar-right">
+        <span><span class="pulse"></span> Available now</span>
+        <a href="tel:+440000000000">+44 (0) 000 000 0000</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="../TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li class="nav-dropdown">
+          <a href="#" class="nav-link">Our Services &#9662;</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="domiciliary-care.html" class="nav-dropdown-item">BrightLife Home Care</a></li>
+            <li><a href="supported-living.html" class="nav-dropdown-item">Stanmore Supported Living</a></li>
+            <li><a href="complex-care.html" class="nav-dropdown-item">Monica Supported Living</a></li>
+          </ul>
+        </li>
+        <li><a href="about-us.html" class="nav-link active">About Us</a></li>
+        <li><a href="work-for-us.html" class="nav-link">Work For Us</a></li>
+        <li><a href="contact-us.html" class="nav-link">Contact Us</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="tel:+440000000000" class="nav-phone">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span>+44 (0) 000 000 0000</span>
+        </a>
+        <a href="contact-us.html" class="btn btn-primary" style="padding:12px 22px; font-size:0.9rem;">Make an Enquiry</a>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <span class="mobile-nav-close" id="mobileClose">&times;</span>
+  <a href="index.html" class="mobile-nav-link">Home</a>
+  <a href="#" class="mobile-nav-link">Our Services</a>
+  <div class="mobile-nav-sub">
+    <a href="domiciliary-care.html" class="mobile-nav-link">BrightLife Home Care</a>
+    <a href="supported-living.html" class="mobile-nav-link">Stanmore Supported Living</a>
+    <a href="complex-care.html" class="mobile-nav-link">Monica Supported Living</a>
+  </div>
+  <a href="about-us.html" class="mobile-nav-link active">About Us</a>
+  <a href="work-for-us.html" class="mobile-nav-link">Work For Us</a>
+  <a href="contact-us.html" class="mobile-nav-link">Contact Us</a>
+  <div class="mobile-nav-actions">
+    <a href="contact-us.html" class="btn btn-primary" style="justify-content:center;">Make an Enquiry</a>
+    <a href="tel:+440000000000" class="btn btn-secondary" style="justify-content:center;">Call Us Now</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1600&q=80');"></div>
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </span>
+      <span>About Us</span>
+    </nav>
+    <h1>Built on Trust, Driven by Care</h1>
+    <p>TRUSTUS Group is a dedicated adult social care provider committed to delivering high-quality, person-centred services that help people live safely, independently and with dignity.</p>
+  </div>
+</section>
+
+<!-- SECTION 1: WHO WE ARE -->
+<section class="section" style="background:#fff;">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <div class="eyebrow">Our Story</div>
+        <h2>About TRUSTUS Group</h2>
+        <p style="margin-top:16px;">TRUSTUS Group is a CQC-registered adult social care organisation operating three specialist services across the UK — BrightLife Home Care, Stanmore Supported Living and Monica Supported Living.</p>
+        <p style="margin-top:16px;">We believe every person, regardless of their needs, deserves compassionate, professional support that promotes independence, choice and dignity. Our experienced teams work closely with individuals, families, local authorities and healthcare professionals to deliver outstanding outcomes.</p>
+        <p style="margin-top:16px;">From flexible home care to 24-hour supported living, we are committed to meeting people where they are and helping them live the lives they choose.</p>
+      </div>
+      <div class="section-photo">
+        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80" alt="TRUSTUS care worker with a client" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: OUR VALUES -->
+<section class="section bg-soft">
+  <div class="container">
+    <div class="section-head center">
+      <div class="eyebrow">Our Values</div>
+      <h2>What Guides Everything We Do</h2>
+    </div>
+    <div class="values-grid">
+
+      <!-- Putting People First -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <h4>Putting People First</h4>
+        <p>Every decision we make starts with the individual — their goals, preferences and wellbeing come above all else.</p>
+      </div>
+
+      <!-- Dignity & Respect -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+          </svg>
+        </div>
+        <h4>Dignity &amp; Respect</h4>
+        <p>We treat every person with the respect and dignity they deserve, in every interaction, every day.</p>
+      </div>
+
+      <!-- Promoting Independence -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h4>Promoting Independence</h4>
+        <p>We support people to do more for themselves — building confidence, skills and control over their own lives.</p>
+      </div>
+
+      <!-- Transparency -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h4>Transparency</h4>
+        <p>We communicate openly with families, placing authorities and service users about everything we do and how we do it.</p>
+      </div>
+
+      <!-- Working in Partnership -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 11l-4 4-2-2"/>
+          </svg>
+        </div>
+        <h4>Working in Partnership</h4>
+        <p>We work closely with families, social workers, commissioners and health professionals to achieve joined-up, positive outcomes.</p>
+      </div>
+
+      <!-- Continuous Improvement -->
+      <div class="value-card">
+        <div class="value-card-icon">
+          <svg viewBox="0 0 24 24">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h4>Continuous Improvement</h4>
+        <p>We never stand still. We regularly review, audit and improve our services to maintain the highest standards of care.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: STATS BAR -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <span class="stat-num"><span data-count="200">0</span>+</span>
+        <span class="stat-label">Dedicated Staff Members</span>
+      </div>
+      <div>
+        <span class="stat-num"><span data-count="500">0</span>+</span>
+        <span class="stat-label">Individuals Supported</span>
+      </div>
+      <div>
+        <span class="stat-num"><span data-count="10">0</span>+</span>
+        <span class="stat-label">Years of Experience</span>
+      </div>
+      <div>
+        <span class="stat-num"><span data-count="3">0</span></span>
+        <span class="stat-label">Specialist Services</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: WHY FAMILIES TRUST TRUSTUS -->
+<section class="section" style="background:#fff;">
+  <div class="container">
+    <div class="grid-2">
+      <div class="section-photo">
+        <img src="https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80" alt="TRUSTUS care team in conversation with a client" loading="lazy" />
+      </div>
+      <div>
+        <div class="eyebrow">Our Commitment</div>
+        <h2>Why Families Choose TRUSTUS Group</h2>
+        <ul class="check-list">
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>CQC registered and regularly inspected — transparency you can trust</span>
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>Fully trained, DBS-checked staff across all services</span>
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>Personalised support plans built with individuals, not just for them</span>
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>Regular reviews and open communication with families</span>
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>Fast response to urgent care needs and hospital discharges</span>
+          </li>
+          <li>
+            <span class="check-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span>Committed to positive outcomes, independence and dignity</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: ACCREDITATIONS -->
+<section class="section" style="background: var(--sage);">
+  <div class="container">
+    <div class="section-head center">
+      <div class="eyebrow" style="color:rgba(255,255,255,.7); border-color:rgba(255,255,255,.25);">Accreditations</div>
+      <h2 style="color:#fff; text-align:center;">Registered, Regulated, Trusted</h2>
+      <p style="color:rgba(255,255,255,.8); text-align:center; max-width:520px; margin:0 auto;">Our credentials reflect the rigorous standards we hold ourselves to &mdash; because the people we support deserve nothing less than the best.</p>
+    </div>
+    <div class="accred-row">
+
+      <div class="accred-badge">
+        <div class="accred-badge-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h4>CQC Registered</h4>
+        <p>Care Quality Commission</p>
+      </div>
+
+      <div class="accred-badge">
+        <div class="accred-badge-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </div>
+        <h4>Cyber Essentials</h4>
+        <p>UK Government Certified</p>
+      </div>
+
+      <div class="accred-badge">
+        <div class="accred-badge-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/>
+          </svg>
+        </div>
+        <h4>DBS Checked Staff</h4>
+        <p>Enhanced Disclosure</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: CTA -->
+<div class="cta-dark">
+  <div class="container">
+    <div class="cta-dark-grid">
+      <div>
+        <div class="eyebrow on-dark">Get in Touch</div>
+        <h2>Ready to find the right support?</h2>
+        <p class="cta-dark-lead">Our team is available 24 hours a day, 7 days a week. Reach out and we&rsquo;ll guide you through every next step — with no pressure and no obligation.</p>
+        <div class="phone-block">
+          <div class="phone-block-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="phone-block-label">Call us anytime</div>
+            <a href="tel:+440000000000" class="phone-block-number">+44 (0) 000 000 0000</a>
+          </div>
+        </div>
+        <div class="contact-bits">
+          <div class="contact-bit">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
+          </div>
+          <div class="contact-bit">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Office address &mdash; London, United Kingdom</span>
+          </div>
+        </div>
+      </div>
+      <div class="quick-form">
+        <h3>Send us a message</h3>
+        <p>We&rsquo;ll get back to you within a few hours.</p>
+        <form>
+          <div class="field-row">
+            <div class="field"><label>First name</label><input type="text" placeholder="Jane" /></div>
+            <div class="field"><label>Last name</label><input type="text" placeholder="Smith" /></div>
+          </div>
+          <div class="field"><label>Phone number</label><input type="tel" placeholder="+44 7700 000000" /></div>
+          <div class="field"><label>Service interested in</label>
+            <select>
+              <option value="">Select a service&hellip;</option>
+              <option>BrightLife Home Care</option>
+              <option>Stanmore Supported Living</option>
+              <option>Monica Supported Living</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field"><label>Message</label><textarea placeholder="Tell us a little about what you&rsquo;re looking for&hellip;"></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:4px;">Send Enquiry</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" style="height:40px;" />
+        <p>Dedicated to providing high-quality, person-centred care for individuals with learning disabilities, autism, mental health needs and complex requirements &mdash; nationwide.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" aria-label="Facebook">f</a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-btn" aria-label="Instagram">&#9671;</a>
+        </div>
+      </div>
+      <div>
+        <h5>Our Services</h5>
+        <ul class="footer-links">
+          <li><a href="domiciliary-care.html">BrightLife Home Care</a></li>
+          <li><a href="supported-living.html">Stanmore Supported Living</a></li>
+          <li><a href="complex-care.html">Monica Supported Living</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Quick Links</h5>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="work-for-us.html">Work For Us</a></li>
+          <li><a href="contact-us.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul class="footer-links">
+          <li><a href="tel:+440000000000">+44 (0) 000 000 0000</a></li>
+          <li><a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a></li>
+          <li><span>London, United Kingdom</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 TRUSTUS Care. All rights reserved.</p>
+      <div class="footer-badges">
+        <span class="footer-badge">CQC Registered</span>
+        <span class="footer-badge">Nationwide Coverage</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
+
