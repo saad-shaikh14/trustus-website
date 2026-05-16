@@ -1,284 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact TRUSTUS Group — Get in Touch</title>
-  <meta name="description" content="Contact TRUSTUS Group to enquire about BrightLife Home Care, Stanmore Supported Living or Monica Supported Living. We&apos;re available 24/7." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
-  <style>
-    .page-hero-bg { background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80'); }
-    .referral-block {
-      background: var(--sage);
-      border-radius: 12px;
-      padding: 32px 28px;
-      margin-top: 36px;
-    }
-    .referral-block h4 { color: white; margin-bottom: 10px; }
-    .referral-block p  { color: rgba(255,255,255,0.85); font-size: 0.95rem; margin-bottom: 20px; }
-    .referral-block .btn-primary {
-      background: white;
-      color: var(--sage);
-      border-color: white;
-    }
-    .referral-block .btn-primary:hover {
-      background: var(--bg-sage);
-      border-color: var(--bg-sage);
-      color: var(--sage-deep);
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us â€” TRUSTUS Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<!-- HELP BAR -->
-<div class="help-bar">
-  <div class="container">
-    <div class="help-bar-inner">
-      <div class="help-bar-left">Adult social care across the UK &mdash; We&rsquo;re here to help, 24/7</div>
-      <div class="help-bar-right">
-        <span><span class="pulse"></span> Available now</span>
-        <a href="tel:+440000000000">+44 (0) 000 000 0000</a>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- NAV -->
 <nav class="nav">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><img src="TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" /></a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li class="nav-dropdown">
-          <a href="#" class="nav-link">Our Services &#9662;</a>
-          <ul class="nav-dropdown-menu">
-            <li><a href="domiciliary-care.html" class="nav-dropdown-item">BrightLife Home Care</a></li>
-            <li><a href="supported-living.html" class="nav-dropdown-item">Stanmore Supported Living</a></li>
-            <li><a href="complex-care.html" class="nav-dropdown-item">Monica Supported Living</a></li>
-          </ul>
-        </li>
-        <li><a href="about-us.html" class="nav-link">About Us</a></li>
-        <li><a href="work-for-us.html" class="nav-link">Work For Us</a></li>
-        <li><a href="contact-us.html" class="nav-link active">Contact Us</a></li>
-      </ul>
-      <div class="nav-right">
-        <a href="tel:+440000000000" class="nav-phone">
-          <svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:var(--sage);stroke-width:2;fill:none;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          <span>+44 (0) 000 000 0000</span>
-        </a>
-        <a href="contact-us.html" class="btn btn-primary" style="padding:12px 22px;font-size:0.9rem;">Make an Enquiry</a>
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-      </div>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html"><img src="images/logo.jpeg" alt="TRUSTUS Care"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <button>Our Services â–¾</button>
+        <div class="dropdown-menu">
+          <a href="domiciliary-care.html">BrightLife Home Care</a>
+          <a href="supported-living.html">Stanmore Supported Living</a>
+          <a href="supported-living.html#monica">Monica Supported Living</a>
+          <a href="complex-care.html">Complex Care</a>
+        </div>
+      </li>
+      <li><a href="about-us.html">About Us</a></li>
+      <li><a href="contact-us.html" class="active">Contact Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:020xxxxxxxx">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        020 xx xx xx xx
+      </a>
+      <a href="contact-us.html" class="btn-primary">Contact Us</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
+
+<!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
-  <span class="mobile-nav-close" id="mobileClose">&times;</span>
-  <a href="index.html" class="mobile-nav-link">Home</a>
-  <a href="#" class="mobile-nav-link">Our Services</a>
-  <div class="mobile-nav-sub">
-    <a href="domiciliary-care.html" class="mobile-nav-link">BrightLife Home Care</a>
-    <a href="supported-living.html" class="mobile-nav-link">Stanmore Supported Living</a>
-    <a href="complex-care.html" class="mobile-nav-link">Monica Supported Living</a>
+  <div class="mobile-nav-header">
+    <img src="images/logo.jpeg" alt="TRUSTUS Care">
+    <button class="mobile-nav-close" id="mobileClose">Ã—</button>
   </div>
-  <a href="about-us.html" class="mobile-nav-link">About Us</a>
-  <a href="work-for-us.html" class="mobile-nav-link">Work For Us</a>
-  <a href="contact-us.html" class="mobile-nav-link">Contact Us</a>
+  <nav class="mobile-nav-links">
+    <a href="index.html">Home</a>
+    <button id="mobileServicesBtn">Our Services â–¾</button>
+    <div class="mobile-submenu" id="mobileSubmenu">
+      <a href="domiciliary-care.html">BrightLife Home Care</a>
+      <a href="supported-living.html">Stanmore Supported Living</a>
+      <a href="supported-living.html#monica">Monica Supported Living</a>
+      <a href="complex-care.html">Complex Care</a>
+    </div>
+    <a href="about-us.html">About Us</a>
+    <a href="contact-us.html">Contact Us</a>
+  </nav>
   <div class="mobile-nav-actions">
-    <a href="contact-us.html" class="btn btn-primary" style="justify-content:center;">Make an Enquiry</a>
-    <a href="tel:+440000000000" class="btn btn-secondary" style="justify-content:center;">Call Us Now</a>
+    <a href="contact-us.html" class="btn-primary btn-lg">Contact Us</a>
+    <a href="tel:020xxxxxxxx" class="btn-secondary btn-lg">Call Us Now</a>
   </div>
 </div>
 
 <!-- PAGE HERO -->
 <section class="page-hero">
-  <div class="page-hero-bg"></div>
+  <div class="page-hero-slides">
+    <div class="page-hero-slide active" style="background-image:url('images/care-1.jpg')"></div>
+    <div class="page-hero-slide" style="background-image:url('images/care-5.jpg')"></div>
+  </div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">â€º</span>
+      <span>Contact Us</span>
+    </nav>
+    <h1>Contact Us</h1>
+    <p>Our team is available 24 hours a day, 7 days a week. We're here to help.</p>
+  </div>
+</section>
+
+<!-- CONTACT INFO GRID -->
+<section class="section">
   <div class="container">
-    <div class="page-hero-content">
-      <div class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span>/</span>
-        <span>Contact Us</span>
+    <div class="section-header">
+      <span class="eyebrow">Get In Touch</span>
+      <h2>We're Here to Help</h2>
+      <p>Whether you are a family member, individual, social worker, or healthcare professional â€” our team is ready to answer your questions and guide you through next steps.</p>
+    </div>
+    <div class="contact-info-grid">
+      <div class="contact-info-card">
+        <div class="icon-circle">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <h4>Phone</h4>
+        <a href="tel:020xxxxxxxx">020 xx xx xx xx</a>
+        <p>Available 24/7</p>
       </div>
-      <h1>Get in Touch With Our Team</h1>
-      <p>We&rsquo;re here 24/7. Whether you&rsquo;re a family looking for support, a social worker making a referral or a professional wanting to discuss a placement — our team is ready to help.</p>
+      <div class="contact-info-card">
+        <div class="icon-circle">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h4>Email</h4>
+        <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
+        <p>We respond promptly</p>
+      </div>
+      <div class="contact-info-card">
+        <div class="icon-circle">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h4>Office</h4>
+        <p>16 Stanmore Road</p>
+        <p>Watford, WD24 5ET</p>
+      </div>
+      <div class="contact-info-card">
+        <div class="icon-circle">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>Hours</h4>
+        <p>24 hours a day</p>
+        <p>7 days a week</p>
+      </div>
+    </div>
+
+    <!-- Professional Referrals block -->
+    <div class="referral-block">
+      <h3>Professional Referrals &amp; Social Workers</h3>
+      <p>We welcome referrals from local authorities, social workers, NHS teams, case managers, commissioners, and healthcare professionals. Our referrals team works quickly and collaboratively to review packages, assess suitability, and arrange placements efficiently. Please contact us directly to discuss a referral â€” we aim to respond within 24 hours.</p>
     </div>
   </div>
 </section>
 
-<!-- MAIN CONTACT SECTION -->
-<section class="section bg-white">
+<!-- CONTACT FORM -->
+<section class="section contact-form-section">
   <div class="container">
-    <div class="contact-page-grid">
-
-      <!-- LEFT: CONTACT INFO -->
-      <div>
-        <div class="contact-info">
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">
-              <!-- Phone -->
-              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            </div>
-            <div>
-              <h4>Call Us Anytime</h4>
-              <p>Available 24 hours a day, 7 days a week — including weekends and bank holidays.</p>
-              <a href="tel:+440000000000" style="font-weight:600;color:var(--sage);display:block;margin-top:6px;">+44 (0) 000 000 0000</a>
-            </div>
-          </div>
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">
-              <!-- Mail -->
-              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <div>
-              <h4>Email Us</h4>
-              <p>We aim to respond to all enquiries within a few hours during business hours.</p>
-              <a href="mailto:info@trustuscare.co.uk" style="font-weight:600;color:var(--sage);display:block;margin-top:6px;">info@trustuscare.co.uk</a>
-            </div>
-          </div>
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">
-              <!-- Map pin -->
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </div>
-            <div>
-              <h4>Our Office</h4>
-              <p>Office address, London, United Kingdom</p>
-            </div>
-          </div>
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">
-              <!-- Clock -->
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            </div>
-            <div>
-              <h4>Hours</h4>
-              <p>We never close. Our team is available around the clock for urgent care needs.</p>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- REFERRALS BLOCK -->
-        <div class="referral-block">
-          <h4>Professional Referrals &amp; Social Workers</h4>
-          <p>If you&rsquo;re a social worker, commissioner or healthcare professional making a referral for BrightLife Home Care, Stanmore or Monica Supported Living — please get in touch by phone for the fastest response.</p>
-          <a href="#contact-form" class="btn btn-primary">Make a Professional Referral</a>
-        </div>
-      </div>
-
-      <!-- RIGHT: CONTACT FORM -->
-      <div class="contact-form-card">
-        <h3>Send Us a Message</h3>
-        <p>Fill in the form and a member of our team will get back to you shortly.</p>
-        <form>
-          <div class="field-row">
-            <div class="field">
-              <label for="first-name">First name</label>
-              <input type="text" id="first-name" name="first_name" placeholder="Jane" />
-            </div>
-            <div class="field">
-              <label for="last-name">Last name</label>
-              <input type="text" id="last-name" name="last_name" placeholder="Smith" />
-            </div>
-          </div>
-          <div class="field">
-            <label for="phone">Phone number</label>
-            <input type="tel" id="phone" name="phone" placeholder="+44 7700 000000" />
-          </div>
-          <div class="field">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" placeholder="jane@example.com" />
-          </div>
-          <div class="field">
-            <label for="enquiry-type">I am enquiring as</label>
-            <select id="enquiry-type" name="enquiry_type">
-              <option value="">Please select&hellip;</option>
-              <option value="family">A family member seeking care</option>
-              <option value="myself">The person needing care</option>
-              <option value="social-worker">A social worker / commissioner</option>
-              <option value="healthcare">A healthcare professional</option>
-              <option value="employee">A prospective employee</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="service">Service interested in</label>
-            <select id="service" name="service">
-              <option value="">Please select&hellip;</option>
-              <option value="brightlife">BrightLife Home Care</option>
-              <option value="stanmore">Stanmore Supported Living</option>
-              <option value="monica">Monica Supported Living</option>
-              <option value="general">Not sure yet / General enquiry</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="message">Your message</label>
-            <textarea id="message" name="message" placeholder="Tell us a little about what you&rsquo;re looking for&hellip;" style="min-height:120px;"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px;">Send Message</button>
-        </form>
-      </div>
-
+    <div class="section-header" style="text-align:left;max-width:none;">
+      <span class="eyebrow">Send a Message</span>
+      <h2>Contact Form</h2>
     </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section-sm bg-soft">
-  <div class="container">
-    <div class="section-head center">
-      <div class="eyebrow">FAQ</div>
-      <h2>Common Questions</h2>
-    </div>
-    <div class="faq">
-
-      <div class="faq-item">
-        <button class="faq-q">
-          How quickly can care start?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner">For BrightLife Home Care, we can often begin within a few days of completing an assessment. Supported living placements at Stanmore or Monica take a little longer to ensure the right match — typically 2-4 weeks. Call us for an honest timescale based on your specific situation.</div>
+    <div class="contact-form-wrap" style="margin-top:40px;">
+      <form>
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label for="firstName">First name *</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Jane" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name *</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+          </div>
         </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q">
-          Who funds the care?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner">We support both privately funded clients and packages commissioned by local authorities or NHS continuing healthcare. We can talk through all funding options including direct payments and personal budgets during our initial conversation.</div>
+        <div class="form-group">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+44 7700 000000">
         </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q">
-          Are you CQC registered?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner">Yes — TRUSTUS Group and all our services are fully registered and regulated by the Care Quality Commission. We welcome families and professionals to ask about our latest inspection outcomes.</div>
+        <div class="form-group">
+          <label for="email">Email address *</label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required>
         </div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q">
-          Can I visit a supported living home before deciding?
-          <span class="faq-icon"></span>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner">Absolutely. We strongly encourage visits to Stanmore or Monica before any placement decisions are made. It&rsquo;s important that the individual and their family feel comfortable and confident in the home.</div>
+        <div class="form-group">
+          <label for="enquiryType">I am enquiring as *</label>
+          <select id="enquiryType" name="enquiryType" required>
+            <option value="">Please select...</option>
+            <option>A family member seeking care</option>
+            <option>The person needing care</option>
+            <option>A social worker / commissioner</option>
+            <option>A healthcare professional</option>
+            <option>A prospective employee</option>
+            <option>Other</option>
+          </select>
         </div>
-      </div>
-
+        <div class="form-group">
+          <label for="service">Service interested in</label>
+          <select id="service" name="service">
+            <option value="">Please select...</option>
+            <option>BrightLife Home Care (Domiciliary)</option>
+            <option>Stanmore Supported Living</option>
+            <option>Monica Supported Living</option>
+            <option>Complex Care</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Your message *</label>
+          <textarea id="message" name="message" placeholder="Tell us a little about your enquiry or the support needed..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-lg">Send Message</button>
+      </form>
     </div>
   </div>
 </section>
@@ -288,46 +198,57 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" style="height:40px;" />
-        <p>Dedicated to providing high-quality, person-centred care for individuals with learning disabilities, autism, mental health needs and complex requirements &mdash; nationwide.</p>
+        <img src="images/logo.jpeg" alt="TRUSTUS Care" class="footer-logo-img">
+        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support.</p>
         <div class="social-links">
-          <a href="#" class="social-btn" aria-label="Facebook">f</a>
-          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
-          <a href="#" class="social-btn" aria-label="Instagram">&#9671;</a>
+          <a href="#" class="social-link" aria-label="Facebook">f</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-link" aria-label="Instagram">ig</a>
+        </div>
+        <div class="footer-badges">
+          <img src="images/badge-cqc.png" alt="Regulated by Care Quality Commission" class="footer-badge">
+          <img src="images/badge-disability.png" alt="Disability Confident Committed" class="footer-badge">
+          <img src="images/badge-dbs.png" alt="DBS Checked" class="footer-badge">
         </div>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Our Services</h5>
-        <ul class="footer-links">
+        <ul>
           <li><a href="domiciliary-care.html">BrightLife Home Care</a></li>
           <li><a href="supported-living.html">Stanmore Supported Living</a></li>
-          <li><a href="complex-care.html">Monica Supported Living</a></li>
+          <li><a href="supported-living.html#monica">Monica Supported Living</a></li>
+          <li><a href="complex-care.html">Complex Care</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Quick Links</h5>
-        <ul class="footer-links">
+        <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about-us.html">About Us</a></li>
-          <li><a href="work-for-us.html">Work For Us</a></li>
           <li><a href="contact-us.html">Contact Us</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Contact</h5>
-        <ul class="footer-links">
-          <li><a href="tel:+440000000000">+44 (0) 000 000 0000</a></li>
-          <li><a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a></li>
-          <li><span>London, United Kingdom</span></li>
-        </ul>
+        <div class="footer-contact">
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:020xxxxxxxx">020 xx xx xx xx</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>16 Stanmore Road, Watford, WD24 5ET</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; 2025 TRUSTUS Care. All rights reserved.</p>
-      <div class="footer-badges">
-        <span class="footer-badge">CQC Registered</span>
-        <span class="footer-badge">Nationwide Coverage</span>
-      </div>
+      <p>Care &middot; Trust &middot; Independence</p>
     </div>
   </div>
 </footer>
@@ -335,4 +256,3 @@
 <script src="js/main.js"></script>
 </body>
 </html>
-

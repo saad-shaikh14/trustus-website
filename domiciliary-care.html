@@ -1,363 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BrightLife Home Care — TRUSTUS Group</title>
-  <meta name="description" content="BrightLife Home Care provides flexible, professional home care across the UK — personal care, medication support, mental health support and more. Part of TRUSTUS Group." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domiciliary / Home Care â€” TRUSTUS Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<!-- HELP BAR -->
-<div class="help-bar">
-  <div class="container">
-    <div class="help-bar-inner">
-      <div class="help-bar-left">Adult social care across the UK &mdash; We&rsquo;re here to help, 24/7</div>
-      <div class="help-bar-right">
-        <span><span class="pulse"></span> Available now</span>
-        <a href="tel:+440000000000">+44 (0) 000 000 0000</a>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- NAV -->
 <nav class="nav">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">
-        <img src="TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" />
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html"><img src="images/logo.jpeg" alt="TRUSTUS Care"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <button>Our Services â–¾</button>
+        <div class="dropdown-menu">
+          <a href="domiciliary-care.html" class="active">BrightLife Home Care</a>
+          <a href="supported-living.html">Stanmore Supported Living</a>
+          <a href="supported-living.html#monica">Monica Supported Living</a>
+          <a href="complex-care.html">Complex Care</a>
+        </div>
+      </li>
+      <li><a href="about-us.html">About Us</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:020xxxxxxxx">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        020 xx xx xx xx
       </a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li class="nav-dropdown">
-          <a href="#" class="nav-link active">Our Services &#9662;</a>
-          <ul class="nav-dropdown-menu">
-            <li><a href="domiciliary-care.html" class="nav-dropdown-item">BrightLife Home Care</a></li>
-            <li><a href="supported-living.html" class="nav-dropdown-item">Stanmore Supported Living</a></li>
-            <li><a href="complex-care.html" class="nav-dropdown-item">Monica Supported Living</a></li>
-          </ul>
-        </li>
-        <li><a href="about-us.html" class="nav-link">About Us</a></li>
-        <li><a href="work-for-us.html" class="nav-link">Work For Us</a></li>
-        <li><a href="contact-us.html" class="nav-link">Contact Us</a></li>
-      </ul>
-      <div class="nav-right">
-        <a href="tel:+440000000000" class="nav-phone">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          <span>+44 (0) 000 000 0000</span>
-        </a>
-        <a href="contact-us.html" class="btn btn-primary" style="padding:12px 22px; font-size:0.9rem;">Make an Enquiry</a>
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-      </div>
+      <a href="contact-us.html" class="btn-primary">Contact Us</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
-  <span class="mobile-nav-close" id="mobileClose">&times;</span>
-  <a href="index.html" class="mobile-nav-link">Home</a>
-  <a href="#" class="mobile-nav-link">Our Services</a>
-  <div class="mobile-nav-sub">
-    <a href="domiciliary-care.html" class="mobile-nav-link">BrightLife Home Care</a>
-    <a href="supported-living.html" class="mobile-nav-link">Stanmore Supported Living</a>
-    <a href="complex-care.html" class="mobile-nav-link">Monica Supported Living</a>
+  <div class="mobile-nav-header">
+    <img src="images/logo.jpeg" alt="TRUSTUS Care">
+    <button class="mobile-nav-close" id="mobileClose">Ã—</button>
   </div>
-  <a href="about-us.html" class="mobile-nav-link">About Us</a>
-  <a href="work-for-us.html" class="mobile-nav-link">Work For Us</a>
-  <a href="contact-us.html" class="mobile-nav-link">Contact Us</a>
+  <nav class="mobile-nav-links">
+    <a href="index.html">Home</a>
+    <button id="mobileServicesBtn">Our Services â–¾</button>
+    <div class="mobile-submenu" id="mobileSubmenu">
+      <a href="domiciliary-care.html">BrightLife Home Care</a>
+      <a href="supported-living.html">Stanmore Supported Living</a>
+      <a href="supported-living.html#monica">Monica Supported Living</a>
+      <a href="complex-care.html">Complex Care</a>
+    </div>
+    <a href="about-us.html">About Us</a>
+    <a href="contact-us.html">Contact Us</a>
+  </nav>
   <div class="mobile-nav-actions">
-    <a href="contact-us.html" class="btn btn-primary" style="justify-content:center;">Make an Enquiry</a>
-    <a href="tel:+440000000000" class="btn btn-secondary" style="justify-content:center;">Call Us Now</a>
+    <a href="contact-us.html" class="btn-primary btn-lg">Contact Us</a>
+    <a href="tel:020xxxxxxxx" class="btn-secondary btn-lg">Call Us Now</a>
   </div>
 </div>
 
 <!-- PAGE HERO -->
 <section class="page-hero">
-  <!-- Replace photo below with a licensed image before going live -->
-  <div class="page-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80');"></div>
-  <div class="container">
-    <div class="page-hero-content">
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="index.html">Home</a>
-        <span>&rsaquo;</span>
-        <a href="#">Our Services</a>
-        <span>&rsaquo;</span>
-        <span>BrightLife Home Care</span>
-      </nav>
-      <h1>Professional Home Care That Puts You First</h1>
-      <p>BrightLife Home Care delivers flexible, compassionate support in the comfort of your own home — from personal care and medication management to mental health support and complex care.</p>
-      <a href="contact-us.html" class="btn btn-ghost-dark">Make an Enquiry</a>
-    </div>
+  <div class="page-hero-slides">
+    <div class="page-hero-slide active" style="background-image:url('images/care-3.jpg')"></div>
+    <div class="page-hero-slide" style="background-image:url('images/care-4.jpg')"></div>
+    <div class="page-hero-slide" style="background-image:url('images/care-7.jpg')"></div>
+  </div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">â€º</span>
+      <span>Domiciliary / Home Care</span>
+    </nav>
+    <h1>Domiciliary / Home Care</h1>
+    <p>Enabling individuals to remain safe, comfortable, and independent within their own homes.</p>
   </div>
 </section>
 
-<!-- SECTION 1 — What Is Domiciliary Care -->
+<!-- INTRO -->
 <section class="section">
   <div class="container">
-    <div class="grid-2">
-      <div>
-        <div class="eyebrow">About BrightLife</div>
-        <h2>What is BrightLife Home Care?</h2>
-        <p style="margin-top:16px;">BrightLife Home Care is TRUSTUS Group&rsquo;s professional home care service, delivering person-centred support to adults across the UK. Our trained carers work flexibly around each individual&rsquo;s routine, preferences and goals.</p>
-        <p style="margin-top:16px; margin-bottom:32px;">Whether you need a few hours of support each week or round-the-clock live-in care, we design a package that fits — and we adapt it as your needs change.</p>
-        <ul class="check-list">
-          <li>Flexible care hours — from a few visits to full live-in care</li>
-          <li>Support tailored to the individual's goals and routines</li>
-          <li>Consistent carers who build trusted relationships</li>
-          <li>Available 24/7, including nights, weekends and bank holidays</li>
-        </ul>
+    <div class="about-block">
+      <div class="about-img">
+        <img src="images/care-3.jpg" alt="Carer helping client at home">
       </div>
-      <div class="section-photo">
-        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80" alt="Care worker supporting a client at home" loading="lazy" />
+      <div class="about-text">
+        <span class="eyebrow">BrightLife Home Care</span>
+        <h2>Professional Care in the Comfort of Your Own Home</h2>
+        <p>TRUSTUS Care's professional domiciliary / home care service delivers compassionate, person-centred support to adults across the UK. Our trained carers provide flexible assistance tailored around each individual's lifestyle, preferences, routines and personal goals.</p>
+        <p>Whether you require a few hours of support each week, daily visits, overnight assistance or full live-in care, we create a personalised care package that evolves alongside your changing needs.</p>
+        <ul class="checklist">
+          <li>Flexible care arrangements â€” from short daily visits to full live-in care</li>
+          <li>Personalised support tailored to individual needs, routines and independence goals</li>
+          <li>Consistent carers who build trusted, meaningful relationships</li>
+          <li>Support with personal care, medication, meals, appointments and companionship</li>
+          <li>Available 24/7, including evenings, nights, weekends and bank holidays</li>
+          <li>Promoting dignity, wellbeing, choice and independent living at home</li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SECTION 2 — Who We Support -->
-<section class="section bg-soft">
+<!-- WHO WE SUPPORT -->
+<section class="section" style="background:var(--bg-soft);">
   <div class="container">
-    <div class="section-head center">
-      <div class="eyebrow">Who We Support</div>
-      <h2>Supporting Adults Across a Range of Needs</h2>
-      <p>Our staff are trained to support people through different life stages and levels of complexity — so families don&rsquo;t need to switch providers as things change.</p>
+    <div class="section-header">
+      <span class="eyebrow">Who We Support</span>
+      <h2>Supporting Adults with a Range of Needs</h2>
+      <p>Our domiciliary care team is experienced in supporting individuals with a wide variety of care needs â€” all within the comfort and familiarity of their own home.</p>
     </div>
     <div class="support-grid">
       <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M6 20c0-3.31 2.69-6 6-6s6 2.69 6 6"/>
-            <path d="M2 17c0-2.21 1.79-4 4-4"/>
-            <path d="M22 17c0-2.21-1.79-4-4-4"/>
-          </svg>
-        </div>
-        <h4>Elderly Care</h4>
-        <p>Companionship, personal care and daily living support — helping people stay safe and comfortable at home.</p>
-      </div>
-      <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a5 5 0 015 5c0 1.93-.69 3.69-1.82 5.07L12 22l-3.18-9.93A7.978 7.978 0 017 7a5 5 0 015-5z"/>
-            <circle cx="12" cy="7" r="1.5"/>
-          </svg>
-        </div>
+        <img src="images/icon-learning.png" alt="">
         <h4>Learning Disabilities</h4>
-        <p>Skill-building, community access and daily support for adults living full, independent lives.</p>
+        <p>Person-centred home support enabling individuals with learning disabilities to live independently.</p>
       </div>
       <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-          </svg>
-        </div>
-        <h4>Autism Support</h4>
-        <p>Sensory-aware, structured support with consistent routines and communication approaches that respect each person.</p>
+        <img src="images/icon-autism.png" alt="">
+        <h4>Autism Spectrum</h4>
+        <p>Consistent, structured support delivered sensitively around individual routines and sensory needs.</p>
       </div>
       <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 8v4l3 3"/>
-            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-          </svg>
-        </div>
-        <h4>Mental Health</h4>
-        <p>Compassionate, recovery-focused support for adults with enduring mental health conditions.</p>
+        <img src="images/icon-mental-health.png" alt="">
+        <h4>Mental Health Needs</h4>
+        <p>Compassionate support promoting positive mental wellbeing and everyday independence at home.</p>
       </div>
       <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-            <path d="M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-        </div>
-        <h4>Emotional &amp; Behavioural Difficulties</h4>
-        <p>Positive Behaviour Support delivered by staff trained to understand the individual behind the behaviour.</p>
+        <img src="images/icon-partnership.png" alt="">
+        <h4>Working in Partnership</h4>
+        <p>Collaborative care with families, GPs, social workers and other healthcare professionals.</p>
       </div>
       <div class="support-card">
-        <div class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-          </svg>
-        </div>
-        <h4>Complex Care</h4>
-        <p>Specialist support for individuals with complex physical and clinical needs — including reablement and complex care packages.</p>
+        <img src="images/icon-behaviour.png" alt="">
+        <h4>Positive Behaviour Support</h4>
+        <p>Empowerment and well-being strategies delivered in the home environment to promote positive outcomes.</p>
+      </div>
+      <div class="support-card">
+        <img src="images/icon-complex-support.png" alt="">
+        <h4>Complex Support Needs</h4>
+        <p>Specialist domiciliary support for individuals with complex health and care requirements.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SECTION 3 — What Support Looks Like -->
+<!-- GETTING STARTED -->
 <section class="section">
   <div class="container">
-    <div class="grid-2">
-      <div class="section-photo">
-        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80" alt="Care worker helping client with daily activities" loading="lazy" />
+    <div class="section-header">
+      <span class="eyebrow">Getting Started</span>
+      <h2>How to Arrange Home Care</h2>
+      <p>We make it simple and stress-free to arrange the right care package â€” at a pace that suits you.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="step-num">1</div>
+        <div class="process-step-icon"><img src="images/icon-free-assessment.png" alt=""></div>
+        <h4>Free Care Assessment</h4>
+        <p>Call us or send a message. We'll listen carefully, answer your questions and arrange a free, no-obligation care assessment.</p>
       </div>
-      <div>
-        <div class="eyebrow">Our Services</div>
-        <h2>What BrightLife Home Care Includes</h2>
-        <p style="margin-top:16px; margin-bottom:32px;">We provide a full range of home care services designed around each individual. Our flexible packages can include any combination of the following:</p>
-        <ul class="check-list">
-          <li>Personal care and hygiene support</li>
-          <li>Medication administration and management</li>
-          <li>Companionship and emotional support</li>
-          <li>Meal preparation and nutrition support</li>
-          <li>Domestic support and housekeeping</li>
-          <li>Shopping and errands assistance</li>
-          <li>Community access and social activities</li>
-          <li>Mental health and wellbeing support</li>
-          <li>Autism and learning disability support</li>
-          <li>Overnight and waking night care</li>
-          <li>Live-in care</li>
-          <li>Respite care for family carers</li>
+      <div class="process-step">
+        <div class="step-num">2</div>
+        <div class="process-step-icon"><img src="images/icon-visit.png" alt=""></div>
+        <h4>We Visit and Plan</h4>
+        <p>A care manager visits to understand exactly what is needed. We create a personalised care plan with you â€” not just for you.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">3</div>
+        <div class="process-step-icon"><img src="images/icon-care-begins-2.png" alt=""></div>
+        <h4>Care Begins</h4>
+        <p>We match the right carer, begin at a comfortable pace and check in regularly to make sure everything is working perfectly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA DARK -->
+<section class="cta-dark">
+  <div class="container">
+    <div class="cta-dark-inner">
+      <div class="cta-text">
+        <span class="eyebrow" style="color:var(--beige)">Ready to find the right support?</span>
+        <h2>Our Team Is Here For You 24/7</h2>
+        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support. Reach out and we'll guide you through every next step.</p>
+        <ul class="cta-contact-list">
+          <li>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:020xxxxxxxx">020 xx xx xx xx</a>
+          </li>
+          <li>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
+          </li>
+          <li>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            16 Stanmore Road, Watford, WD24 5ET
+          </li>
         </ul>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 4 — Process -->
-<section class="section bg-sage">
-  <div class="container">
-    <div class="section-head center">
-      <div class="eyebrow">Getting Started</div>
-      <h2>How to Arrange Care</h2>
-      <p>Arranging care is straightforward. Our team will guide you every step of the way.</p>
-    </div>
-    <div class="process">
-      <div class="process-step">
-        <div class="process-num">1</div>
-        <h4>Call or Message Us</h4>
-        <p>Get in touch and tell us about the individual. We&rsquo;ll listen and answer any questions — no obligation.</p>
-      </div>
-      <div class="process-step">
-        <div class="process-num">2</div>
-        <h4>Free Care Assessment</h4>
-        <p>A care coordinator visits to understand the individual&rsquo;s needs, preferences and goals. We then design a tailored care package together.</p>
-      </div>
-      <div class="process-step">
-        <div class="process-num">3</div>
-        <h4>Care Begins</h4>
-        <p>We match a consistent carer, start at a comfortable pace and check in regularly to make sure everything is working well.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 5 — CTA -->
-<div class="cta-dark">
-  <div class="container">
-    <div class="cta-dark-grid">
-      <div>
-        <div class="eyebrow on-dark">Get Started</div>
-        <h2>Ready to Arrange Home Care?</h2>
-        <p class="cta-dark-lead">Our BrightLife Home Care team is available 24 hours a day, 7 days a week to answer questions and arrange support.</p>
-        <div class="phone-block">
-          <div class="phone-block-icon">
-            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.09 9.81 19.79 19.79 0 01.08 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          </div>
-          <div>
-            <div class="phone-block-label">Call us anytime</div>
-            <a href="tel:+440000000000" class="phone-block-number">+44 (0) 000 000 0000</a>
-          </div>
-        </div>
-        <div class="contact-bits">
-          <div class="contact-bit">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
-          </div>
-          <div class="contact-bit">
-            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>Office address &mdash; London, United Kingdom</span>
-          </div>
-        </div>
-      </div>
       <div class="quick-form">
-        <h3>Send us a message</h3>
-        <p>We&rsquo;ll get back to you within a few hours.</p>
+        <h3>Arrange a Free Assessment</h3>
         <form>
-          <div class="field-row">
-            <div class="field"><label>First name</label><input type="text" placeholder="Jane" /></div>
-            <div class="field"><label>Last name</label><input type="text" placeholder="Smith" /></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fn">First name</label>
+              <input type="text" id="fn" placeholder="Jane" required>
+            </div>
+            <div class="form-group">
+              <label for="ln">Last name</label>
+              <input type="text" id="ln" placeholder="Smith" required>
+            </div>
           </div>
-          <div class="field"><label>Phone number</label><input type="tel" placeholder="+44 7700 000000" /></div>
-          <div class="field"><label>Service interested in</label>
-            <select>
-              <option value="">Select a service&hellip;</option>
-              <option>BrightLife Home Care</option>
+          <div class="form-group">
+            <label for="ph">Phone number</label>
+            <input type="tel" id="ph" placeholder="+44 7700 000000">
+          </div>
+          <div class="form-group">
+            <label for="svc">Service interested in</label>
+            <select id="svc">
+              <option value="">Please select...</option>
+              <option selected>BrightLife Home Care (Domiciliary)</option>
               <option>Stanmore Supported Living</option>
               <option>Monica Supported Living</option>
+              <option>Complex Care</option>
               <option>Not sure yet</option>
             </select>
           </div>
-          <div class="field"><label>Message</label><textarea placeholder="Tell us a little about what you&rsquo;re looking for&hellip;"></textarea></div>
-          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:4px;">Send Enquiry</button>
+          <div class="form-group">
+            <label for="msg">Your message</label>
+            <textarea id="msg" placeholder="Tell us about the care needed..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Send Message</button>
         </form>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <img src="TRUSTUS Logo_Transparent.png" alt="TRUSTUS Care" style="height:40px;" />
-        <p>Dedicated to providing high-quality, person-centred care for individuals with learning disabilities, autism, mental health needs and complex requirements &mdash; nationwide.</p>
+        <img src="images/logo.jpeg" alt="TRUSTUS Care" class="footer-logo-img">
+        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support.</p>
         <div class="social-links">
-          <a href="#" class="social-btn" aria-label="Facebook">f</a>
-          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
-          <a href="#" class="social-btn" aria-label="Instagram">&#9671;</a>
+          <a href="#" class="social-link" aria-label="Facebook">f</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-link" aria-label="Instagram">ig</a>
+        </div>
+        <div class="footer-badges">
+          <img src="images/badge-cqc.png" alt="Regulated by Care Quality Commission" class="footer-badge">
+          <img src="images/badge-disability.png" alt="Disability Confident Committed" class="footer-badge">
+          <img src="images/badge-dbs.png" alt="DBS Checked" class="footer-badge">
         </div>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Our Services</h5>
-        <ul class="footer-links">
+        <ul>
           <li><a href="domiciliary-care.html">BrightLife Home Care</a></li>
           <li><a href="supported-living.html">Stanmore Supported Living</a></li>
-          <li><a href="complex-care.html">Monica Supported Living</a></li>
+          <li><a href="supported-living.html#monica">Monica Supported Living</a></li>
+          <li><a href="complex-care.html">Complex Care</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Quick Links</h5>
-        <ul class="footer-links">
+        <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about-us.html">About Us</a></li>
-          <li><a href="work-for-us.html">Work For Us</a></li>
           <li><a href="contact-us.html">Contact Us</a></li>
         </ul>
       </div>
-      <div>
+      <div class="footer-col">
         <h5>Contact</h5>
-        <ul class="footer-links">
-          <li><a href="tel:+440000000000">+44 (0) 000 000 0000</a></li>
-          <li><a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a></li>
-          <li><span>London, United Kingdom</span></li>
-        </ul>
+        <div class="footer-contact">
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:020xxxxxxxx">020 xx xx xx xx</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@trustuscare.co.uk">info@trustuscare.co.uk</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>16 Stanmore Road, Watford, WD24 5ET</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; 2025 TRUSTUS Care. All rights reserved.</p>
-      <div class="footer-badges">
-        <span class="footer-badge">CQC Registered</span>
-        <span class="footer-badge">Nationwide Coverage</span>
-      </div>
+      <p>Care &middot; Trust &middot; Independence</p>
     </div>
   </div>
 </footer>
 
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">Ã—</button>
+  <button class="lightbox-prev" id="lightboxPrev">&#8249;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <button class="lightbox-next" id="lightboxNext">&#8250;</button>
+  <span class="lightbox-counter" id="lightboxCounter"></span>
+</div>
+
 <script src="js/main.js"></script>
 </body>
 </html>
-

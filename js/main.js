@@ -1,46 +1,57 @@
-/* TRUSTUS — main.js */
+/* TRUSTUS Care — main.js */
 
 /* ---- Services Dropdown (click toggle) ---- */
-document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
-  const trigger = dropdown.querySelector('.nav-link');
-  const menu    = dropdown.querySelector('.nav-dropdown-menu');
-  if (!trigger || !menu) return;
-
+document.querySelectorAll('.has-dropdown').forEach(dropdown => {
+  const trigger = dropdown.querySelector('button, a');
+  if (!trigger) return;
   trigger.addEventListener('click', e => {
     e.preventDefault();
     const isOpen = dropdown.classList.contains('open');
-    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.has-dropdown').forEach(d => d.classList.remove('open'));
     if (!isOpen) dropdown.classList.add('open');
   });
 });
 
 document.addEventListener('click', e => {
-  if (!e.target.closest('.nav-dropdown')) {
-    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  if (!e.target.closest('.has-dropdown')) {
+    document.querySelectorAll('.has-dropdown').forEach(d => d.classList.remove('open'));
   }
 });
 
 /* ---- Mobile Nav ---- */
-const hamburger  = document.getElementById('hamburger');
-const mobileNav  = document.getElementById('mobileNav');
+const hamburger   = document.getElementById('hamburger');
+const mobileNav   = document.getElementById('mobileNav');
 const mobileClose = document.getElementById('mobileClose');
 
-if (hamburger && mobileNav) {
-  hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
-  mobileClose && mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
-}
+hamburger  && hamburger.addEventListener('click', () => mobileNav.classList.add('open'));
+mobileClose && mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
 
-/* ---- FAQ Accordion ---- */
-document.querySelectorAll('.faq-q').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  });
+/* Mobile services submenu */
+const mobileServicesBtn = document.getElementById('mobileServicesBtn');
+const mobileSubmenu     = document.getElementById('mobileSubmenu');
+mobileServicesBtn && mobileServicesBtn.addEventListener('click', () => {
+  mobileSubmenu && mobileSubmenu.classList.toggle('open');
 });
 
-/* ---- Property Lightbox ---- */
+/* ---- Hero / Page-Hero Slideshow ---- */
+function initSlideshow(containerSelector, interval) {
+  document.querySelectorAll(containerSelector).forEach(container => {
+    const slides = container.querySelectorAll('.hero-slide, .page-hero-slide');
+    if (slides.length < 2) { slides[0] && slides[0].classList.add('active'); return; }
+    let current = 0;
+    slides[current].classList.add('active');
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, interval);
+  });
+}
+
+initSlideshow('.hero-slides', 5000);
+initSlideshow('.page-hero-slides', 5000);
+
+/* ---- Property Gallery + Lightbox ---- */
 let lightboxImages = [];
 let lightboxIndex  = 0;
 
@@ -55,7 +66,7 @@ function openLightbox(images, idx) {
   lightboxImages = images;
   lightboxIndex  = idx;
   showLightboxImage();
-  lightbox.classList.add('open');
+  lightbox && lightbox.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -67,13 +78,20 @@ function closeLightbox() {
 function showLightboxImage() {
   if (!lightboxImg) return;
   lightboxImg.src = lightboxImages[lightboxIndex];
-  lightboxCtr && (lightboxCtr.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length);
+  if (lightboxCtr) lightboxCtr.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
 }
 
 lightboxClose && lightboxClose.addEventListener('click', closeLightbox);
-lightboxPrev  && lightboxPrev.addEventListener('click', () => { lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length; showLightboxImage(); });
-lightboxNext  && lightboxNext.addEventListener('click', () => { lightboxIndex = (lightboxIndex + 1) % lightboxImages.length; showLightboxImage(); });
-lightbox && lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+lightbox      && lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+lightboxPrev && lightboxPrev.addEventListener('click', () => {
+  lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+  showLightboxImage();
+});
+lightboxNext && lightboxNext.addEventListener('click', () => {
+  lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+  showLightboxImage();
+});
 
 document.addEventListener('keydown', e => {
   if (!lightbox || !lightbox.classList.contains('open')) return;
@@ -82,27 +100,25 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % lightboxImages.length; showLightboxImage(); }
 });
 
-/* ---- Single property feature gallery ---- */
-document.querySelectorAll('.property-feature-gallery').forEach(gallery => {
-  const images = (() => { try { return JSON.parse(gallery.dataset.images || '[]'); } catch(e) { return []; } })();
-  if (!images.length) return;
-  const main = gallery.querySelector('.property-feature-main');
-  main && main.addEventListener('click', () => openLightbox(images, 0));
-  gallery.querySelectorAll('.property-thumb-img').forEach((img, i) => {
-    img.addEventListener('click', () => openLightbox(images, i + 1));
+/* Property gallery blocks */
+document.querySelectorAll('.property-gallery-block').forEach(block => {
+  const imagesAttr = block.dataset.images;
+  if (!imagesAttr) return;
+  let images;
+  try { images = JSON.parse(imagesAttr); } catch(e) { return; }
+
+  const mainImg  = block.querySelector('.property-main-img');
+  const thumbs   = block.querySelectorAll('.property-thumb');
+
+  mainImg && mainImg.addEventListener('click', () => openLightbox(images, 0));
+  thumbs.forEach((thumb, i) => {
+    thumb.addEventListener('click', () => {
+      openLightbox(images, i + 1 < images.length ? i + 1 : i);
+    });
   });
 });
 
-document.querySelectorAll('.property-card').forEach(card => {
-  card.addEventListener('click', () => {
-    try {
-      const images = JSON.parse(card.dataset.images || '[]');
-      if (images.length) openLightbox(images, 0);
-    } catch(e) {}
-  });
-});
-
-/* ---- Stat Counter ---- */
+/* ---- Stat Counter Animation ---- */
 function animateCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {
     const target = parseInt(el.dataset.count, 10);
