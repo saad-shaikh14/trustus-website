@@ -96,7 +96,8 @@ h5 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spa
 .section-navy .process-step p  { color: rgba(255,255,255,.65); }
 .section-navy .eyebrow { color: var(--beige); }
 .section-navy .eyebrow::before { background: var(--beige); }
-.section-navy .process-step-icon img { filter: brightness(0) invert(1) opacity(0.85); }
+.section-navy .process-step-icon img { filter: brightness(0) invert(1); opacity: 0.85; }
+.section-navy .process-step-icon svg { stroke: rgba(255,255,255,.85); }
 
 /* ── Section Header ─────────────────────────────────────────── */
 .section-header { max-width: 640px; margin: 0 auto; text-align: center; }
@@ -386,6 +387,7 @@ h5 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spa
 .step-num { display: none; }
 .process-step-icon { width: 96px; height: 96px; margin-bottom: 24px; }
 .process-step-icon img { width: 100%; height: 100%; object-fit: contain; }
+.process-step-icon svg { width: 100%; height: 100%; }
 .process-step h4 { margin-bottom: 12px; font-size: 1.1rem; }
 .process-step p { font-size: 0.92rem; line-height: 1.7; }
 
