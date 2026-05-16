@@ -147,10 +147,10 @@ h5 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spa
 /* Dropdown */
 .has-dropdown { position: relative; }
 .dropdown-menu {
-  position: absolute; top: calc(100% + 8px); left: 0;
+  position: absolute; top: 100%; left: 0;
   background: #fff; border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow-md);
-  min-width: 220px; padding: 8px;
+  min-width: 220px; padding: 8px; padding-top: 16px;
   opacity: 0; visibility: hidden; transform: translateY(-8px);
   transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
   z-index: 200;
