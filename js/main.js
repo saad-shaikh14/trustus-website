@@ -1,17 +1,6 @@
 /* TRUSTUS Care — main.js */
 
-/* ---- Services Dropdown (click toggle) ---- */
-document.querySelectorAll('.has-dropdown').forEach(dropdown => {
-  const trigger = dropdown.querySelector('button, a');
-  if (!trigger) return;
-  trigger.addEventListener('click', e => {
-    e.preventDefault();
-    const isOpen = dropdown.classList.contains('open');
-    document.querySelectorAll('.has-dropdown').forEach(d => d.classList.remove('open'));
-    if (!isOpen) dropdown.classList.add('open');
-  });
-});
-
+/* ---- Services Dropdown (hover via CSS; JS closes on outside click) ---- */
 document.addEventListener('click', e => {
   if (!e.target.closest('.has-dropdown')) {
     document.querySelectorAll('.has-dropdown').forEach(d => d.classList.remove('open'));

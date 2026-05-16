@@ -155,6 +155,7 @@ h5 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spa
   transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
   z-index: 200;
 }
+.has-dropdown:hover .dropdown-menu,
 .has-dropdown.open .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
 .dropdown-menu a {
   display: block; padding: 10px 14px; border-radius: 6px;
@@ -602,6 +603,10 @@ h5 { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spa
 }
 .referral-block h3 { color: #fff; margin-bottom: 10px; }
 .referral-block p { color: rgba(255,255,255,.85); line-height: 1.7; }
+.referral-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin: 14px 0; }
+.referral-list-item { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: rgba(255,255,255,.92); font-weight: 500; }
+.referral-arrow { color: var(--beige); font-weight: 700; flex-shrink: 0; }
+@media (max-width: 480px) { .referral-list { grid-template-columns: 1fr; } }
 
 /* ── UTILITIES ───────────────────────────────────────────────── */
 .text-center { text-align: center; }
