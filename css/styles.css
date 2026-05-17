@@ -1,44 +1,44 @@
 /* ============================================================
    TRUSTUS Care — styles.css  (redesign-v2)
-   Navy #1C3A5E · Terracotta #C4614A · Sage #6B8C7A
+   Navy #1C2B4A · Rose #C8526A · Blush #FAE8EC
    ============================================================ */
 
 /* ── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --navy:           #1C3A5E;
-  --navy-deep:      #0F2035;
-  --forest:         #2E5445;
-  --navy-soft:      #E8EEF5;
-  --terracotta:     #C4614A;
-  --terracotta-deep:#A8503B;
-  --terracotta-soft:#F5E8E5;
-  --sage:           #6B8C7A;
-  --sage-soft:      #EBF1ED;
-  --beige:          #D9C4A8;
-  --cream:          #FDFBF8;
-  --ink:            #1A2B3C;
-  --ink-2:          #3A5268;
-  --ink-3:          #5A7080;
-  --mute:           #8A9EAC;
-  --bg:             #FDFBF8;
-  --bg-soft:        #F4F1EC;
-  --line:           #E4DED8;
-  --line-2:         #CFC9C2;
+  --navy:           #1C2B4A;
+  --navy-deep:      #111D33;
+  --forest:         #1C2B4A;
+  --navy-soft:      #E8EEF8;
+  --terracotta:     #C8526A;
+  --terracotta-deep:#b04460;
+  --terracotta-soft:#FAE8EC;
+  --sage:           #E07A90;
+  --sage-soft:      #FAE8EC;
+  --beige:          #E07A90;
+  --cream:          #FDF8F5;
+  --ink:            #2D2D2D;
+  --ink-2:          #4A4A5A;
+  --ink-3:          #717784;
+  --mute:           #9BA3AF;
+  --bg:             #FDF8F5;
+  --bg-soft:        #F6EFE9;
+  --line:           #EBE5DF;
+  --line-2:         #D4CCC6;
   --radius-sm:      6px;
   --radius:         12px;
   --radius-lg:      20px;
-  --shadow-sm:      0 2px 12px rgba(15,32,53,.07);
-  --shadow-md:      0 8px 32px rgba(15,32,53,.12);
-  --shadow-lg:      0 20px 60px rgba(15,32,53,.18);
+  --shadow-sm:      0 2px 12px rgba(28,43,74,.07);
+  --shadow-md:      0 8px 32px rgba(28,43,74,.12);
+  --shadow-lg:      0 20px 60px rgba(28,43,74,.18);
   --transition:     0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 17px;
   line-height: 1.68;
   color: var(--ink);
@@ -53,21 +53,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ── Typography ─────────────────────────────────────────────── */
 h1 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2.4rem, 5vw, 4rem);
-  font-weight: 800; line-height: 1.1; letter-spacing: -0.01em;
+  font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
 }
 h1 em { font-style: italic; color: var(--beige); }
 
 h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(1.9rem, 3.2vw, 2.7rem);
-  font-weight: 700; line-height: 1.18; letter-spacing: -0.01em;
+  font-weight: 600; line-height: 1.18; letter-spacing: -0.02em;
 }
 
-h3 { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 600; line-height: 1.3; }
-h4 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; line-height: 1.35; }
-h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; }
+h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; line-height: 1.3; }
+h4 { font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 600; line-height: 1.35; }
+h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
@@ -115,7 +115,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 .btn-primary:hover {
   background: var(--terracotta-deep);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(196,97,74,.42);
+  box-shadow: 0 12px 32px rgba(200,82,106,.42);
 }
 
 .btn-secondary {
@@ -146,7 +146,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
   background: rgba(253,251,248,.96);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
-  box-shadow: 0 1px 12px rgba(15,32,53,.06);
+  box-shadow: 0 1px 12px rgba(28,43,74,.06);
 }
 .nav-inner {
   display: flex; align-items: center; justify-content: space-between;
@@ -306,7 +306,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 .page-hero-slide.active { opacity: 1; }
 .page-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(15,32,53,.88) 0%, rgba(15,32,53,.3) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(28,43,74,.88) 0%, rgba(28,43,74,.3) 60%, transparent 100%);
   z-index: 1;
 }
 .page-hero-content {
@@ -340,8 +340,8 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 
 .service-num {
   position: absolute; top: 0; right: 16px;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 7rem; font-weight: 800;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 7rem; font-weight: 600;
   line-height: 0.85; color: var(--navy);
   opacity: 0.055; user-select: none; pointer-events: none;
   z-index: 1;
@@ -428,8 +428,8 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 .value-num {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--navy); color: #fff;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.1rem; font-weight: 700;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
 }
@@ -680,13 +680,13 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
   padding: 13px 26px; border-radius: 50px;
   font-size: 0.88rem; font-weight: 600; letter-spacing: 0.01em;
   display: inline-flex; align-items: center; gap: 8px;
-  box-shadow: 0 8px 36px rgba(196,97,74,.48);
+  box-shadow: 0 8px 36px rgba(200,82,106,.48);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 .float-cta:hover {
   background: var(--terracotta-deep);
   transform: translateY(-3px);
-  box-shadow: 0 16px 48px rgba(196,97,74,.58);
+  box-shadow: 0 16px 48px rgba(200,82,106,.58);
 }
 
 /* ── UTILITIES ───────────────────────────────────────────────── */
