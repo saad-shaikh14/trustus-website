@@ -247,7 +247,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 }
 
 .hero-left {
-  background: #ffffff;
+  background: var(--sage-soft);
   display: flex; align-items: center;
   padding: 88px 72px 88px 80px;
   position: relative;
@@ -256,7 +256,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
   content: '';
   position: absolute; top: 0; right: -32px;
   width: 64px; height: 100%;
-  background: #ffffff;
+  background: var(--sage-soft);
   clip-path: polygon(0 0, 0 100%, 100% 100%);
   z-index: 2;
 }
