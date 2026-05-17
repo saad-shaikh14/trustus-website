@@ -9,6 +9,7 @@
 :root {
   --navy:           #1C3A5E;
   --navy-deep:      #0F2035;
+  --forest:         #2E5445;
   --navy-soft:      #E8EEF5;
   --terracotta:     #C4614A;
   --terracotta-deep:#A8503B;
@@ -246,7 +247,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 }
 
 .hero-left {
-  background: var(--navy);
+  background: #ffffff;
   display: flex; align-items: center;
   padding: 88px 72px 88px 80px;
   position: relative;
@@ -255,7 +256,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
   content: '';
   position: absolute; top: 0; right: -32px;
   width: 64px; height: 100%;
-  background: var(--navy);
+  background: #ffffff;
   clip-path: polygon(0 0, 0 100%, 100% 100%);
   z-index: 2;
 }
@@ -273,20 +274,20 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 .hero-overlay { display: none; }
 
 .hero-content { position: relative; z-index: 1; }
-.hero-content .eyebrow { color: var(--beige); }
-.hero-content .eyebrow::before { background: var(--beige); }
-.hero-content h1 { color: #fff; margin-bottom: 22px; }
-.hero-content p { color: rgba(255,255,255,.75); font-size: 1.05rem; max-width: 520px; margin-bottom: 36px; line-height: 1.72; }
+.hero-content .eyebrow { color: var(--terracotta); }
+.hero-content .eyebrow::before { background: var(--terracotta); }
+.hero-content h1 { color: var(--navy); margin-bottom: 22px; }
+.hero-content p { color: var(--ink-2); font-size: 1.05rem; max-width: 520px; margin-bottom: 36px; line-height: 1.72; }
 
 .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 44px; }
 
 .hero-trust {
   display: flex; gap: 24px; flex-wrap: wrap;
-  padding-top: 32px; border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 32px; border-top: 1px solid var(--line);
 }
 .hero-trust-item {
   display: flex; align-items: center; gap: 7px;
-  font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,.6);
+  font-size: 0.82rem; font-weight: 600; color: var(--ink-3);
   letter-spacing: 0.01em;
 }
 .hero-trust-item svg { color: var(--terracotta); flex-shrink: 0; }
@@ -518,7 +519,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 }
 
 /* ── CTA DARK ────────────────────────────────────────────────── */
-.cta-dark { background: var(--navy); padding: 88px 0; }
+.cta-dark { background: var(--forest); padding: 88px 0; }
 .cta-dark-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
 .cta-text h2 { color: #fff; margin-bottom: 16px; }
 .cta-text p { color: rgba(255,255,255,.7); font-size: 1rem; line-height: 1.75; margin-bottom: 28px; }
@@ -557,7 +558,7 @@ h5 { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700; tex
 .form-group textarea { resize: vertical; min-height: 100px; }
 
 /* ── FOOTER ─────────────────────────────────────────────────── */
-.footer { background: var(--navy); padding: 72px 0 0; }
+.footer { background: var(--forest); padding: 72px 0 0; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; padding-bottom: 52px; }
 
 .footer-logo-img {
