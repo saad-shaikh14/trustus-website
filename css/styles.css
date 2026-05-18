@@ -83,7 +83,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
 /* ── Layout ─────────────────────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
-.section    { padding: 64px 0; }
+.section    { padding: 40px 0; }
 .section-sm { padding: 64px 0; }
 
 .section-navy {
@@ -386,7 +386,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
 /* ── SERVICE CARDS ──────────────────────────────────────────── */
 .services-section { background: var(--bg); }
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 24px; }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 0; }
 
 .service-card {
   background: #fff; border-radius: var(--radius-lg); overflow: hidden;
