@@ -352,10 +352,15 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 }
 .hero-trust-item svg { color: var(--terracotta); flex-shrink: 0; }
 
+/* Hero services list (domiciliary page) */
+.hero-services-label { font-weight: 700; color: var(--navy); margin-top: 18px; margin-bottom: 8px; font-size: 0.97rem; }
+.hero-checklist { max-width: 560px; }
+.hero-checklist li { color: var(--navy); font-size: 0.93rem; }
+
 /* Page hero (inner pages) */
 .page-hero {
   position: relative; overflow: hidden;
-  min-height: 340px; display: flex; align-items: flex-end;
+  min-height: 480px; display: flex; align-items: flex-end;
 }
 .page-hero-slides { position: absolute; inset: 0; z-index: 0; }
 .page-hero-slide {
