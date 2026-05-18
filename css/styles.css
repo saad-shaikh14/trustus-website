@@ -258,7 +258,6 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .hero.hero-full {
   display: block;
   position: relative;
-  min-height: 680px;
   overflow: hidden;
 }
 .hero-full .hero-slides {
