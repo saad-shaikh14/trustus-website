@@ -71,8 +71,8 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
-  font-size: 0.9rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 1.1rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.12em;
   color: var(--terracotta); margin-bottom: 16px;
 }
 .eyebrow::before {
