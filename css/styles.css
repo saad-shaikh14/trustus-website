@@ -267,7 +267,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   inset: 0;
   z-index: 0;
 }
-.hero-full .hero-slide { opacity: 0; transition: opacity 1.4s ease; }
+.hero-full .hero-slide { opacity: 0; transition: opacity 1.4s ease; background-position: center top; }
 .hero-full .hero-slide.active { opacity: 0.5; }
 .hero-full .hero-overlay {
   display: block;
