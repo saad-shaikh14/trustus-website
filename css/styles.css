@@ -53,14 +53,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ── Typography ─────────────────────────────────────────────── */
 h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Nunito', sans-serif;
   font-size: clamp(2.4rem, 5vw, 4rem);
   font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
 }
 h1 em { font-style: italic; color: var(--beige); }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Nunito', sans-serif;
   font-size: clamp(1.9rem, 3.2vw, 2.7rem);
   font-weight: 600; line-height: 1.18; letter-spacing: -0.02em;
 }
@@ -406,7 +406,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
 .service-num {
   position: absolute; top: 0; right: 16px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 7rem; font-weight: 600;
   line-height: 0.85; color: var(--navy);
   opacity: 0.055; user-select: none; pointer-events: none;
@@ -502,7 +502,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .value-num {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--navy); color: #fff;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Nunito', sans-serif;
   font-size: 1.1rem; font-weight: 600;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 16px;
