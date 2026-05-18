@@ -259,7 +259,6 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   display: block;
   position: relative;
   min-height: auto;
-  padding: 64px 0;
   overflow: hidden;
 }
 .hero-full .hero-slides {
@@ -268,13 +267,12 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   z-index: 0;
 }
 .hero-full .hero-slide { opacity: 0; transition: opacity 1.4s ease; background-position: center top; }
-.hero-full .hero-slide.active { opacity: 0.5; }
+.hero-full .hero-slide.active { opacity: 1; }
 .hero-full .hero-overlay {
   display: block;
   position: absolute;
   inset: 0;
-  background: var(--terracotta-soft);
-  opacity: 0.72;
+  background: rgba(250, 232, 236, 0.62);
   z-index: 1;
 }
 .hero-full-content {
@@ -286,7 +284,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   text-align: left;
   max-width: 680px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 52px 48px;
 }
 .hero-full-content h1 { color: var(--navy); margin-bottom: 24px; }
 .hero-full-content .eyebrow { color: var(--terracotta); }
