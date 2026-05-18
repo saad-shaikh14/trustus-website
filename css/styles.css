@@ -259,6 +259,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   display: block;
   position: relative;
   min-height: auto;
+  padding: 64px 0;
   overflow: hidden;
 }
 .hero-full .hero-slides {
@@ -285,7 +286,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   text-align: left;
   max-width: 680px;
   margin: 0 auto;
-  padding: 48px 48px 40px;
+  padding: 0 48px;
 }
 .hero-full-content h1 { color: var(--navy); margin-bottom: 24px; }
 .hero-full-content .eyebrow { color: var(--terracotta); }
