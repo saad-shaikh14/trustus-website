@@ -366,7 +366,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .page-hero-slide.active { opacity: 1; }
 .page-hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(28,43,74,.88) 0%, rgba(28,43,74,.3) 60%, transparent 100%);
+  background: rgba(250, 232, 236, 0.85);
   z-index: 1;
 }
 .page-hero-content {
@@ -382,8 +382,8 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .breadcrumb a { color: rgba(255,255,255,.6); transition: color var(--transition); }
 .breadcrumb a:hover { color: #fff; }
 .breadcrumb-sep { color: rgba(255,255,255,.35); }
-.page-hero-content h1 { color: #fff; font-size: clamp(2rem, 4vw, 3rem); }
-.page-hero-content p { color: rgba(255,255,255,.78); margin-top: 10px; font-size: 1.05rem; max-width: 560px; }
+.page-hero-content h1 { color: var(--navy); font-size: clamp(2rem, 4vw, 3rem); }
+.page-hero-content p { color: var(--ink-2); margin-top: 10px; font-size: 1.05rem; max-width: 560px; }
 
 /* ── SERVICE CARDS ──────────────────────────────────────────── */
 .services-section { background: var(--bg); }
@@ -442,10 +442,17 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .icon-box p { font-size: 0.88rem; color: var(--ink-3); line-height: 1.62; }
 
 /* ── PROCESS STEPS (How It Works) ───────────────────────────── */
-.process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 60px; }
-.process-step { text-align: left; }
+.process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 60px; }
+.process-step {
+  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px;
+  text-align: center; box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--terracotta);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.process-step:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.process-step-icon { margin: 0 auto 24px; }
 .step-num { display: none; }
-.process-step-icon { width: 96px; height: 96px; margin-bottom: 24px; }
+.process-step-icon { width: 150px; height: 150px; margin-bottom: 24px; }
 .process-step-icon img { width: 100%; height: 100%; object-fit: contain; }
 .process-step-icon svg { width: 100%; height: 100%; }
 .process-step h4 { margin-bottom: 12px; font-size: 1.1rem; }
@@ -463,10 +470,11 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .support-card {
   background: #fff; border-radius: var(--radius-lg); padding: 30px 24px; text-align: center;
   box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--terracotta);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .support-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-.support-card img { width: 64px; height: 64px; object-fit: contain; margin: 0 auto 14px; }
+.support-card img { width: 110px; height: 110px; object-fit: contain; margin: 0 auto 14px; }
 .support-card h4 { color: var(--navy); font-size: 0.97rem; margin-bottom: 8px; }
 .support-card p { font-size: 0.85rem; color: var(--ink-3); line-height: 1.6; }
 
