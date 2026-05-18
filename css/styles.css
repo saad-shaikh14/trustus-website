@@ -283,23 +283,19 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  max-width: 900px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 80px 48px;
+  padding: 56px 48px;
 }
-.hero-full-content h1 {
-  color: var(--navy);
-  font-size: clamp(3rem, 6vw, 5.2rem);
-  margin-bottom: 28px;
-}
+.hero-full-content h1 { color: var(--navy); margin-bottom: 24px; }
 .hero-full-content .eyebrow { color: var(--terracotta); }
 .hero-lead,
 .hero-body {
-  font-size: 1.15rem; color: var(--navy);
+  font-size: 1rem; color: var(--navy);
   font-family: 'Nunito', sans-serif; font-weight: 500;
-  max-width: 740px; line-height: 1.78;
+  max-width: 100%; line-height: 1.78;
 }
-.hero-lead { margin-bottom: 16px; }
+.hero-lead { margin-bottom: 14px; }
 .hero-body { margin-bottom: 0; }
 
 /* icon-box SVG icon support (How It Works) */
