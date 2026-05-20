@@ -35,7 +35,7 @@
   --transition:     0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; overflow-x: hidden; }
 
 body {
   font-family: 'Nunito', sans-serif;
@@ -44,6 +44,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img { max-width: 100%; display: block; }
@@ -435,7 +436,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
 .icon-box {
   background: #fff; border-radius: var(--radius-lg); padding: 32px 26px;
-  text-align: center;
+  text-align: center; min-width: 0;
   box-shadow: var(--shadow-sm);
   border-top: 3px solid var(--terracotta);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -449,7 +450,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 60px; }
 .process-step {
   background: #fff; border-radius: var(--radius-lg); padding: 32px 26px;
-  text-align: center; box-shadow: var(--shadow-sm);
+  text-align: center; min-width: 0; box-shadow: var(--shadow-sm);
   border-top: 3px solid var(--terracotta);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -472,7 +473,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 /* ── SUPPORT / WHO WE SUPPORT ───────────────────────────────── */
 .support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
 .support-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px; text-align: center;
+  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px; text-align: center; min-width: 0;
   box-shadow: var(--shadow-sm);
   border-top: 3px solid var(--terracotta);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -485,7 +486,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 /* ── VALUES / WHY CHOOSE US ─────────────────────────────────── */
 .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
 .value-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px;
+  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px; min-width: 0;
   border-top: 3px solid var(--terracotta);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
@@ -537,7 +538,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 24px;
 }
 .check-card {
-  display: flex; align-items: center; gap: 14px;
+  display: flex; align-items: center; gap: 14px; min-width: 0;
   background: #fff; border-radius: var(--radius-lg);
   border-top: 3px solid var(--terracotta);
   box-shadow: var(--shadow-sm); padding: 24px 22px;
@@ -882,6 +883,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
   /* page hero */
   .page-hero-content  { padding: 28px 16px; }
+  .hero-checklist     { columns: 1; }
 
   /* eyebrow */
   .eyebrow { font-size: 0.95rem; }
