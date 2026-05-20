@@ -37,7 +37,7 @@ function initSlideshow(containerSelector, interval) {
   });
 }
 
-initSlideshow('.hero-slides', 5000);
+initSlideshow('.hero-slides', 3000);
 initSlideshow('.page-hero-slides', 5000);
 
 /* ---- Property Gallery + Lightbox ---- */
