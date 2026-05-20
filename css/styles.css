@@ -7,9 +7,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --navy:           #1C2B4A;
+  --navy:           #111111;
   --navy-deep:      #111D33;
-  --forest:         #1C2B4A;
+  --forest:         #111111;
   --navy-soft:      #E8EEF8;
   --terracotta:     #C8526A;
   --terracotta-deep:#b04460;
@@ -18,10 +18,10 @@
   --sage-soft:      #FAE8EC;
   --beige:          #E07A90;
   --cream:          #FDF8F5;
-  --ink:            #2D2D2D;
-  --ink-2:          #4A4A5A;
-  --ink-3:          #717784;
-  --mute:           #9BA3AF;
+  --ink:            #111111;
+  --ink-2:          #333333;
+  --ink-3:          #555555;
+  --mute:           #777777;
   --bg:             #FDF8F5;
   --bg-soft:        #F6EFE9;
   --line:           #EBE5DF;
