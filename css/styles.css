@@ -388,7 +388,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .breadcrumb a:hover { color: #fff; }
 .breadcrumb-sep { color: rgba(255,255,255,.35); }
 .page-hero-content h1 { color: var(--navy); font-size: clamp(2rem, 4vw, 3rem); }
-.page-hero-content p { color: var(--ink-2); margin-top: 10px; font-size: 1.05rem; max-width: 560px; }
+.page-hero-content p { color: var(--ink-2); margin-top: 10px; font-size: 1.05rem; }
 
 /* ── SERVICE CARDS ──────────────────────────────────────────── */
 .services-section { background: var(--bg); }
