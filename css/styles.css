@@ -888,6 +888,8 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
   /* grids → 1 column */
   .services-grid      { grid-template-columns: 1fr; }
+  .icon-boxes-4       { grid-template-columns: 1fr; }
+  .icon-boxes-6       { grid-template-columns: 1fr; }
   .support-grid       { grid-template-columns: 1fr; }
   .values-grid        { grid-template-columns: 1fr; }
   .check-cards-grid   { grid-template-columns: 1fr; gap: 12px; }
