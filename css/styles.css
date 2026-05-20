@@ -543,6 +543,25 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   border-radius: 50%; margin-top: 2px;
 }
 
+/* ── CHECK CARDS GRID ───────────────────────────────────────── */
+.check-cards-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px;
+}
+.check-card {
+  display: flex; align-items: center; gap: 14px;
+  background: #fff; border-radius: var(--radius);
+  border-top: 3px solid var(--terracotta);
+  box-shadow: var(--shadow-sm); padding: 18px 22px;
+  font-size: 0.95rem; font-weight: 600; color: var(--ink-2);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.check-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.check-card::before {
+  content: ''; width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
+  background: var(--terracotta) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/12px no-repeat;
+}
+@media (max-width: 600px) { .check-cards-grid { grid-template-columns: 1fr; } }
+
 /* ── PROPERTY SECTION ────────────────────────────────────────── */
 .property-block {
   display: grid; grid-template-columns: 1fr 1fr; gap: 56px;
