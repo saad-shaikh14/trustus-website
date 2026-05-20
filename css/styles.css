@@ -285,7 +285,6 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   font-family: 'Nunito', sans-serif;
   color: var(--navy);
   font-size: clamp(2rem, 3.5vw, 2.8rem);
-  max-width: 620px;
   margin-bottom: 22px;
 }
 .hero-full-content .eyebrow { color: var(--terracotta); }
@@ -293,7 +292,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .hero-body {
   font-size: 1rem; color: var(--navy);
   font-family: 'Nunito', sans-serif; font-weight: 500;
-  max-width: 560px; line-height: 1.8;
+  line-height: 1.8;
 }
 .hero-lead { margin-bottom: 16px; }
 .hero-body { margin-bottom: 0; }
