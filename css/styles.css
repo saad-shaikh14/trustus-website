@@ -486,27 +486,12 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 /* ── VALUES / WHY CHOOSE US ─────────────────────────────────── */
 .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
 .value-card {
-  background: #fff; border-radius: var(--radius-lg); padding: 34px 28px;
+  background: #fff; border-radius: var(--radius-lg); padding: 32px 26px;
+  border-top: 3px solid var(--terracotta);
   box-shadow: var(--shadow-sm);
-  position: relative; overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.value-card::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, var(--terracotta), var(--navy));
-  transform: scaleX(0); transform-origin: left;
-  transition: transform 0.35s ease;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 .value-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
-.value-card:hover::after { transform: scaleX(1); }
-.value-num {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--navy); color: #fff;
-  font-family: 'Nunito', sans-serif;
-  font-size: 1.1rem; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 16px;
-}
 .value-card h4 { color: var(--navy); margin-bottom: 10px; }
 .value-card p { font-size: 0.88rem; color: var(--ink-3); line-height: 1.66; }
 
