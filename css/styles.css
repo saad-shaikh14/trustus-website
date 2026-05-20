@@ -797,7 +797,6 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   .hero-left { padding: 72px 48px; }
   .hero-left::after { display: none; }
   .icon-boxes-4       { grid-template-columns: repeat(2, 1fr); }
-  .services-grid      { grid-template-columns: repeat(2, 1fr); }
   .footer-grid        { grid-template-columns: 1fr 1fr; gap: 28px; }
   .contact-info-grid  { grid-template-columns: repeat(2, 1fr); }
   .values-grid        { grid-template-columns: repeat(2, 1fr); }
@@ -834,15 +833,21 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
   .about-img img  { height: 260px; }
   .about-img::after { display: none; }
 
-  /* grids → 2 columns */
-  .services-grid      { grid-template-columns: 1fr; }
+  /* grids */
+  .services-grid      { grid-template-columns: repeat(3, 1fr); }
   .icon-boxes-4       { grid-template-columns: 1fr 1fr; }
   .icon-boxes-6       { grid-template-columns: 1fr 1fr; }
   .support-grid       { grid-template-columns: 1fr 1fr; }
   .values-grid        { grid-template-columns: 1fr 1fr; }
   .check-cards-grid   { grid-template-columns: 1fr 1fr; gap: 16px; }
-  .process-grid       { grid-template-columns: 1fr; gap: 20px; }
+  .process-grid       { grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .contact-info-grid  { grid-template-columns: 1fr 1fr; }
+
+  /* reduce icon & card size at tablet */
+  .process-step       { padding: 24px 16px; }
+  .process-step-icon  { width: 80px; height: 80px; }
+  .support-card img,
+  .icon-box img       { width: 90px; height: 90px; }
 
   /* forms */
   .cta-dark-inner { grid-template-columns: 1fr; gap: 36px; }
@@ -877,17 +882,16 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 
   /* page hero */
   .page-hero-content  { padding: 28px 16px; }
-  .hero-checklist     { columns: 1; }
 
   /* eyebrow */
   .eyebrow { font-size: 0.95rem; }
 
   /* grids → 1 column */
-  .icon-boxes-4       { grid-template-columns: 1fr; }
-  .icon-boxes-6       { grid-template-columns: 1fr; }
+  .services-grid      { grid-template-columns: 1fr; }
   .support-grid       { grid-template-columns: 1fr; }
   .values-grid        { grid-template-columns: 1fr; }
   .check-cards-grid   { grid-template-columns: 1fr; gap: 12px; }
+  .process-grid       { grid-template-columns: 1fr; gap: 14px; }
 
   /* card padding reduction */
   .check-card         { padding: 16px 18px; }
