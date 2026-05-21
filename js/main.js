@@ -107,6 +107,36 @@ document.querySelectorAll('.property-gallery-block').forEach(block => {
   });
 });
 
+/* ---- Contact Form (formsubmit.co) ---- */
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = contactForm.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    const data = Object.fromEntries(new FormData(contactForm));
+    data._subject = 'New TRUSTUS Care Enquiry';
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.co.uk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        contactForm.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else {
+        throw new Error('Server error');
+      }
+    } catch {
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again or call us on +44 7712 736233.');
+    }
+  });
+}
+
 /* ---- Stat Counter Animation ---- */
 function animateCounters() {
   document.querySelectorAll('[data-count]').forEach(el => {

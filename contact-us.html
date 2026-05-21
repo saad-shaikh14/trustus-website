@@ -146,7 +146,16 @@
       <span class="eyebrow">Send a Message</span>
     </div>
     <div class="contact-form-wrap" style="margin-top:40px;">
-      <form>
+
+      <!-- Success message (hidden until form submitted) -->
+      <div id="formSuccess" style="display:none;text-align:center;padding:3rem 1rem">
+        <div style="font-size:2.5rem;margin-bottom:1rem">&#10003;</div>
+        <h3 style="font-size:1.3rem;font-weight:600;margin-bottom:0.6rem;color:var(--sage)">Message Received</h3>
+        <p style="font-size:0.95rem;color:var(--text-muted);line-height:1.75;max-width:380px;margin:0 auto">Thank you for getting in touch. A member of our team will respond to you within one working day.</p>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem">For urgent matters, call us on <a href="tel:+447712736233" style="color:var(--sage);font-weight:600">+44 7712 736233</a></p>
+      </div>
+
+      <form id="contactForm">
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First name *</label>
