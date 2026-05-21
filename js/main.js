@@ -118,7 +118,7 @@ if (contactForm) {
     const data = Object.fromEntries(new FormData(contactForm));
     data._subject = 'New TRUSTUS Care Enquiry';
     try {
-      const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.co.uk', {
+      const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
