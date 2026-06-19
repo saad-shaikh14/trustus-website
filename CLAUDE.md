@@ -29,7 +29,7 @@ gh CLI is at `C:\Program Files\GitHub CLI\gh.exe` — add to PATH in PowerShell:
 > Stanmore and Monica are each ONE property with multiple rooms — never split into separate fake addresses.
 
 ## Contact details
-- Phone: +44 7879 436849
+- Phone: 020 3411 1218 (landline, updated 2026-06-19)
 - Email: info@trustuscare.com
 - Address: Office G24, 47 Clarendon Road, Watford, Hertfordshire, WD17 1HP
 
@@ -94,8 +94,17 @@ All card types (`.icon-box`, `.support-card`, `.process-step`) share identical s
 - Use HTML entities for all special chars: `&mdash;` `&middot;` `&rarr;` `&#9662;` `&times;`
 - No BOM — files must be saved as plain UTF-8
 
-## Nav dropdown
-3 items only: Domiciliary Care, Supported Living, Complex Care
+## Nav
+Top-level items: Home, Our Services (dropdown), About Us, Contact Us, Careers
+Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3 items only)
+
+## Careers page
+- File: `careers.html`
+- Expression of interest form — `id="careersForm"`, success div `id="careersSuccess"`
+- JS handler in `js/main.js` — POSTs to formsubmit.co, subject "New Career Enquiry — [role]"
+- Roles: Care Coordinator, Field Care Worker, Learning Disability Support Worker
+- Fields: firstName, lastName, phone (required), email (required), role (required)
+- When full job portal is ready, replace this page with links to the portal
 
 ## Contact form backend
 - **Service:** formsubmit.co (free, no backend)

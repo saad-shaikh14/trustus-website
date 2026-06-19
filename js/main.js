@@ -132,7 +132,37 @@ if (contactForm) {
     } catch {
       btn.textContent = 'Send Message';
       btn.disabled = false;
-      alert('Something went wrong. Please try again or call us on +44 7712 736233.');
+      alert('Something went wrong. Please try again or call us on 020 3411 1218.');
+    }
+  });
+}
+
+/* ---- Careers Form (formsubmit.co) ---- */
+const careersForm = document.getElementById('careersForm');
+if (careersForm) {
+  careersForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = careersForm.querySelector('button[type="submit"]');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+    const data = Object.fromEntries(new FormData(careersForm));
+    data._subject = 'New Career Enquiry — ' + (data.role || 'Role not specified');
+    try {
+      const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        careersForm.style.display = 'none';
+        document.getElementById('careersSuccess').style.display = 'block';
+      } else {
+        throw new Error('Server error');
+      }
+    } catch {
+      btn.textContent = 'Submit Interest';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again or call us on 020 3411 1218.');
     }
   });
 }
