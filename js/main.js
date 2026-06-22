@@ -145,13 +145,13 @@ if (careersForm) {
     const btn = careersForm.querySelector('button[type="submit"]');
     btn.textContent = 'Submitting…';
     btn.disabled = true;
-    const data = Object.fromEntries(new FormData(careersForm));
-    data._subject = 'New Career Enquiry — ' + (data.role || 'Role not specified');
+    const fd = new FormData(careersForm);
+    fd.append('_subject', 'New Career Enquiry — ' + (fd.get('role') || 'Role not specified'));
     try {
       const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
+        headers: { 'Accept': 'application/json' },
+        body: fd
       });
       if (res.ok) {
         careersForm.style.display = 'none';

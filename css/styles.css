@@ -753,6 +753,7 @@ h5 { font-family: 'Nunito', sans-serif; font-size: 0.72rem; font-weight: 700; te
 .contact-form-wrap .form-group select:focus,
 .contact-form-wrap .form-group textarea:focus { outline: none; border-color: var(--terracotta); }
 .contact-form-wrap .form-group textarea { resize: vertical; min-height: 130px; }
+.contact-form-wrap .form-group input[type="file"] { padding: 9px 12px; cursor: pointer; }
 
 .referral-block {
   background: var(--sage); padding: 44px;
