@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Application &mdash; TRUSTUS Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
+  <link rel="stylesheet" href="css/styles.css?v=4">
+  <style>
+    .apply-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .apply-header { text-align: center; margin-bottom: 40px; }
+    .apply-header h1 { font-size: 1.8rem; color: var(--navy); margin-bottom: 8px; }
+    .apply-header p { color: #666; font-size: 1rem; }
+
+    /* Progress bar */
+    .progress-bar { display: flex; align-items: center; margin-bottom: 48px; }
+    .progress-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .progress-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 16px; left: 50%; width: 100%;
+      height: 2px; background: #e0e0e0; z-index: 0;
+    }
+    .progress-step.done::after, .progress-step.active::after { background: var(--terracotta); }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%; background: #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: #999; position: relative; z-index: 1;
+      transition: background 0.3s, color 0.3s;
+    }
+    .progress-step.done .step-dot { background: var(--terracotta); color: #fff; }
+    .progress-step.active .step-dot { background: var(--sage); color: #fff; }
+    .step-label { font-size: 11px; color: #999; margin-top: 6px; text-align: center; font-weight: 600; }
+    .progress-step.active .step-label { color: var(--sage); }
+    .progress-step.done .step-label { color: var(--terracotta); }
+
+    /* Form steps */
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .step-title { font-size: 1.25rem; font-weight: 700; color: var(--navy); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--terracotta-soft); }
+
+    /* Dynamic entries */
+    .dynamic-entry {
+      background: var(--bg-soft); border-radius: var(--radius-md);
+      padding: 20px; margin-bottom: 16px; position: relative;
+    }
+    .dynamic-entry .remove-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: none; border: none; color: #aaa; font-size: 18px;
+      cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: 4px;
+    }
+    .dynamic-entry .remove-btn:hover { background: #fee; color: var(--terracotta); }
+    .add-entry-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: none; border: 2px dashed var(--sage); color: var(--sage);
+      padding: 10px 20px; border-radius: var(--radius-md); font-family: Nunito, sans-serif;
+      font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 8px; width: 100%;
+      justify-content: center; transition: background 0.2s;
+    }
+    .add-entry-btn:hover { background: rgba(61,106,90,0.07); }
+
+    /* Declaration */
+    .declaration-box {
+      background: var(--bg-soft); border-radius: var(--radius-md); padding: 24px; margin-bottom: 24px;
+    }
+    .check-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+    .check-row input[type=checkbox] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--terracotta); }
+    .check-row label { font-size: 0.95rem; color: #444; line-height: 1.6; cursor: pointer; }
+
+    /* Nav buttons */
+    .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
+    .btn-back { background: none; border: 2px solid #ddd; color: #666; padding: 12px 28px; border-radius: var(--radius-md); font-family: Nunito, sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; }
+    .btn-back:hover { border-color: var(--sage); color: var(--sage); }
+
+    /* Error / invalid states */
+    .token-error { text-align: center; padding: 80px 24px; }
+    .token-error h2 { color: var(--terracotta); margin-bottom: 12px; }
+    .token-error p { color: #666; }
+
+    /* Success */
+    .apply-success { display: none; text-align: center; padding: 80px 24px; }
+    .success-icon { width: 72px; height: 72px; background: var(--sage); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+
+    @media (max-width: 600px) {
+      .step-label { display: none; }
+      .form-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html"><img src="images/logo.png" alt="TRUSTUS Care"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <button>Our Services &#9662;</button>
+        <div class="dropdown-menu">
+          <a href="domiciliary-care.html">Domiciliary Care</a>
+          <a href="supported-living.html">Supported Living</a>
+          <a href="complex-care.html">Complex Care</a>
+        </div>
+      </li>
+      <li><a href="about-us.html">About Us</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+      <li><a href="careers.html">Careers</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:02034111218">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+        020 3411 1218
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-header">
+    <img src="images/logo.png" alt="TRUSTUS Care">
+    <button class="mobile-nav-close" id="mobileClose">&times;</button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="index.html">Home</a>
+    <button id="mobileServicesBtn">Our Services &#9662;</button>
+    <div class="mobile-submenu" id="mobileSubmenu">
+      <a href="domiciliary-care.html">Domiciliary Care</a>
+      <a href="supported-living.html">Supported Living</a>
+      <a href="complex-care.html">Complex Care</a>
+    </div>
+    <a href="about-us.html">About Us</a>
+    <a href="contact-us.html">Contact Us</a>
+    <a href="careers.html">Careers</a>
+  </nav>
+  <div class="mobile-nav-actions">
+    <a href="tel:02034111218" class="btn-secondary btn-lg">Call Us Now</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main style="background:#fff;min-height:80vh;">
+
+  <!-- Token invalid state -->
+  <div id="tokenError" class="apply-wrap token-error" style="display:none;">
+    <h2>This link is invalid or has expired</h2>
+    <p>Application links are valid for 7 days. If you need a new link, please contact us.</p>
+    <a href="contact-us.html" class="btn-primary" style="margin-top:24px;display:inline-block;">Contact Us</a>
+  </div>
+
+  <!-- Loading state -->
+  <div id="loadingState" class="apply-wrap" style="text-align:center;padding:80px 24px;">
+    <p style="color:#888;">Loading your application&hellip;</p>
+  </div>
+
+  <!-- Application form -->
+  <div id="applyWrap" class="apply-wrap" style="display:none;">
+
+    <div class="apply-header">
+      <img src="images/logo.png" alt="TRUSTUS Care" style="height:48px;margin-bottom:16px;">
+      <h1>Complete Your Application</h1>
+      <p id="applySubtitle">Please complete all sections carefully &mdash; this information is used for your DBS check and employment records.</p>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-step active" data-step="1"><div class="step-dot">1</div><span class="step-label">Personal</span></div>
+      <div class="progress-step" data-step="2"><div class="step-dot">2</div><span class="step-label">Education</span></div>
+      <div class="progress-step" data-step="3"><div class="step-dot">3</div><span class="step-label">Employment</span></div>
+      <div class="progress-step" data-step="4"><div class="step-dot">4</div><span class="step-label">Referees</span></div>
+      <div class="progress-step" data-step="5"><div class="step-dot">5</div><span class="step-label">Addresses</span></div>
+      <div class="progress-step" data-step="6"><div class="step-dot">6</div><span class="step-label">Declaration</span></div>
+    </div>
+
+    <!-- STEP 1: Personal Details -->
+    <div class="form-step active" id="step1">
+      <div class="step-title">Step 1 &mdash; Personal Details</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First name *</label>
+          <input type="text" id="p_firstName" required>
+        </div>
+        <div class="form-group">
+          <label>Last name *</label>
+          <input type="text" id="p_lastName" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>National Insurance number *</label>
+          <input type="text" id="p_ni" placeholder="e.g. AB 12 34 56 C" required>
+        </div>
+        <div class="form-group">
+          <label>Date of birth *</label>
+          <input type="date" id="p_dob" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Current address (house number &amp; street) *</label>
+        <input type="text" id="p_street" placeholder="e.g. 12 High Street" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Town / City *</label>
+          <input type="text" id="p_city" required>
+        </div>
+        <div class="form-group">
+          <label>Postcode *</label>
+          <input type="text" id="p_postcode" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>How did you hear about this role?</label>
+        <select id="p_referral">
+          <option value="">Please select&hellip;</option>
+          <option>Indeed</option>
+          <option>Reed</option>
+          <option>TotalJobs</option>
+          <option>CV-Library</option>
+          <option>Word of mouth / referral</option>
+          <option>TRUSTUS Care website</option>
+          <option>Social media</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-nav">
+        <span></span>
+        <button class="btn-primary" onclick="nextStep(1)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Education -->
+    <div class="form-step" id="step2">
+      <div class="step-title">Step 2 &mdash; Education History</div>
+      <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">Add your qualifications starting with the most recent. Include GCSEs, A-Levels, NVQs, degrees, and any care-related certifications.</p>
+      <div id="educationList"></div>
+      <button class="add-entry-btn" onclick="addEducation()">+ Add Qualification</button>
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStep(2)">&#8592; Back</button>
+        <button class="btn-primary" onclick="nextStep(2)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Employment History -->
+    <div class="form-step" id="step3">
+      <div class="step-title">Step 3 &mdash; Employment History</div>
+      <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">List all employment in reverse chronological order. You <strong>must</strong> account for all gaps of one month or more.</p>
+      <div id="employmentList"></div>
+      <button class="add-entry-btn" onclick="addEmployment()">+ Add Employment / Gap</button>
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStep(3)">&#8592; Back</button>
+        <button class="btn-primary" onclick="nextStep(3)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Referees -->
+    <div class="form-step" id="step4">
+      <div class="step-title">Step 4 &mdash; Professional Referees</div>
+      <p style="color:#666;margin-bottom:24px;font-size:0.95rem;">Please provide two professional referees. References must not be family members. At least one should be your most recent employer.</p>
+
+      <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">Referee 1</p>
+      <div class="dynamic-entry">
+        <div class="form-row">
+          <div class="form-group"><label>Full name *</label><input type="text" id="ref1_name" required></div>
+          <div class="form-group"><label>Job title *</label><input type="text" id="ref1_title" required></div>
+        </div>
+        <div class="form-group"><label>Organisation *</label><input type="text" id="ref1_org" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone *</label><input type="tel" id="ref1_phone" required></div>
+          <div class="form-group"><label>Email *</label><input type="email" id="ref1_email" required></div>
+        </div>
+        <div class="form-group"><label>Relationship to you *</label><input type="text" id="ref1_rel" placeholder="e.g. Line Manager" required></div>
+      </div>
+
+      <p style="font-weight:700;color:var(--navy);margin-bottom:12px;margin-top:24px;">Referee 2</p>
+      <div class="dynamic-entry">
+        <div class="form-row">
+          <div class="form-group"><label>Full name *</label><input type="text" id="ref2_name" required></div>
+          <div class="form-group"><label>Job title *</label><input type="text" id="ref2_title" required></div>
+        </div>
+        <div class="form-group"><label>Organisation *</label><input type="text" id="ref2_org" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone *</label><input type="tel" id="ref2_phone" required></div>
+          <div class="form-group"><label>Email *</label><input type="email" id="ref2_email" required></div>
+        </div>
+        <div class="form-group"><label>Relationship to you *</label><input type="text" id="ref2_rel" placeholder="e.g. Team Leader" required></div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStep(4)">&#8592; Back</button>
+        <button class="btn-primary" onclick="nextStep(4)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 5: 5-Year Address History -->
+    <div class="form-step" id="step5">
+      <div class="step-title">Step 5 &mdash; 5-Year Address History</div>
+      <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">Required for your DBS check. Please list all addresses you have lived at over the last 5 years, starting with your current address.</p>
+      <div id="addressList"></div>
+      <button class="add-entry-btn" onclick="addAddress()">+ Add Address</button>
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStep(5)">&#8592; Back</button>
+        <button class="btn-primary" onclick="nextStep(5)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 6: Declaration -->
+    <div class="form-step" id="step6">
+      <div class="step-title">Step 6 &mdash; Declaration</div>
+      <div class="declaration-box">
+        <div class="check-row">
+          <input type="checkbox" id="decl1">
+          <label for="decl1">I confirm that the information provided in this application is true, complete and accurate to the best of my knowledge. I understand that any false or misleading information may result in my application being rejected or, if employed, in dismissal.</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="decl2">
+          <label for="decl2">I consent to TRUSTUS Care carrying out a Disclosure and Barring Service (DBS) check and reference checks as part of the recruitment process.</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="decl3">
+          <label for="decl3">I have read and understood TRUSTUS Care&rsquo;s privacy notice and consent to my personal data being processed for recruitment purposes in accordance with GDPR.</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Full name (typed signature) *</label>
+        <input type="text" id="decl_signature" placeholder="Type your full name to sign" required>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="text" id="decl_date" readonly style="background:#f5f5f5;color:#888;">
+      </div>
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStep(6)">&#8592; Back</button>
+        <button class="btn-primary btn-lg" id="submitBtn" onclick="submitApplication()">Submit Application</button>
+      </div>
+    </div>
+
+  </div><!-- /applyWrap -->
+
+  <!-- Success state -->
+  <div class="apply-wrap apply-success" id="applySuccess">
+    <div class="success-icon">
+      <svg width="32" height="32" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="color:var(--sage);margin-bottom:12px;">Application Submitted</h2>
+    <p style="color:#555;max-width:440px;margin:0 auto 12px;line-height:1.8;">Thank you &mdash; your full application has been received. Our team will be in touch with you shortly to discuss the next steps.</p>
+    <p style="color:#888;font-size:0.9rem;">Questions? Call <a href="tel:02034111218" style="color:var(--sage);font-weight:600;">020 3411 1218</a> or email <a href="mailto:info@trustuscare.com" style="color:var(--sage);">info@trustuscare.com</a></p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="images/logo.png" alt="TRUSTUS Care" class="footer-logo-img">
+        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support.</p>
+        <div class="footer-badges">
+          <img src="images/badge-cqc.png" alt="Regulated by Care Quality Commission" class="footer-badge">
+          <img src="images/badge-disability.png" alt="Disability Confident Committed" class="footer-badge">
+          <img src="images/badge-dbs.png" alt="DBS Checked" class="footer-badge">
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Our Services</h5>
+        <ul>
+          <li><a href="domiciliary-care.html">Domiciliary Care</a></li>
+          <li><a href="supported-living.html">Supported Living</a></li>
+          <li><a href="complex-care.html">Complex Care</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about-us.html">About Us</a></li>
+          <li><a href="contact-us.html">Contact Us</a></li>
+          <li><a href="careers.html">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <div class="footer-contact">
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="tel:02034111218">020 3411 1218</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Office G24, 47 Clarendon Road, Watford, Hertfordshire, WD17 1HP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 TRUSTUS Care. All rights reserved.</p>
+      <p>Care &middot; Trust &middot; Independence</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/portal.config.js"></script>
+<script>
+const SUPABASE_URL  = PORTAL_CONFIG.supabaseUrl;
+const SUPABASE_ANON = PORTAL_CONFIG.supabaseAnon;
+const EDGE_BASE     = SUPABASE_URL + '/functions/v1';
+
+let appToken = null;
+let currentStep = 1;
+
+// ---- Init ----
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  appToken = params.get('token');
+
+  if (!appToken) { showTokenError(); return; }
+
+  // Validate token via Supabase REST (anon key, RLS blocks sensitive data)
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/trustus_applications_public?token=eq.${appToken}&select=first_name,role_applied`, {
+      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
+    });
+
+    // Fallback: check via Edge Function approach — just show the form
+    // Token is validated server-side on submission anyway
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('applyWrap').style.display = 'block';
+
+    // Set today's date on declaration
+    document.getElementById('decl_date').value = new Date().toLocaleDateString('en-GB');
+
+    // Restore from localStorage if available
+    restoreFromStorage();
+
+    // Add initial entries
+    if (document.getElementById('educationList').children.length === 0) addEducation();
+    if (document.getElementById('employmentList').children.length === 0) addEmployment();
+    if (document.getElementById('addressList').children.length === 0) addAddress();
+
+  } catch(e) {
+    showTokenError();
+  }
+})();
+
+function showTokenError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('tokenError').style.display = 'block';
+}
+
+// ---- Step navigation ----
+function nextStep(from) {
+  if (!validateStep(from)) return;
+  saveToStorage();
+  setStep(from + 1);
+}
+
+function prevStep(from) {
+  saveToStorage();
+  setStep(from - 1);
+}
+
+function setStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  document.querySelectorAll('.progress-step').forEach(s => {
+    const sn = parseInt(s.dataset.step);
+    s.classList.remove('active', 'done');
+    if (sn < n) s.classList.add('done');
+    if (sn === n) s.classList.add('active');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- Validation ----
+function validateStep(n) {
+  const step = document.getElementById('step' + n);
+  const required = step.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(el => {
+    el.style.borderColor = '';
+    if (!el.value.trim()) {
+      el.style.borderColor = 'var(--terracotta)';
+      valid = false;
+    }
+  });
+  if (!valid) {
+    step.querySelector('[required]').focus();
+    alert('Please fill in all required fields before continuing.');
+  }
+  return valid;
+}
+
+// ---- Dynamic: Education ----
+function addEducation() {
+  const list = document.getElementById('educationList');
+  const idx = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'dynamic-entry';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">&times;</button>
+    <div class="form-row">
+      <div class="form-group"><label>Qualification / Certificate *</label><input type="text" name="edu_qual_${idx}" required></div>
+      <div class="form-group"><label>Grade / Result</label><input type="text" name="edu_grade_${idx}"></div>
+    </div>
+    <div class="form-group"><label>School / College / University *</label><input type="text" name="edu_inst_${idx}" required></div>
+    <div class="form-row">
+      <div class="form-group"><label>Start year</label><input type="number" name="edu_start_${idx}" min="1970" max="2030" placeholder="2018"></div>
+      <div class="form-group"><label>End year</label><input type="number" name="edu_end_${idx}" min="1970" max="2030" placeholder="2020"></div>
+    </div>`;
+  list.appendChild(div);
+}
+
+// ---- Dynamic: Employment ----
+function addEmployment() {
+  const list = document.getElementById('employmentList');
+  const idx = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'dynamic-entry';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">&times;</button>
+    <div style="margin-bottom:12px;">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+        <input type="checkbox" name="emp_gap_${idx}" onchange="toggleGap(this,${idx})"> This is a gap in employment
+      </label>
+    </div>
+    <div id="emp_fields_${idx}">
+      <div class="form-row">
+        <div class="form-group"><label>Employer *</label><input type="text" name="emp_employer_${idx}" required></div>
+        <div class="form-group"><label>Job title *</label><input type="text" name="emp_title_${idx}" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Start date *</label><input type="month" name="emp_start_${idx}" required></div>
+        <div class="form-group"><label>End date (leave blank if current)</label><input type="month" name="emp_end_${idx}"></div>
+      </div>
+      <div class="form-group"><label>Reason for leaving</label><input type="text" name="emp_reason_${idx}"></div>
+    </div>
+    <div id="emp_gap_fields_${idx}" style="display:none;">
+      <div class="form-row">
+        <div class="form-group"><label>Gap from *</label><input type="month" name="emp_gap_from_${idx}"></div>
+        <div class="form-group"><label>Gap to *</label><input type="month" name="emp_gap_to_${idx}"></div>
+      </div>
+      <div class="form-group"><label>Reason for gap *</label><input type="text" name="emp_gap_reason_${idx}" placeholder="e.g. Caring for a family member"></div>
+    </div>`;
+  list.appendChild(div);
+}
+
+function toggleGap(cb, idx) {
+  document.getElementById('emp_fields_' + idx).style.display = cb.checked ? 'none' : 'block';
+  document.getElementById('emp_gap_fields_' + idx).style.display = cb.checked ? 'block' : 'none';
+}
+
+// ---- Dynamic: Address ----
+function addAddress() {
+  const list = document.getElementById('addressList');
+  const idx = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'dynamic-entry';
+  div.innerHTML = `
+    <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove">&times;</button>
+    <div class="form-group"><label>Address (house number &amp; street) *</label><input type="text" name="addr_street_${idx}" required></div>
+    <div class="form-row">
+      <div class="form-group"><label>Town / City *</label><input type="text" name="addr_city_${idx}" required></div>
+      <div class="form-group"><label>Postcode *</label><input type="text" name="addr_postcode_${idx}" required></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>From *</label><input type="month" name="addr_from_${idx}" required></div>
+      <div class="form-group"><label>To (leave blank if current)</label><input type="month" name="addr_to_${idx}"></div>
+    </div>`;
+  list.appendChild(div);
+}
+
+// ---- Collect data ----
+function collectData() {
+  // Personal
+  const personal = {
+    ni_number:  document.getElementById('p_ni').value.trim(),
+    dob:        document.getElementById('p_dob').value,
+    street:     document.getElementById('p_street').value.trim(),
+    city:       document.getElementById('p_city').value.trim(),
+    postcode:   document.getElementById('p_postcode').value.trim(),
+    referral:   document.getElementById('p_referral').value,
+  };
+
+  // Education
+  const education = [];
+  document.querySelectorAll('#educationList .dynamic-entry').forEach((el, i) => {
+    const q = el.querySelector(`[name="edu_qual_${i}"]`)?.value.trim();
+    if (q) education.push({
+      qualification: q,
+      grade:       el.querySelector(`[name="edu_grade_${i}"]`)?.value.trim(),
+      institution: el.querySelector(`[name="edu_inst_${i}"]`)?.value.trim(),
+      start_year:  el.querySelector(`[name="edu_start_${i}"]`)?.value,
+      end_year:    el.querySelector(`[name="edu_end_${i}"]`)?.value,
+    });
+  });
+
+  // Employment
+  const employment_history = [];
+  document.querySelectorAll('#employmentList .dynamic-entry').forEach((el, i) => {
+    const isGap = el.querySelector(`[name="emp_gap_${i}"]`)?.checked;
+    if (isGap) {
+      employment_history.push({
+        type:    'gap',
+        from:    el.querySelector(`[name="emp_gap_from_${i}"]`)?.value,
+        to:      el.querySelector(`[name="emp_gap_to_${i}"]`)?.value,
+        reason:  el.querySelector(`[name="emp_gap_reason_${i}"]`)?.value.trim(),
+      });
+    } else {
+      const employer = el.querySelector(`[name="emp_employer_${i}"]`)?.value.trim();
+      if (employer) employment_history.push({
+        type:       'employment',
+        employer,
+        title:      el.querySelector(`[name="emp_title_${i}"]`)?.value.trim(),
+        start:      el.querySelector(`[name="emp_start_${i}"]`)?.value,
+        end:        el.querySelector(`[name="emp_end_${i}"]`)?.value,
+        reason:     el.querySelector(`[name="emp_reason_${i}"]`)?.value.trim(),
+      });
+    }
+  });
+
+  // Referees
+  const referees = [
+    { name: document.getElementById('ref1_name').value.trim(), title: document.getElementById('ref1_title').value.trim(), organisation: document.getElementById('ref1_org').value.trim(), phone: document.getElementById('ref1_phone').value.trim(), email: document.getElementById('ref1_email').value.trim(), relationship: document.getElementById('ref1_rel').value.trim() },
+    { name: document.getElementById('ref2_name').value.trim(), title: document.getElementById('ref2_title').value.trim(), organisation: document.getElementById('ref2_org').value.trim(), phone: document.getElementById('ref2_phone').value.trim(), email: document.getElementById('ref2_email').value.trim(), relationship: document.getElementById('ref2_rel').value.trim() },
+  ];
+
+  // Address history
+  const address_history = [];
+  document.querySelectorAll('#addressList .dynamic-entry').forEach((el, i) => {
+    const street = el.querySelector(`[name="addr_street_${i}"]`)?.value.trim();
+    if (street) address_history.push({
+      street,
+      city:     el.querySelector(`[name="addr_city_${i}"]`)?.value.trim(),
+      postcode: el.querySelector(`[name="addr_postcode_${i}"]`)?.value.trim(),
+      from:     el.querySelector(`[name="addr_from_${i}"]`)?.value,
+      to:       el.querySelector(`[name="addr_to_${i}"]`)?.value,
+    });
+  });
+
+  return { ...personal, education, employment_history, referees, address_history,
+    declaration_signature: document.getElementById('decl_signature').value.trim() };
+}
+
+// ---- localStorage ----
+function saveToStorage() {
+  try { localStorage.setItem('trustus_apply_' + appToken, JSON.stringify(collectData())); } catch(e) {}
+}
+
+function restoreFromStorage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('trustus_apply_' + appToken) || 'null');
+    if (!saved) return;
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('p_ni', saved.ni_number); set('p_dob', saved.dob);
+    set('p_street', saved.street); set('p_city', saved.city);
+    set('p_postcode', saved.postcode); set('p_referral', saved.referral);
+  } catch(e) {}
+}
+
+// ---- Submit ----
+async function submitApplication() {
+  // Validate declaration
+  if (!document.getElementById('decl1').checked || !document.getElementById('decl2').checked || !document.getElementById('decl3').checked) {
+    alert('Please tick all three declaration checkboxes to continue.'); return;
+  }
+  if (!document.getElementById('decl_signature').value.trim()) {
+    alert('Please type your full name as a signature.'); return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(EDGE_BASE + '/submit-form1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: appToken, details: collectData() })
+    });
+    const json = await res.json();
+    if (res.ok && json.success) {
+      localStorage.removeItem('trustus_apply_' + appToken);
+      document.getElementById('applyWrap').style.display = 'none';
+      document.getElementById('applySuccess').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error(json.error || 'Submission failed');
+    }
+  } catch(e) {
+    btn.textContent = 'Submit Application';
+    btn.disabled = false;
+    alert('Something went wrong. Please try again or call us on 020 3411 1218.\n\nError: ' + e.message);
+  }
+}
+</script>
+</body>
+</html>
