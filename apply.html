@@ -603,7 +603,8 @@ function getMonthYear(container, prefix) {
 function validateStep(n) {
   const step = document.getElementById('step' + n);
   const errDiv = document.getElementById('err_step' + n);
-  const fields = step.querySelectorAll('[required]');
+  const fields = Array.from(step.querySelectorAll('[required]'))
+    .filter(el => !el.closest('[style*="display:none"]'));
   const missing = [];
 
   fields.forEach(el => {
