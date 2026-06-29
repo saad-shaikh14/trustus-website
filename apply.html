@@ -604,7 +604,7 @@ function validateStep(n) {
   const step = document.getElementById('step' + n);
   const errDiv = document.getElementById('err_step' + n);
   const fields = Array.from(step.querySelectorAll('[required]'))
-    .filter(el => !el.closest('[style*="display:none"]'));
+    .filter(el => el.offsetParent !== null);
   const missing = [];
 
   fields.forEach(el => {
