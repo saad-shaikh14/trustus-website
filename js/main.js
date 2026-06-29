@@ -137,7 +137,7 @@ if (contactForm) {
   });
 }
 
-/* ---- Careers Form (formsubmit.co) ---- */
+/* ---- Careers Form (Supabase Edge Function) ---- */
 const careersForm = document.getElementById('careersForm');
 if (careersForm) {
   careersForm.addEventListener('submit', async function(e) {
@@ -146,18 +146,17 @@ if (careersForm) {
     btn.textContent = 'Submitting…';
     btn.disabled = true;
     const fd = new FormData(careersForm);
-    fd.append('_subject', 'New Career Enquiry — ' + (fd.get('role') || 'Role not specified'));
     try {
-      const res = await fetch('https://formsubmit.co/ajax/info@trustuscare.com', {
+      const res = await fetch('https://ssbcpblfkgpgtcxifopp.supabase.co/functions/v1/submit-cv', {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
         body: fd
       });
-      if (res.ok) {
+      const json = await res.json();
+      if (res.ok && json.success) {
         careersForm.style.display = 'none';
         document.getElementById('careersSuccess').style.display = 'block';
       } else {
-        throw new Error('Server error');
+        throw new Error(json.error || 'Server error');
       }
     } catch {
       btn.textContent = 'Submit Interest';
