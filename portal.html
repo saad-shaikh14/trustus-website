@@ -597,11 +597,12 @@ async function sendInvite() {
     if (!res.ok) throw new Error(json.error || 'Failed');
 
     // Update local state
-    const app = allApps.find(a => a.id === _inviteAppId);
-    if (app) { app.status = 'interview_invited'; detCache[_inviteAppId] = detCache[_inviteAppId] || null; }
+    const savedId = _inviteAppId;
+    const app = allApps.find(a => a.id === savedId);
+    if (app) app.status = 'interview_invited';
     closeInvite();
     renderStats(); renderList();
-    openDetail(_inviteAppId);
+    openDetail(savedId);
   } catch(e) {
     err.textContent = 'Error: ' + e.message;
     err.style.display = 'block';
