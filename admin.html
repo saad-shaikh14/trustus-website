@@ -132,12 +132,8 @@
 
     /* Section cards */
     .sec-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); border-top: 3px solid var(--terra); margin-bottom: 14px; overflow: hidden; }
-    .sec-head { padding: 13px 16px; font-weight: 700; font-size: 0.87rem; color: var(--ink); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; transition: background 0.15s; }
-    .sec-head:hover { background: var(--bg); }
-    .sec-head .tog { color: var(--muted); font-size: 11px; transition: transform 0.2s; }
-    .sec-head.closed .tog { transform: rotate(-90deg); }
+    .sec-head { padding: 13px 16px; font-weight: 700; font-size: 0.87rem; color: var(--ink); border-bottom: 1px solid var(--border); }
     .sec-body { padding: 16px; }
-    .sec-body.collapsed { display: none; }
 
     /* Status & notes */
     .status-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
@@ -455,7 +451,7 @@ function renderFull(app, det) {
       </div>
 
       <div class="sec-card">
-        <div class="sec-head" onclick="togSec(this)"><span>Status &amp; HR Notes</span><span class="tog">&#9660;</span></div>
+        <div class="sec-head">Status &amp; HR Notes</div>
         <div class="sec-body">
           <div class="status-row">
             <select class="status-select" id="statusSel" onchange="updateBadge()">
@@ -475,7 +471,7 @@ function renderFull(app, det) {
       </div>
 
       <div class="sec-card">
-        <div class="sec-head" onclick="togSec(this)"><span>Application Form Details</span><span class="tog">&#9660;</span></div>
+        <div class="sec-head">Application Form Details</div>
         <div class="sec-body">${form1Html}</div>
       </div>
 
@@ -589,12 +585,6 @@ function buildForm1(d) {
   }
 
   return out.join('') || '<p class="no-data">No form data on record.</p>';
-}
-
-function togSec(head) {
-  const body = head.nextElementSibling;
-  body.classList.toggle('collapsed');
-  head.classList.toggle('closed');
 }
 
 /* ---- HELPERS ---- */
