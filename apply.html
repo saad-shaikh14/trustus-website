@@ -447,7 +447,17 @@ let currentStep = 1;
 // ---- Init ----
 (async () => {
   const params = new URLSearchParams(window.location.search);
-  appToken = params.get('token');
+  const urlToken = params.get('token');
+
+  if (urlToken) {
+    // Store token in sessionStorage and immediately wipe it from the URL bar
+    sessionStorage.setItem('trustus_token', urlToken);
+    history.replaceState(null, '', window.location.pathname);
+    appToken = urlToken;
+  } else {
+    // Refreshed page — recover from sessionStorage
+    appToken = sessionStorage.getItem('trustus_token');
+  }
 
   if (!appToken) { showTokenError(); return; }
 
@@ -720,6 +730,7 @@ async function submitApplication() {
     const json = await res.json();
     if (res.ok && json.success) {
       localStorage.removeItem('trustus_apply_' + appToken);
+      sessionStorage.removeItem('trustus_token');
       document.getElementById('applyWrap').style.display = 'none';
       document.getElementById('applySuccess').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
