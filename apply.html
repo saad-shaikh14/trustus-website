@@ -99,6 +99,28 @@
     .form-group textarea::placeholder { color: #bbb; }
     .form-group select option { background: #fff; color: #111; }
 
+    /* Month-year picker */
+    .my-pick { display: flex; gap: 8px; width: 100%; }
+    .my-pick select, .my-pick input[type=number] { width: auto; }
+    .my-pick select { flex: 2; }
+    .my-pick input[type=number] { flex: 1; min-width: 90px; -moz-appearance: textfield; }
+    .my-pick input[type=number]::-webkit-outer-spin-button,
+    .my-pick input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Inline step errors */
+    .step-error {
+      background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626;
+      border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+      margin-bottom: 18px; display: none;
+    }
+    .step-error strong { display: block; margin-bottom: 4px; }
+    .step-error ul { margin: 4px 0 0 18px; padding: 0; }
+    .submit-error {
+      background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626;
+      border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+      margin-bottom: 14px; display: none;
+    }
+
     @media (max-width: 600px) {
       .step-label { display: none; }
       .form-row { flex-direction: column; }
@@ -205,6 +227,7 @@
     <!-- STEP 1: Personal Details -->
     <div class="form-step active" id="step1">
       <div class="step-title">Step 1 &mdash; Personal Details</div>
+      <div class="step-error" id="err_step1"></div>
       <div class="form-row">
         <div class="form-group">
           <label>First name *</label>
@@ -262,6 +285,7 @@
     <!-- STEP 2: Education -->
     <div class="form-step" id="step2">
       <div class="step-title">Step 2 &mdash; Education History</div>
+      <div class="step-error" id="err_step2"></div>
       <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">Add your qualifications starting with the most recent. Include GCSEs, A-Levels, NVQs, degrees, and any care-related certifications.</p>
       <div id="educationList"></div>
       <button class="add-entry-btn" onclick="addEducation()">+ Add Qualification</button>
@@ -274,6 +298,7 @@
     <!-- STEP 3: Employment History -->
     <div class="form-step" id="step3">
       <div class="step-title">Step 3 &mdash; Employment History</div>
+      <div class="step-error" id="err_step3"></div>
       <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">List all employment in reverse chronological order. You <strong>must</strong> account for all gaps of one month or more.</p>
       <div id="employmentList"></div>
       <button class="add-entry-btn" onclick="addEmployment()">+ Add Employment / Gap</button>
@@ -286,6 +311,7 @@
     <!-- STEP 4: Referees -->
     <div class="form-step" id="step4">
       <div class="step-title">Step 4 &mdash; Professional Referees</div>
+      <div class="step-error" id="err_step4"></div>
       <p style="color:#666;margin-bottom:24px;font-size:0.95rem;">Please provide two professional referees. References must not be family members. At least one should be your most recent employer.</p>
 
       <p style="font-weight:700;color:var(--navy);margin-bottom:12px;">Referee 1</p>
@@ -325,6 +351,7 @@
     <!-- STEP 5: 5-Year Address History -->
     <div class="form-step" id="step5">
       <div class="step-title">Step 5 &mdash; 5-Year Address History</div>
+      <div class="step-error" id="err_step5"></div>
       <p style="color:#666;margin-bottom:20px;font-size:0.95rem;">Required for your DBS check. Please list all addresses you have lived at over the last 5 years, starting with your current address.</p>
       <div id="addressList"></div>
       <button class="add-entry-btn" onclick="addAddress()">+ Add Address</button>
@@ -337,6 +364,7 @@
     <!-- STEP 6: Declaration -->
     <div class="form-step" id="step6">
       <div class="step-title">Step 6 &mdash; Declaration</div>
+      <div class="step-error" id="err_step6"></div>
       <div class="declaration-box">
         <div class="check-row">
           <input type="checkbox" id="decl1">
@@ -361,7 +389,10 @@
       </div>
       <div class="form-nav">
         <button class="btn-back" onclick="prevStep(6)">&#8592; Back</button>
-        <button class="btn-primary btn-lg" id="submitBtn" onclick="submitApplication()">Submit Application</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+          <div class="submit-error" id="submitError"></div>
+          <button class="btn-primary btn-lg" id="submitBtn" onclick="submitApplication()">Submit Application</button>
+        </div>
       </div>
     </div>
 
@@ -522,22 +553,49 @@ function setStep(n) {
 }
 
 // ---- Validation ----
+function monthYearPicker(name, req) {
+  const r = req ? 'required' : '';
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const opts = months.map((m,i) => `<option value="${String(i+1).padStart(2,'0')}">${m}</option>`).join('');
+  return `<div class="my-pick">
+    <select name="${name}_m" ${r}><option value="">Month</option>${opts}</select>
+    <input type="number" name="${name}_y" placeholder="Year" min="1950" max="2030" ${r}>
+  </div>`;
+}
+
+function getMonthYear(container, prefix) {
+  const m = container.querySelector(`[name="${prefix}_m"]`)?.value;
+  const y = container.querySelector(`[name="${prefix}_y"]`)?.value;
+  return (m && y) ? `${y}-${m}` : '';
+}
+
 function validateStep(n) {
   const step = document.getElementById('step' + n);
-  const required = step.querySelectorAll('[required]');
-  let valid = true;
-  required.forEach(el => {
-    el.style.borderColor = '';
-    if (!el.value.trim()) {
-      el.style.borderColor = 'var(--terracotta)';
-      valid = false;
+  const errDiv = document.getElementById('err_step' + n);
+  const fields = step.querySelectorAll('[required]');
+  const missing = [];
+
+  fields.forEach(el => {
+    const empty = !el.value.trim();
+    el.style.borderColor = empty ? '#C8526A' : '';
+    if (empty) {
+      const label = el.closest('.form-group')?.querySelector('label');
+      const fieldName = label ? label.textContent.replace(/\*/g,'').trim() : (el.placeholder || el.name || 'Field');
+      if (!missing.includes(fieldName)) missing.push(fieldName);
     }
   });
-  if (!valid) {
-    step.querySelector('[required]').focus();
-    alert('Please fill in all required fields before continuing.');
+
+  if (missing.length) {
+    errDiv.innerHTML = `<strong>Please complete these required fields before continuing:</strong><ul>${missing.map(f => `<li>${f}</li>`).join('')}</ul>`;
+    errDiv.style.display = 'block';
+    errDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const first = Array.from(fields).find(el => !el.value.trim());
+    setTimeout(() => first && first.focus(), 350);
+    return false;
   }
-  return valid;
+
+  errDiv.style.display = 'none';
+  return true;
 }
 
 // ---- Dynamic: Education ----
@@ -579,15 +637,15 @@ function addEmployment() {
         <div class="form-group"><label>Job title *</label><input type="text" name="emp_title_${idx}" required></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Start date *</label><input type="month" name="emp_start_${idx}" required></div>
-        <div class="form-group"><label>End date (leave blank if current)</label><input type="month" name="emp_end_${idx}"></div>
+        <div class="form-group"><label>Start date *</label>${monthYearPicker(`emp_start_${idx}`, true)}</div>
+        <div class="form-group"><label>End date (leave blank if current)</label>${monthYearPicker(`emp_end_${idx}`, false)}</div>
       </div>
       <div class="form-group"><label>Reason for leaving</label><input type="text" name="emp_reason_${idx}"></div>
     </div>
     <div id="emp_gap_fields_${idx}" style="display:none;">
       <div class="form-row">
-        <div class="form-group"><label>Gap from *</label><input type="month" name="emp_gap_from_${idx}"></div>
-        <div class="form-group"><label>Gap to *</label><input type="month" name="emp_gap_to_${idx}"></div>
+        <div class="form-group"><label>Gap from *</label>${monthYearPicker(`emp_gap_from_${idx}`, true)}</div>
+        <div class="form-group"><label>Gap to *</label>${monthYearPicker(`emp_gap_to_${idx}`, true)}</div>
       </div>
       <div class="form-group"><label>Reason for gap *</label><input type="text" name="emp_gap_reason_${idx}" placeholder="e.g. Caring for a family member"></div>
     </div>`;
@@ -613,8 +671,8 @@ function addAddress() {
       <div class="form-group"><label>Postcode *</label><input type="text" name="addr_postcode_${idx}" required></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>From *</label><input type="month" name="addr_from_${idx}" required></div>
-      <div class="form-group"><label>To (leave blank if current)</label><input type="month" name="addr_to_${idx}"></div>
+      <div class="form-group"><label>From *</label>${monthYearPicker(`addr_from_${idx}`, true)}</div>
+      <div class="form-group"><label>To (leave blank if current)</label>${monthYearPicker(`addr_to_${idx}`, false)}</div>
     </div>`;
   list.appendChild(div);
 }
@@ -651,8 +709,8 @@ function collectData() {
     if (isGap) {
       employment_history.push({
         type:    'gap',
-        from:    el.querySelector(`[name="emp_gap_from_${i}"]`)?.value,
-        to:      el.querySelector(`[name="emp_gap_to_${i}"]`)?.value,
+        from:    getMonthYear(el, `emp_gap_from_${i}`),
+        to:      getMonthYear(el, `emp_gap_to_${i}`),
         reason:  el.querySelector(`[name="emp_gap_reason_${i}"]`)?.value.trim(),
       });
     } else {
@@ -661,8 +719,8 @@ function collectData() {
         type:       'employment',
         employer,
         title:      el.querySelector(`[name="emp_title_${i}"]`)?.value.trim(),
-        start:      el.querySelector(`[name="emp_start_${i}"]`)?.value,
-        end:        el.querySelector(`[name="emp_end_${i}"]`)?.value,
+        start:      getMonthYear(el, `emp_start_${i}`),
+        end:        getMonthYear(el, `emp_end_${i}`),
         reason:     el.querySelector(`[name="emp_reason_${i}"]`)?.value.trim(),
       });
     }
@@ -682,8 +740,8 @@ function collectData() {
       street,
       city:     el.querySelector(`[name="addr_city_${i}"]`)?.value.trim(),
       postcode: el.querySelector(`[name="addr_postcode_${i}"]`)?.value.trim(),
-      from:     el.querySelector(`[name="addr_from_${i}"]`)?.value,
-      to:       el.querySelector(`[name="addr_to_${i}"]`)?.value,
+      from:     getMonthYear(el, `addr_from_${i}`),
+      to:       getMonthYear(el, `addr_to_${i}`),
     });
   });
 
@@ -710,12 +768,20 @@ function restoreFromStorage() {
 // ---- Submit ----
 async function submitApplication() {
   // Validate declaration
+  const declErr = document.getElementById('err_step6');
   if (!document.getElementById('decl1').checked || !document.getElementById('decl2').checked || !document.getElementById('decl3').checked) {
-    alert('Please tick all three declaration checkboxes to continue.'); return;
+    declErr.innerHTML = '<strong>Please tick all three declaration checkboxes to continue.</strong>';
+    declErr.style.display = 'block';
+    declErr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
   }
   if (!document.getElementById('decl_signature').value.trim()) {
-    alert('Please type your full name as a signature.'); return;
+    declErr.innerHTML = '<strong>Please type your full name as a signature to continue.</strong>';
+    declErr.style.display = 'block';
+    declErr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
   }
+  declErr.style.display = 'none';
 
   const btn = document.getElementById('submitBtn');
   btn.textContent = 'Submitting…';
@@ -740,7 +806,10 @@ async function submitApplication() {
   } catch(e) {
     btn.textContent = 'Submit Application';
     btn.disabled = false;
-    alert('Something went wrong. Please try again or call us on 020 3411 1218.\n\nError: ' + e.message);
+    const subErr = document.getElementById('submitError');
+    subErr.textContent = 'Submission failed: ' + e.message + '. Please try again or call us on 020 3411 1218.';
+    subErr.style.display = 'block';
+    subErr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
 </script>
