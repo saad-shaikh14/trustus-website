@@ -131,7 +131,7 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 - **File:** `contact-us.html` — form `id="contactForm"`, success div `id="formSuccess"`
 - **JS handler:** `js/main.js` — POSTs JSON to `https://formsubmit.co/ajax/info@trustuscare.com`
 - **Subject line:** "New TRUSTUS Care Enquiry"
-- **Activation:** One-time — first submission triggers a confirmation email to `info@trustuscare.com`; Sajid must click the link. Status as of 2026-05-21: **pending activation**.
+- **Activation:** One-time — first submission triggers a confirmation email to `info@trustuscare.com`; Sajid must click the link. Status as of 2026-06-30: **unknown** (separate from job portal which uses Resend and is confirmed working). Test by submitting contact form — if activation email arrives, click it; if normal enquiry email arrives, already active.
 - Fields captured: firstName, lastName, phone, email, enquiryType, service, message
 
 ## Placeholders (client to replace)
