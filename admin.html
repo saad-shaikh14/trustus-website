@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR Admin &mdash; TRUSTUS Care</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sage:       #3D6A5A;
+      --sage-dark:  #2d5244;
+      --terra:      #C8526A;
+      --navy:       #1C2B4A;
+      --bg:         #f0f4f2;
+      --white:      #ffffff;
+      --border:     #e2e8e6;
+      --text:       #333;
+      --muted:      #666;
+      --radius:     8px;
+    }
+    body { font-family: Nunito, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ---- LOGIN ---- */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--sage-dark) 0%, var(--sage) 100%); padding: 24px;
+    }
+    .login-card { background: white; border-radius: 12px; padding: 48px 40px; width: 100%; max-width: 400px; box-shadow: 0 8px 48px rgba(0,0,0,0.18); }
+    .login-card img { height: 44px; display: block; margin: 0 auto 20px; }
+    .login-card h1 { font-size: 1.25rem; color: var(--navy); text-align: center; margin-bottom: 4px; }
+    .login-card .sub { font-size: 0.82rem; color: var(--muted); text-align: center; margin-bottom: 28px; }
+    .lf { margin-bottom: 14px; }
+    .lf label { display: block; font-size: 0.83rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .lf input { width: 100%; padding: 11px 13px; border: 1.5px solid #ddd; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.93rem; }
+    .lf input:focus { outline: none; border-color: var(--sage); }
+    .login-err { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 9px 13px; border-radius: 6px; font-size: 0.83rem; margin-bottom: 14px; display: none; }
+    .login-btn { width: 100%; padding: 12px; background: var(--sage); color: white; border: none; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.97rem; font-weight: 700; cursor: pointer; }
+    .login-btn:hover { background: var(--sage-dark); }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ---- ADMIN SHELL ---- */
+    #adminApp { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    .adm-header { background: var(--sage-dark); color: white; height: 54px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .adm-header-l { display: flex; align-items: center; gap: 14px; }
+    .adm-header img { height: 30px; filter: brightness(0) invert(1); }
+    .adm-header-title { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.8px; opacity: 0.85; text-transform: uppercase; }
+    .adm-header-r { display: flex; align-items: center; gap: 14px; }
+    .adm-email { font-size: 0.78rem; opacity: 0.65; }
+    .signout-btn { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); color: white; padding: 5px 13px; border-radius: 4px; font-family: Nunito, Arial, sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .signout-btn:hover { background: rgba(255,255,255,0.24); }
+
+    .stats-bar { background: white; border-bottom: 1px solid var(--border); height: 44px; padding: 0 20px; display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .stat { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; }
+    .stat-n { font-size: 1.05rem; font-weight: 700; color: var(--sage); }
+    .stat-l { color: var(--muted); }
+    .stat-div { width: 1px; height: 22px; background: var(--border); }
+
+    .adm-layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ---- LIST PANEL ---- */
+    .list-panel { width: 370px; flex-shrink: 0; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+    .list-search { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .list-search input {
+      width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid #ddd; border-radius: 6px;
+      font-family: Nunito, Arial, sans-serif; font-size: 0.87rem;
+      background: #f7f7f7 url("data:image/svg+xml,%3Csvg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 10px center;
+    }
+    .list-search input:focus { outline: none; border-color: var(--sage); background-color: white; }
+
+    .filter-tabs { display: flex; overflow-x: auto; padding: 0 14px; border-bottom: 1px solid var(--border); scrollbar-width: none; flex-shrink: 0; }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .ftab { padding: 9px 12px; font-size: 0.77rem; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+    .ftab.active { color: var(--sage); border-bottom-color: var(--sage); }
+    .ftab:hover:not(.active) { color: var(--navy); }
+
+    .app-list { flex: 1; overflow-y: auto; }
+    .app-row { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; transition: background 0.12s; }
+    .app-row:hover { background: #f6f9f7; }
+    .app-row.sel { background: #edf5f1; border-left: 3px solid var(--sage); padding-left: 11px; }
+    .app-name { font-weight: 700; font-size: 0.92rem; color: var(--navy); margin-bottom: 2px; }
+    .app-role { font-size: 0.78rem; color: var(--muted); }
+    .app-right { text-align: right; flex-shrink: 0; margin-left: 10px; }
+    .app-date { font-size: 0.72rem; color: var(--muted); margin-bottom: 5px; }
+    .app-empty { text-align: center; padding: 44px 20px; color: var(--muted); font-size: 0.88rem; }
+
+    /* ---- BADGES ---- */
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .b-cv_received       { background: #FEF3C7; color: #92400E; }
+    .b-form1_complete    { background: #DBEAFE; color: #1E40AF; }
+    .b-shortlisted       { background: #D1FAE5; color: #065F46; }
+    .b-interview_invited { background: #EDE9FE; color: #5B21B6; }
+    .b-rejected          { background: #F3F4F6; color: #6B7280; }
+
+    /* ---- DETAIL PANEL ---- */
+    .detail-panel { flex: 1; overflow-y: auto; background: #f8f9fb; position: relative; }
+    .detail-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted); gap: 12px; }
+    .detail-empty svg { opacity: 0.18; }
+
+    .detail-header { background: white; border-bottom: 1px solid var(--border); padding: 18px 24px; position: sticky; top: 0; z-index: 5; }
+    .detail-name { font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 7px; }
+    .detail-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .role-tag { background: var(--bg); color: var(--sage); font-size: 0.79rem; font-weight: 700; padding: 3px 9px; border-radius: 4px; }
+    .detail-date { font-size: 0.79rem; color: var(--muted); }
+
+    .detail-body { padding: 20px 24px; max-width: 760px; }
+
+    .info-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .info-item { background: white; border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); }
+    .info-item label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+    .info-item span, .info-item a { font-size: 0.9rem; color: var(--navy); font-weight: 600; text-decoration: none; }
+    .info-item a:hover { color: var(--sage); }
+
+    .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .btn-dl { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: var(--sage); color: white; border: none; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+    .btn-dl:hover { background: var(--sage-dark); }
+    .btn-dl:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-invite { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: #EDE9FE; color: #5B21B6; border: none; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.85rem; font-weight: 700; cursor: not-allowed; opacity: 0.55; }
+
+    /* Section cards */
+    .sec-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 14px; overflow: hidden; }
+    .sec-head { padding: 13px 16px; font-weight: 700; font-size: 0.87rem; color: var(--navy); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+    .sec-head:hover { background: #fafafa; }
+    .sec-head .tog { color: var(--muted); font-size: 11px; transition: transform 0.2s; }
+    .sec-head.closed .tog { transform: rotate(-90deg); }
+    .sec-body { padding: 16px; }
+    .sec-body.collapsed { display: none; }
+
+    /* Status & notes */
+    .status-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+    .status-select { padding: 9px 11px; border: 1.5px solid #ddd; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.88rem; color: var(--navy); background: white; min-width: 200px; }
+    .status-select:focus { outline: none; border-color: var(--sage); }
+    .hr-notes { width: 100%; min-height: 90px; padding: 9px 11px; border: 1.5px solid #ddd; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-size: 0.88rem; resize: vertical; margin-bottom: 10px; }
+    .hr-notes:focus { outline: none; border-color: var(--sage); }
+    .save-row { display: flex; align-items: center; gap: 10px; }
+    .save-btn { background: var(--sage); color: white; border: none; padding: 9px 22px; border-radius: 6px; font-family: Nunito, Arial, sans-serif; font-weight: 700; font-size: 0.87rem; cursor: pointer; }
+    .save-btn:hover { background: var(--sage-dark); }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .save-ok { font-size: 0.8rem; color: var(--sage); display: none; }
+
+    /* Form1 data */
+    .f1-section-title { font-weight: 700; color: var(--sage); font-size: 0.77rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px; }
+    .f1-section { margin-bottom: 18px; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .data-table td { padding: 6px 0; vertical-align: top; }
+    .data-table td:first-child { width: 130px; color: var(--muted); font-weight: 600; }
+    .data-entry { background: #f8f9fb; border-radius: 6px; padding: 11px 13px; margin-bottom: 8px; font-size: 0.84rem; }
+    .de-title { font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .de-row { display: flex; gap: 8px; margin-bottom: 3px; }
+    .de-k { color: var(--muted); min-width: 110px; font-size: 0.8rem; }
+    .de-v { color: var(--navy); font-size: 0.8rem; }
+    .no-data { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+    .gap-entry { border-left: 3px solid #f59e0b; }
+
+    /* Spinner */
+    .spin { display: inline-block; width: 22px; height: 22px; border: 3px solid #eee; border-top-color: var(--sage); border-radius: 50%; animation: _spin 0.75s linear infinite; }
+    @keyframes _spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; }
+      .adm-layout { flex-direction: column; }
+      .list-panel { width: 100%; border-right: none; max-height: 55vh; }
+      .detail-panel { min-height: 45vh; }
+      .adm-email { display: none; }
+      .detail-body { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="images/logo.png" alt="TRUSTUS Care">
+    <h1>HR Admin Portal</h1>
+    <p class="sub">Authorised personnel only</p>
+    <div id="loginErr" class="login-err"></div>
+    <div class="lf"><label>Email</label><input type="email" id="lEmail" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="lf"><label>Password</label><input type="password" id="lPass" placeholder="Password" autocomplete="current-password"></div>
+    <button class="login-btn" id="loginBtn" onclick="login()">Sign In</button>
+  </div>
+</div>
+
+<!-- ===== ADMIN APP ===== -->
+<div id="adminApp">
+
+  <header class="adm-header">
+    <div class="adm-header-l">
+      <img src="images/logo.png" alt="TRUSTUS Care">
+      <span class="adm-header-title">HR Admin Portal</span>
+    </div>
+    <div class="adm-header-r">
+      <span class="adm-email" id="admEmail"></span>
+      <button class="signout-btn" onclick="signOut()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-n" id="sTotal">—</span><span class="stat-l">Total</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-n" id="sForm">—</span><span class="stat-l">Form Complete</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-n" id="sShort">—</span><span class="stat-l">Shortlisted</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-n" id="sInvited">—</span><span class="stat-l">Interview Invited</span></div>
+  </div>
+
+  <div class="adm-layout">
+
+    <!-- List -->
+    <div class="list-panel">
+      <div class="list-search">
+        <input type="text" id="searchBox" placeholder="Search name or email&hellip;" oninput="onSearch()">
+      </div>
+      <div class="filter-tabs">
+        <div class="ftab active" data-f="all"              onclick="setFilter('all',this)">All</div>
+        <div class="ftab"        data-f="cv_received"      onclick="setFilter('cv_received',this)">CV Received</div>
+        <div class="ftab"        data-f="form1_complete"   onclick="setFilter('form1_complete',this)">Form Complete</div>
+        <div class="ftab"        data-f="shortlisted"      onclick="setFilter('shortlisted',this)">Shortlisted</div>
+        <div class="ftab"        data-f="interview_invited" onclick="setFilter('interview_invited',this)">Interview Invited</div>
+        <div class="ftab"        data-f="rejected"         onclick="setFilter('rejected',this)">Rejected</div>
+      </div>
+      <div class="app-list" id="appList">
+        <div class="app-empty"><div class="spin"></div></div>
+      </div>
+    </div>
+
+    <!-- Detail -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-empty" id="detailEmpty">
+        <svg width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        <p style="font-size:0.9rem;">Select an application to view</p>
+      </div>
+      <div id="detailContent" style="display:none;"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/portal.config.js"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(PORTAL_CONFIG.supabaseUrl, PORTAL_CONFIG.supabaseAnon);
+
+let allApps    = [];
+let curFilter  = 'all';
+let curSearch  = '';
+let openId     = null;
+let detCache   = {};
+
+const SC = {
+  cv_received:       { label: 'CV Received',      cls: 'b-cv_received'       },
+  form1_complete:    { label: 'Form Complete',     cls: 'b-form1_complete'    },
+  shortlisted:       { label: 'Shortlisted',       cls: 'b-shortlisted'       },
+  interview_invited: { label: 'Interview Invited', cls: 'b-interview_invited' },
+  rejected:          { label: 'Not Progressing',   cls: 'b-rejected'          },
+};
+
+/* ---- AUTH ---- */
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { showAdmin(session.user.email); loadApps(); }
+  else showLogin();
+}
+
+async function login() {
+  const email = document.getElementById('lEmail').value.trim();
+  const pass  = document.getElementById('lPass').value;
+  const btn   = document.getElementById('loginBtn');
+  const err   = document.getElementById('loginErr');
+  if (!email || !pass) { err.textContent = 'Enter email and password.'; err.style.display = 'block'; return; }
+  btn.textContent = 'Signing in…'; btn.disabled = true; err.style.display = 'none';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { err.textContent = error.message; err.style.display = 'block'; btn.textContent = 'Sign In'; btn.disabled = false; return; }
+  showAdmin(data.user.email); loadApps();
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  showLogin();
+  allApps = []; openId = null;
+  document.getElementById('appList').innerHTML = '<div class="app-empty"><div class="spin"></div></div>';
+  document.getElementById('detailContent').style.display = 'none';
+  document.getElementById('detailEmpty').style.display = 'flex';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') login();
+});
+
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminApp').style.display = 'none';
+}
+
+function showAdmin(email) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminApp').style.display = 'flex';
+  document.getElementById('admEmail').textContent = email || '';
+}
+
+/* ---- LOAD APPS ---- */
+async function loadApps() {
+  const { data, error } = await sb
+    .from('trustus_applications')
+    .select('*').order('created_at', { ascending: false });
+  if (error) {
+    document.getElementById('appList').innerHTML = `<div class="app-empty">Error: ${esc(error.message)}</div>`;
+    return;
+  }
+  allApps = data || [];
+  renderStats(); renderList();
+}
+
+function renderStats() {
+  document.getElementById('sTotal').textContent   = allApps.length;
+  document.getElementById('sForm').textContent    = allApps.filter(a => a.status === 'form1_complete').length;
+  document.getElementById('sShort').textContent   = allApps.filter(a => a.status === 'shortlisted').length;
+  document.getElementById('sInvited').textContent = allApps.filter(a => a.status === 'interview_invited').length;
+}
+
+function getVisible() {
+  let apps = allApps;
+  if (curFilter !== 'all') apps = apps.filter(a => a.status === curFilter);
+  if (curSearch) {
+    const q = curSearch.toLowerCase();
+    apps = apps.filter(a => (a.first_name + ' ' + a.last_name).toLowerCase().includes(q) || (a.email || '').toLowerCase().includes(q));
+  }
+  return apps;
+}
+
+function renderList() {
+  const list = document.getElementById('appList');
+  const apps = getVisible();
+  if (!apps.length) { list.innerHTML = '<div class="app-empty">No applications found</div>'; return; }
+  list.innerHTML = apps.map(a => {
+    const s = SC[a.status] || { label: a.status, cls: '' };
+    const sel = a.id === openId ? ' sel' : '';
+    return `<div class="app-row${sel}" onclick="openDetail('${a.id}')">
+      <div>
+        <div class="app-name">${esc(a.first_name)} ${esc(a.last_name)}</div>
+        <div class="app-role">${esc(a.role_applied)}</div>
+      </div>
+      <div class="app-right">
+        <div class="app-date">${fmtShort(a.created_at)}</div>
+        <span class="badge ${s.cls}">${s.label}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f, el) {
+  curFilter = f;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); renderList();
+}
+
+function onSearch() { curSearch = document.getElementById('searchBox').value; renderList(); }
+
+/* ---- DETAIL ---- */
+async function openDetail(id) {
+  openId = id; renderList();
+  const app = allApps.find(a => a.id === id);
+  if (!app) return;
+  document.getElementById('detailEmpty').style.display = 'none';
+  document.getElementById('detailContent').style.display = 'block';
+
+  // Show skeleton header immediately
+  renderHeader(app);
+
+  // Fetch form1 details if applicable
+  const needsDetails = ['form1_complete','shortlisted','interview_invited','rejected'].includes(app.status);
+  if (needsDetails && !detCache[id]) {
+    const { data } = await sb.from('trustus_application_details').select('*').eq('application_id', id).single();
+    detCache[id] = data || null;
+  }
+
+  renderFull(app, detCache[id] || null);
+}
+
+function renderHeader(app) {
+  const s = SC[app.status] || { label: app.status, cls: '' };
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-name">${esc(app.first_name)} ${esc(app.last_name)}</div>
+      <div class="detail-meta">
+        <span class="role-tag">${esc(app.role_applied)}</span>
+        <span class="badge ${s.cls}">${s.label}</span>
+        <span class="detail-date">Applied ${fmtFull(app.created_at)}</span>
+      </div>
+    </div>
+    <div class="detail-body"><div style="text-align:center;padding:48px 0;"><div class="spin"></div></div></div>`;
+}
+
+function renderFull(app, det) {
+  const s = SC[app.status] || { label: app.status, cls: '' };
+
+  const cvBtn = app.cv_url
+    ? `<button class="btn-dl" onclick="dlCV('${esc(app.cv_url)}')">
+         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+         Download CV
+       </button>`
+    : `<button class="btn-dl" disabled>No CV Uploaded</button>`;
+
+  const form1Html = det ? buildForm1(det) : `<p class="no-data">${
+    app.status === 'cv_received'
+      ? 'Candidate has not yet completed their application form.'
+      : 'No form details on record.'}</p>`;
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-name">${esc(app.first_name)} ${esc(app.last_name)}</div>
+      <div class="detail-meta">
+        <span class="role-tag">${esc(app.role_applied)}</span>
+        <span class="badge ${s.cls}" id="dbadge">${s.label}</span>
+        <span class="detail-date">Applied ${fmtFull(app.created_at)}</span>
+      </div>
+    </div>
+
+    <div class="detail-body">
+
+      <div class="info-row">
+        <div class="info-item"><label>Email</label><a href="mailto:${esc(app.email)}">${esc(app.email)}</a></div>
+        <div class="info-item"><label>Phone</label><a href="tel:${esc(app.phone)}">${esc(app.phone)}</a></div>
+        ${app.form1_submitted_at ? `<div class="info-item"><label>Form Submitted</label><span>${fmtFull(app.form1_submitted_at)}</span></div>` : ''}
+      </div>
+
+      <div class="action-row">
+        ${cvBtn}
+        <button class="btn-invite" title="Coming in Phase 5 — Send interview date and location">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Send Interview Invite
+        </button>
+      </div>
+
+      <div class="sec-card">
+        <div class="sec-head" onclick="togSec(this)"><span>Status &amp; HR Notes</span><span class="tog">&#9660;</span></div>
+        <div class="sec-body">
+          <div class="status-row">
+            <select class="status-select" id="statusSel" onchange="updateBadge()">
+              <option value="cv_received"       ${app.status==='cv_received'       ?'selected':''}>CV Received</option>
+              <option value="form1_complete"    ${app.status==='form1_complete'    ?'selected':''}>Form Complete</option>
+              <option value="shortlisted"       ${app.status==='shortlisted'       ?'selected':''}>Shortlisted</option>
+              <option value="interview_invited" ${app.status==='interview_invited' ?'selected':''}>Interview Invited</option>
+              <option value="rejected"          ${app.status==='rejected'          ?'selected':''}>Not Progressing</option>
+            </select>
+          </div>
+          <textarea class="hr-notes" id="hrNotes" placeholder="HR notes…">${esc(app.hr_notes || '')}</textarea>
+          <div class="save-row">
+            <button class="save-btn" id="saveBtn" onclick="saveUpdate('${app.id}')">Save</button>
+            <span class="save-ok" id="saveOk">Saved &#10003;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-card">
+        <div class="sec-head" onclick="togSec(this)"><span>Application Form Details</span><span class="tog">&#9660;</span></div>
+        <div class="sec-body">${form1Html}</div>
+      </div>
+
+    </div>`;
+}
+
+function updateBadge() {
+  const v = document.getElementById('statusSel').value;
+  const s = SC[v] || { label: v, cls: '' };
+  const b = document.getElementById('dbadge');
+  if (b) { b.textContent = s.label; b.className = `badge ${s.cls}`; }
+}
+
+async function saveUpdate(appId) {
+  const status   = document.getElementById('statusSel').value;
+  const hr_notes = document.getElementById('hrNotes').value;
+  const btn      = document.getElementById('saveBtn');
+  const ok       = document.getElementById('saveOk');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const { error } = await sb.from('trustus_applications').update({ status, hr_notes }).eq('id', appId);
+
+  btn.disabled = false; btn.textContent = 'Save';
+  if (error) { alert('Save failed: ' + error.message); return; }
+
+  const app = allApps.find(a => a.id === appId);
+  if (app) { app.status = status; app.hr_notes = hr_notes; }
+  renderStats(); renderList();
+  ok.style.display = 'inline';
+  setTimeout(() => { ok.style.display = 'none'; }, 2500);
+}
+
+async function dlCV(cvUrl) {
+  const { data, error } = await sb.storage.from('cvs').createSignedUrl(cvUrl, 120);
+  if (error || !data?.signedUrl) { alert('Could not generate download link: ' + (error?.message || 'Unknown error')); return; }
+  window.open(data.signedUrl, '_blank');
+}
+
+/* ---- FORM 1 RENDERER ---- */
+function buildForm1(d) {
+  const out = [];
+
+  // Personal
+  out.push(`<div class="f1-section">
+    <div class="f1-section-title">Personal Details</div>
+    <table class="data-table">
+      <tr><td>NI Number</td><td>${esc(d.ni_number || '—')}</td></tr>
+      <tr><td>Date of Birth</td><td>${fmtDOB(d.dob)}</td></tr>
+      <tr><td>Signed by</td><td>${d.declaration_signature ? `${esc(d.declaration_signature)} on ${fmtFull(d.declaration_signed_at)}` : '—'}</td></tr>
+    </table>
+  </div>`);
+
+  // Education
+  if (d.education?.length) {
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">Education</div>
+      ${d.education.map(e => `
+        <div class="data-entry">
+          <div class="de-title">${esc(e.qualification)}${e.grade ? ` &mdash; ${esc(e.grade)}` : ''}</div>
+          <div class="de-row"><span class="de-k">Institution</span><span class="de-v">${esc(e.institution || '—')}</span></div>
+          ${e.start_year ? `<div class="de-row"><span class="de-k">Period</span><span class="de-v">${e.start_year} &ndash; ${e.end_year || 'present'}</span></div>` : ''}
+        </div>`).join('')}
+    </div>`);
+  }
+
+  // Employment
+  if (d.employment_history?.length) {
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">Employment History</div>
+      ${d.employment_history.map(e => e.type === 'gap'
+        ? `<div class="data-entry gap-entry">
+             <div class="de-title" style="color:#92400E;">Gap in Employment</div>
+             <div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(e.from || '?')} &ndash; ${esc(e.to || '?')}</span></div>
+             <div class="de-row"><span class="de-k">Reason</span><span class="de-v">${esc(e.reason || '—')}</span></div>
+           </div>`
+        : `<div class="data-entry">
+             <div class="de-title">${esc(e.employer || '—')}</div>
+             <div class="de-row"><span class="de-k">Job title</span><span class="de-v">${esc(e.title || '—')}</span></div>
+             <div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(e.start || '?')} &ndash; ${esc(e.end || 'Present')}</span></div>
+             ${e.reason ? `<div class="de-row"><span class="de-k">Reason left</span><span class="de-v">${esc(e.reason)}</span></div>` : ''}
+           </div>`).join('')}
+    </div>`);
+  }
+
+  // Referees
+  if (d.referees?.length) {
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">Referees</div>
+      ${d.referees.map((r, i) => `
+        <div class="data-entry">
+          <div class="de-title">Referee ${i+1}: ${esc(r.name || '—')}</div>
+          <div class="de-row"><span class="de-k">Job title</span><span class="de-v">${esc(r.title || '—')}</span></div>
+          <div class="de-row"><span class="de-k">Organisation</span><span class="de-v">${esc(r.organisation || '—')}</span></div>
+          <div class="de-row"><span class="de-k">Email</span><span class="de-v"><a href="mailto:${esc(r.email)}" style="color:var(--sage)">${esc(r.email || '—')}</a></span></div>
+          <div class="de-row"><span class="de-k">Phone</span><span class="de-v">${esc(r.phone || '—')}</span></div>
+          <div class="de-row"><span class="de-k">Relationship</span><span class="de-v">${esc(r.relationship || '—')}</span></div>
+        </div>`).join('')}
+    </div>`);
+  }
+
+  // Address history
+  if (d.address_history?.length) {
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">5-Year Address History</div>
+      ${d.address_history.map(a => `
+        <div class="data-entry">
+          <div class="de-title">${esc(a.street)}, ${esc(a.city)}, ${esc(a.postcode)}</div>
+          <div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(a.from || '?')} &ndash; ${a.to ? esc(a.to) : 'Present'}</span></div>
+        </div>`).join('')}
+    </div>`);
+  }
+
+  return out.join('') || '<p class="no-data">No form data on record.</p>';
+}
+
+function togSec(head) {
+  const body = head.nextElementSibling;
+  body.classList.toggle('collapsed');
+  head.classList.toggle('closed');
+}
+
+/* ---- HELPERS ---- */
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtShort(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso), now = new Date();
+  const days = Math.floor((now - d) / 86400000);
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return days + 'd ago';
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function fmtFull(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function fmtDOB(dob) {
+  if (!dob) return '—';
+  try { return new Date(dob).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  catch(e) { return dob; }
+}
+
+init();
+</script>
+</body>
+</html>
