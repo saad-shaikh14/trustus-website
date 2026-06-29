@@ -30,7 +30,7 @@ gh CLI is at `C:\Program Files\GitHub CLI\gh.exe` — add to PATH in PowerShell:
 
 ## Contact details
 - Phone: 020 3411 1218 (landline, updated 2026-06-19)
-- Email: info@trustuscare.com
+- Email: info@trustuscare.com (restored 2026-06-29)
 - Address: Office G24, 47 Clarendon Road, Watford, Hertfordshire, WD17 1HP
 
 ## Design system
