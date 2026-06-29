@@ -100,11 +100,18 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 
 ## Careers page
 - File: `careers.html`
-- Expression of interest form — `id="careersForm"`, success div `id="careersSuccess"`
+- **Current:** Expression of interest form via formsubmit.co (temporary) — `id="careersForm"`, success div `id="careersSuccess"`
 - JS handler in `js/main.js` — POSTs to formsubmit.co, subject "New Career Enquiry — [role]"
 - Roles: Care Coordinator, Field Care Worker, Learning Disability Support Worker
-- Fields: firstName, lastName, phone (required), email (required), role (required)
-- When full job portal is ready, replace this page with links to the portal
+- Fields: firstName, lastName, phone (required), email (required), role (required), CV attachment (non-functional — formsubmit.co drops files)
+- **Replace with full portal once built** (see job portal plan in memory)
+
+## Job portal plan (not yet built — plan finalised 2026-06-29)
+- Stack: Supabase (Postgres + Auth) + Cloudflare R2 (CV files) + Resend (email) — all free tier
+- Blockers before build: Sajid creates Supabase project + Cloudflare R2 bucket + Resend DNS TXT record in Squarespace
+- Flow: Candidate submits CV → auto-email fires Form 1 link → candidate completes 6-step Form 1 → HR reviews CV + Form 1 → HR sends interview invite → competency test on interview day
+- No candidate accounts — token-based links only; HR is only authenticated user
+- Full plan in memory: `project_trustus_job_portal.md`
 
 ## Contact form backend
 - **Service:** formsubmit.co (free, no backend)
