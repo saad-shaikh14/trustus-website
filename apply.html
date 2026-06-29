@@ -676,8 +676,8 @@ function addEmployment() {
     </div>
     <div id="emp_gap_fields_${idx}" style="display:none;">
       <div class="form-row">
-        <div class="form-group"><label>Gap from *</label>${monthYearPicker(`emp_gap_from_${idx}`, true)}</div>
-        <div class="form-group"><label>Gap to *</label>${monthYearPicker(`emp_gap_to_${idx}`, true)}</div>
+        <div class="form-group"><label>Gap from *</label>${monthYearPicker(`emp_gap_from_${idx}`, false)}</div>
+        <div class="form-group"><label>Gap to *</label>${monthYearPicker(`emp_gap_to_${idx}`, false)}</div>
       </div>
       <div class="form-group"><label>Reason for gap *</label><input type="text" name="emp_gap_reason_${idx}" placeholder="e.g. Caring for a family member"></div>
     </div>`;
@@ -686,7 +686,11 @@ function addEmployment() {
 
 function toggleGap(cb, idx) {
   document.getElementById('emp_fields_' + idx).style.display = cb.checked ? 'none' : 'block';
-  document.getElementById('emp_gap_fields_' + idx).style.display = cb.checked ? 'block' : 'none';
+  const gapDiv = document.getElementById('emp_gap_fields_' + idx);
+  gapDiv.style.display = cb.checked ? 'block' : 'none';
+  gapDiv.querySelectorAll('select, input[type=number], input[type=text]').forEach(el => {
+    if (cb.checked) el.setAttribute('required', ''); else el.removeAttribute('required');
+  });
 }
 
 // ---- Dynamic: Address ----
