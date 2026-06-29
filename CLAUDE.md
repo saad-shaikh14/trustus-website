@@ -98,20 +98,33 @@ All card types (`.icon-box`, `.support-card`, `.process-step`) share identical s
 Top-level items: Home, Our Services (dropdown), About Us, Contact Us, Careers
 Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3 items only)
 
+## Admin portal login
+- URL: https://trustuscare.com/portal
+- Login email: hr@trustuscare.com (updated 2026-06-30)
+- HR notification emails (new CV, Form 1 complete) → info@trustuscare.com
+
 ## Careers page
 - File: `careers.html`
 - **Current:** Expression of interest form via formsubmit.co (temporary) — `id="careersForm"`, success div `id="careersSuccess"`
 - JS handler in `js/main.js` — POSTs to formsubmit.co, subject "New Career Enquiry — [role]"
 - Roles: Care Coordinator, Field Care Worker, Learning Disability Support Worker
 - Fields: firstName, lastName, phone (required), email (required), role (required), CV attachment (non-functional — formsubmit.co drops files)
-- **Replace with full portal once built** (see job portal plan in memory)
+- Full portal live (see below) — careers.html still used as public entry point
 
-## Job portal plan (not yet built — plan finalised 2026-06-29)
-- Stack: Supabase (Postgres + Auth) + Cloudflare R2 (CV files) + Resend (email) — all free tier
-- Blockers before build: Sajid creates Supabase project + Cloudflare R2 bucket + Resend DNS TXT record in Squarespace
-- Flow: Candidate submits CV → auto-email fires Form 1 link → candidate completes 6-step Form 1 → HR reviews CV + Form 1 → HR sends interview invite → competency test on interview day
+## Job portal (LIVE 2026-06-30)
+- Stack: Supabase (Postgres + Auth + Storage) + Resend — all free tier
+- Supabase project: `ssbcpblfkgpgtcxifopp`, dashboard: https://supabase.com/dashboard/project/ssbcpblfkgpgtcxifopp
+- CV files: Supabase Storage bucket `cvs` (signed URLs, 1hr expiry)
+- Emails: Resend via noreply@trustuscare.com (API key held by Saad, set as Edge Function secret)
+- DB schema in `trustus` schema (not `public`); public views `trustus_applications`, `trustus_application_details` bridge PostgREST
+- Edge Functions (Deno, project `ssbcpblfkgpgtcxifopp`): `submit-cv`, `submit-form1`, `send-invite` — all deployed with `--no-verify-jwt`
 - No candidate accounts — token-based links only; HR is only authenticated user
-- Full plan in memory: `project_trustus_job_portal.md`
+- Application statuses (DB constraint): `cv_received` → `form1_complete` → `shortlisted` → `interview_invited` → `rejected`
+- Full plan + schema in memory: `project_trustus_job_portal.md`
+
+**Remaining phases:**
+- Phase 6: Competency test + scorecard (20 MCQ, pass ≥12/20, answer keys server-side only, interviewer scorecard)
+- Phase 7: Monthly Google Apps Script — auto-zip CVs + application data → Google Drive
 
 ## Contact form backend
 - **Service:** formsubmit.co (free, no backend)
