@@ -588,13 +588,17 @@ async function sendInvite() {
   btn.disabled = true; btn.textContent = 'Sending…'; err.style.display = 'none';
 
   try {
+    const session = (await sb.auth.getSession()).data.session;
+    if (!session) throw new Error('Not logged in — please refresh the page');
     const res = await fetch(PORTAL_CONFIG.edgeBase + '/send-invite', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(await sb.auth.getSession()).data.session?.access_token}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
       body: JSON.stringify({ app_id: _inviteAppId, date, time, location, notes }),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || 'Failed');
+    const rawText = await res.text();
+    let json;
+    try { json = JSON.parse(rawText); } catch { throw new Error(`HTTP ${res.status} — ${rawText.slice(0, 120)}`); }
+    if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
 
     // Update local state
     const savedId = _inviteAppId;
