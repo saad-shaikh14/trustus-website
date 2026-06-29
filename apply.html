@@ -152,6 +152,16 @@
     <a href="contact-us.html" class="btn-primary" style="margin-top:24px;display:inline-block;">Contact Us</a>
   </div>
 
+  <!-- Already submitted state -->
+  <div id="alreadySubmitted" class="apply-wrap" style="display:none;text-align:center;padding:80px 24px;">
+    <div style="width:72px;height:72px;background:var(--sage);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+      <svg width="32" height="32" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="color:var(--sage);">Application Already Received</h2>
+    <p style="color:#555;max-width:440px;margin:0 auto 12px;line-height:1.8;">We already have your completed application. Our team will be in touch with you shortly.</p>
+    <p style="color:#888;font-size:0.9rem;">Questions? Call <a href="tel:02034111218" style="color:var(--sage);font-weight:600;">020 3411 1218</a> or email <a href="mailto:info@trustuscare.com" style="color:var(--sage);">info@trustuscare.com</a></p>
+  </div>
+
   <!-- Loading state -->
   <div id="loadingState" class="apply-wrap" style="text-align:center;padding:80px 24px;">
     <p style="color:#888;">Loading your application&hellip;</p>
@@ -425,24 +435,27 @@ let currentStep = 1;
 
   if (!appToken) { showTokenError(); return; }
 
-  // Validate token via Supabase REST (anon key, RLS blocks sensitive data)
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/trustus_applications_public?token=eq.${appToken}&select=first_name,role_applied`, {
-      headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}` }
-    });
+    const res  = await fetch(`${EDGE_BASE}/validate-token?token=${encodeURIComponent(appToken)}`);
+    const json = await res.json();
 
-    // Fallback: check via Edge Function approach — just show the form
-    // Token is validated server-side on submission anyway
+    if (!json.valid) { showTokenError(); return; }
+
+    if (json.status === 'form1_complete') {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('alreadySubmitted').style.display = 'block';
+      return;
+    }
+
+    // Token valid and form not yet submitted — show the form
+    document.getElementById('applySubtitle').textContent =
+      `Applying for: ${json.roleApplied} — Hi ${json.firstName}, please complete all sections below.`;
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('applyWrap').style.display = 'block';
 
-    // Set today's date on declaration
     document.getElementById('decl_date').value = new Date().toLocaleDateString('en-GB');
-
-    // Restore from localStorage if available
     restoreFromStorage();
 
-    // Add initial entries
     if (document.getElementById('educationList').children.length === 0) addEducation();
     if (document.getElementById('employmentList').children.length === 0) addEmployment();
     if (document.getElementById('addressList').children.length === 0) addAddress();
