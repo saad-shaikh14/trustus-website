@@ -132,6 +132,10 @@
     .btn-invite.enabled { color: var(--green); border-color: var(--green); opacity: 1; cursor: pointer; }
     .btn-invite.enabled:hover { background: var(--green); color: white; transform: translateY(-1px); }
 
+    /* Success toast */
+    #inviteToast { position:fixed; bottom:28px; right:28px; z-index:200; background:#3D6A5A; color:#fff; padding:14px 22px; border-radius:10px; font:600 14px Nunito; display:flex; align-items:center; gap:10px; box-shadow:0 8px 28px rgba(0,0,0,0.18); transform:translateY(20px); opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none; }
+    #inviteToast.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+    #inviteToast svg { flex-shrink:0; }
     /* Invite modal */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(17,17,17,0.45); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
     .modal-card { background: white; border-radius: 16px; padding: 32px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(17,17,17,0.18); border-top: 4px solid var(--green); }
@@ -270,6 +274,12 @@
     </div>
 
   </div>
+</div>
+
+<!-- Success toast -->
+<div id="inviteToast">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(255,255,255,0.25)"/><path d="M5 9l3 3 5-5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Interview invite sent successfully
 </div>
 
 <!-- Interview invite modal -->
@@ -600,13 +610,16 @@ async function sendInvite() {
     try { json = JSON.parse(rawText); } catch { throw new Error(`HTTP ${res.status} — ${rawText.slice(0, 120)}`); }
     if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
 
-    // Update local state
+    // Update local state and show toast
     const savedId = _inviteAppId;
     const app = allApps.find(a => a.id === savedId);
     if (app) app.status = 'interview_invited';
     closeInvite();
     renderStats(); renderList();
     openDetail(savedId);
+    const toast = document.getElementById('inviteToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
   } catch(e) {
     err.textContent = 'Error: ' + e.message;
     err.style.display = 'block';
