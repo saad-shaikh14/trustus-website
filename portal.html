@@ -172,27 +172,6 @@
     .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .save-ok { font-size: 0.8rem; color: var(--green); font-weight: 700; display: none; }
 
-    /* MCQ score card */
-    .mcq-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); border-top: 3px solid #9D174D; margin-bottom: 14px; overflow: hidden; }
-    .mcq-head { padding: 13px 16px; font-weight: 700; font-size: 0.87rem; color: var(--ink); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    .mcq-verdict { padding: 4px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-    .mcq-pass { background: #D1FAE5; color: #065F46; }
-    .mcq-fail { background: #FCE7F3; color: #9D174D; }
-    .mcq-body { padding: 16px; }
-    .mcq-score-big { font-size: 2.2rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
-    .mcq-score-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; }
-    .ss-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .ss-label { font-size: 0.79rem; color: var(--ink); flex: 1; }
-    .ss-bar { flex: 2; height: 5px; background: var(--bg-soft); border-radius: 50px; overflow: hidden; }
-    .ss-fill { height: 100%; border-radius: 50px; background: var(--green); }
-    .ss-score { font-size: 0.79rem; font-weight: 700; color: var(--ink); min-width: 34px; text-align: right; }
-    /* Scorecard */
-    .sc-domain-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
-    .sc-domain-row { display: flex; align-items: center; gap: 10px; }
-    .sc-domain-label { font-size: 0.82rem; color: var(--ink); flex: 1; }
-    .sc-rating-group { display: flex; gap: 4px; }
-    .sc-star { cursor: pointer; font-size: 1.1rem; color: #D4CCC6; transition: color 0.1s; }
-    .sc-star.on { color: #F59E0B; }
     /* Form1 data */
     .f1-section-title { font-weight: 700; color: var(--terra); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px; }
     .f1-section { margin-bottom: 18px; }
@@ -335,7 +314,6 @@ let curFilter  = 'all';
 let curSearch  = '';
 let openId     = null;
 let detCache   = {};
-let compCache  = {};
 
 const SC = {
   cv_received:       { label: 'CV Received',      cls: 'b-cv_received'       },
@@ -466,14 +444,7 @@ async function openDetail(id) {
     detCache[id] = data || null;
   }
 
-  // Fetch competency results if applicable
-  const needsComp = ['test_complete','shortlisted','interview_invited','rejected'].includes(app.status);
-  if (needsComp && !compCache[id]) {
-    const { data } = await sb.from('competency_results').select('*').eq('application_id', id).maybeSingle();
-    compCache[id] = data || null;
-  }
-
-  renderFull(app, detCache[id] || null, compCache[id] || null);
+  renderFull(app, detCache[id] || null);
 }
 
 function renderHeader(app) {
@@ -490,7 +461,7 @@ function renderHeader(app) {
     <div class="detail-body"><div style="text-align:center;padding:48px 0;"><div class="spin"></div></div></div>`;
 }
 
-function renderFull(app, det, comp) {
+function renderFull(app, det) {
   const s = SC[app.status] || { label: app.status, cls: '' };
 
   const cvBtn = app.cv_url
@@ -504,9 +475,6 @@ function renderFull(app, det, comp) {
     app.status === 'cv_received'
       ? 'Candidate has not yet completed their application form.'
       : 'No form details on record.'}</p>`;
-
-  const mcqHtml = buildMcqCard(comp, app.status);
-  const scorecardHtml = app.status === 'interview_invited' ? buildScorecardForm(app.id, comp) : '';
 
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-header">
@@ -534,9 +502,6 @@ function renderFull(app, det, comp) {
           Send Interview Invite
         </button>
       </div>
-
-      ${mcqHtml}
-      ${scorecardHtml}
 
       <div class="sec-card">
         <div class="sec-head">Status &amp; HR Notes</div>
@@ -663,161 +628,6 @@ async function sendInvite() {
     err.textContent = 'Error: ' + e.message;
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Send Invite';
-  }
-}
-
-/* ---- MCQ CARD ---- */
-const SS_META = [
-  { key: 'core_values',   label: 'Core Values & Prof. Boundaries', max: 4 },
-  { key: 'safeguarding',  label: 'Safeguarding & Risk Mgmt',        max: 4 },
-  { key: 'medication',    label: 'Medication & Infection Control',   max: 4 },
-  { key: 'emergency',     label: 'Emergency & Health & Safety',      max: 3 },
-  { key: 'communication', label: 'Learning Disabilities & Comms',    max: 5 },
-];
-
-function buildMcqCard(comp, status) {
-  const showStatuses = ['test_complete','shortlisted','interview_invited','rejected'];
-  if (!showStatuses.includes(status)) return '';
-  if (!comp || comp.mcq_score == null) return `<div class="mcq-card"><div class="mcq-head">Competency Test</div><div class="mcq-body"><p class="no-data">Test not yet completed.</p></div></div>`;
-
-  const score = comp.mcq_score;
-  const passed = score >= 12;
-  const ss = comp.section_scores || {};
-
-  const rows = SS_META.map(s => {
-    const got = ss[s.key] || 0;
-    const pct = Math.round(got / s.max * 100);
-    return `<div class="ss-row">
-      <span class="ss-label">${s.label}</span>
-      <div class="ss-bar"><div class="ss-fill" style="width:${pct}%"></div></div>
-      <span class="ss-score">${got}/${s.max}</span>
-    </div>`;
-  }).join('');
-
-  let outcomeHtml = '';
-  if (comp.outcome) {
-    const oc = { PASS: '#065F46', HOLD: '#92400E', FAIL: '#9D174D' }[comp.outcome] || '#333';
-    outcomeHtml = `<div style="margin-top:14px;padding:10px 14px;background:var(--bg-soft);border-radius:8px;font-size:0.84rem;">
-      <strong>Interview Outcome:</strong> <span style="color:${oc};font-weight:700">${comp.outcome}</span>
-      ${comp.interviewer_name ? ` &mdash; ${esc(comp.interviewer_name)}` : ''}
-      ${comp.strengths ? `<div style="margin-top:8px;"><strong>Strengths:</strong> ${esc(comp.strengths)}</div>` : ''}
-      ${comp.development_areas ? `<div style="margin-top:4px;"><strong>Development Areas:</strong> ${esc(comp.development_areas)}</div>` : ''}
-    </div>`;
-  }
-
-  return `<div class="mcq-card">
-    <div class="mcq-head">
-      Competency Test
-      <span class="mcq-verdict ${passed ? 'mcq-pass' : 'mcq-fail'}">${passed ? 'PASS' : 'FAIL'}</span>
-    </div>
-    <div class="mcq-body">
-      <div class="mcq-score-big">${score} / 20</div>
-      <div class="mcq-score-sub">Pass mark: 12 &mdash; candidate ${passed ? 'passed' : 'did not pass'}</div>
-      ${rows}
-      ${outcomeHtml}
-    </div>
-  </div>`;
-}
-
-/* ---- SCORECARD FORM ---- */
-const SC_DOMAINS = [
-  { key: 'core_values',   label: 'Core Values & Professional Boundaries' },
-  { key: 'safeguarding',  label: 'Safeguarding & Risk Management' },
-  { key: 'medication',    label: 'Medication & Infection Control' },
-  { key: 'emergency',     label: 'Emergency & Health and Safety' },
-  { key: 'communication', label: 'Communication & Specialist Support' },
-];
-
-let _scAppId = null;
-let _scRatings = { core_values: 0, safeguarding: 0, medication: 0, emergency: 0, communication: 0 };
-
-function buildScorecardForm(appId, comp) {
-  _scAppId = appId;
-  _scRatings = comp?.domain_ratings || { core_values: 0, safeguarding: 0, medication: 0, emergency: 0, communication: 0 };
-
-  const domainRows = SC_DOMAINS.map(d => {
-    const cur = _scRatings[d.key] || 0;
-    const stars = [1,2,3,4,5].map(v =>
-      `<span class="sc-star${cur >= v ? ' on' : ''}" id="sc_${d.key}_${v}" onclick="setRating('${d.key}',${v})">&#9733;</span>`
-    ).join('');
-    return `<div class="sc-domain-row"><span class="sc-domain-label">${d.label}</span><div class="sc-rating-group">${stars}</div></div>`;
-  }).join('');
-
-  const ex = comp || {};
-  return `<div class="sec-card">
-    <div class="sec-head">Interviewer Scorecard</div>
-    <div class="sec-body">
-      <div class="sc-domain-grid">${domainRows}</div>
-      <div class="mf" style="margin-bottom:10px">
-        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Strengths Identified</label>
-        <textarea class="hr-notes" id="sc_strengths" placeholder="Key strengths observed during interview…" style="min-height:70px">${esc(ex.strengths || '')}</textarea>
-      </div>
-      <div class="mf" style="margin-bottom:10px">
-        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Areas for Development</label>
-        <textarea class="hr-notes" id="sc_dev" placeholder="Areas needing improvement or support…" style="min-height:70px">${esc(ex.development_areas || '')}</textarea>
-      </div>
-      <div class="mf" style="margin-bottom:10px">
-        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Interviewer Name</label>
-        <input style="width:100%;padding:9px 11px;border:1.5px solid var(--border-2);border-radius:8px;font-family:Nunito,Arial,sans-serif;font-size:0.88rem;" id="sc_interviewer" value="${esc(ex.interviewer_name || '')}" placeholder="Full name">
-      </div>
-      <div style="margin-bottom:14px">
-        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:8px">Hiring Recommendation</label>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          ${['PASS','HOLD','FAIL'].map(o => `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.87rem;font-weight:700">
-            <input type="radio" name="sc_outcome" value="${o}" style="accent-color:var(--sage)" ${ex.outcome===o?'checked':''}>
-            <span style="color:${o==='PASS'?'#065F46':o==='HOLD'?'#92400E':'#9D174D'}">${o}</span>
-          </label>`).join('')}
-        </div>
-      </div>
-      <div class="save-row">
-        <button class="save-btn" id="scSaveBtn" onclick="saveScorecard()">Save Scorecard</button>
-        <span class="save-ok" id="scSaveOk">Saved &#10003;</span>
-      </div>
-    </div>
-  </div>`;
-}
-
-function setRating(domain, val) {
-  _scRatings[domain] = val;
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById(`sc_${domain}_${i}`);
-    if (el) el.classList.toggle('on', i <= val);
-  }
-}
-
-async function saveScorecard() {
-  const outcome = (document.querySelector('input[name="sc_outcome"]:checked') || {}).value || null;
-  const interviewer_name = (document.getElementById('sc_interviewer') || {}).value?.trim() || '';
-  const strengths = (document.getElementById('sc_strengths') || {}).value?.trim() || '';
-  const development_areas = (document.getElementById('sc_dev') || {}).value?.trim() || '';
-
-  if (!outcome || !interviewer_name) {
-    alert('Please select a hiring recommendation and enter the interviewer name.');
-    return;
-  }
-
-  const btn = document.getElementById('scSaveBtn');
-  btn.disabled = true; btn.textContent = 'Saving…';
-
-  try {
-    const session = (await sb.auth.getSession()).data.session;
-    if (!session) throw new Error('Not logged in');
-    const res = await fetch(PORTAL_CONFIG.edgeBase + '/submit-scorecard', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-      body: JSON.stringify({ app_id: _scAppId, domain_ratings: _scRatings, strengths, development_areas, outcome, interviewer_name }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    // Invalidate comp cache so next open re-fetches
-    delete compCache[_scAppId];
-    btn.disabled = false; btn.textContent = 'Save Scorecard';
-    const ok = document.getElementById('scSaveOk');
-    ok.style.display = 'inline';
-    setTimeout(() => { ok.style.display = 'none'; }, 2500);
-  } catch(e) {
-    btn.disabled = false; btn.textContent = 'Save Scorecard';
-    alert('Save failed: ' + e.message);
   }
 }
 
