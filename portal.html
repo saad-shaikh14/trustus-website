@@ -101,6 +101,7 @@
     .badge { display: inline-block; padding: 3px 9px; border-radius: 50px; font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
     .b-cv_received       { background: #FEF3C7; color: #92400E; }
     .b-form1_complete    { background: #DBEAFE; color: #1E40AF; }
+    .b-test_complete     { background: #FCE7F3; color: #9D174D; }
     .b-shortlisted       { background: #D1FAE5; color: #065F46; }
     .b-interview_invited { background: #EDE9FE; color: #5B21B6; }
     .b-rejected          { background: #F3F4F6; color: #6B7280; }
@@ -171,6 +172,27 @@
     .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .save-ok { font-size: 0.8rem; color: var(--green); font-weight: 700; display: none; }
 
+    /* MCQ score card */
+    .mcq-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); border-top: 3px solid #9D174D; margin-bottom: 14px; overflow: hidden; }
+    .mcq-head { padding: 13px 16px; font-weight: 700; font-size: 0.87rem; color: var(--ink); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .mcq-verdict { padding: 4px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+    .mcq-pass { background: #D1FAE5; color: #065F46; }
+    .mcq-fail { background: #FCE7F3; color: #9D174D; }
+    .mcq-body { padding: 16px; }
+    .mcq-score-big { font-size: 2.2rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+    .mcq-score-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; }
+    .ss-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .ss-label { font-size: 0.79rem; color: var(--ink); flex: 1; }
+    .ss-bar { flex: 2; height: 5px; background: var(--bg-soft); border-radius: 50px; overflow: hidden; }
+    .ss-fill { height: 100%; border-radius: 50px; background: var(--green); }
+    .ss-score { font-size: 0.79rem; font-weight: 700; color: var(--ink); min-width: 34px; text-align: right; }
+    /* Scorecard */
+    .sc-domain-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    .sc-domain-row { display: flex; align-items: center; gap: 10px; }
+    .sc-domain-label { font-size: 0.82rem; color: var(--ink); flex: 1; }
+    .sc-rating-group { display: flex; gap: 4px; }
+    .sc-star { cursor: pointer; font-size: 1.1rem; color: #D4CCC6; transition: color 0.1s; }
+    .sc-star.on { color: #F59E0B; }
     /* Form1 data */
     .f1-section-title { font-weight: 700; color: var(--terra); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 9px; }
     .f1-section { margin-bottom: 18px; }
@@ -249,6 +271,7 @@
           <option value="all">All Applications</option>
           <option value="cv_received">CV Received</option>
           <option value="form1_complete">Form Complete</option>
+          <option value="test_complete">Test Complete</option>
           <option value="shortlisted">Shortlisted</option>
           <option value="interview_invited">Interview Invited</option>
           <option value="rejected">Rejected</option>
@@ -312,10 +335,12 @@ let curFilter  = 'all';
 let curSearch  = '';
 let openId     = null;
 let detCache   = {};
+let compCache  = {};
 
 const SC = {
   cv_received:       { label: 'CV Received',      cls: 'b-cv_received'       },
   form1_complete:    { label: 'Form Complete',     cls: 'b-form1_complete'    },
+  test_complete:     { label: 'Test Complete',     cls: 'b-test_complete'     },
   shortlisted:       { label: 'Shortlisted',       cls: 'b-shortlisted'       },
   interview_invited: { label: 'Interview Invited', cls: 'b-interview_invited' },
   rejected:          { label: 'Not Progressing',   cls: 'b-rejected'          },
@@ -435,13 +460,20 @@ async function openDetail(id) {
   renderHeader(app);
 
   // Fetch form1 details if applicable
-  const needsDetails = ['form1_complete','shortlisted','interview_invited','rejected'].includes(app.status);
+  const needsDetails = ['form1_complete','test_complete','shortlisted','interview_invited','rejected'].includes(app.status);
   if (needsDetails && !detCache[id]) {
     const { data } = await sb.from('trustus_application_details').select('*').eq('application_id', id).single();
     detCache[id] = data || null;
   }
 
-  renderFull(app, detCache[id] || null);
+  // Fetch competency results if applicable
+  const needsComp = ['test_complete','shortlisted','interview_invited','rejected'].includes(app.status);
+  if (needsComp && !compCache[id]) {
+    const { data } = await sb.from('competency_results').select('*').eq('application_id', id).maybeSingle();
+    compCache[id] = data || null;
+  }
+
+  renderFull(app, detCache[id] || null, compCache[id] || null);
 }
 
 function renderHeader(app) {
@@ -458,7 +490,7 @@ function renderHeader(app) {
     <div class="detail-body"><div style="text-align:center;padding:48px 0;"><div class="spin"></div></div></div>`;
 }
 
-function renderFull(app, det) {
+function renderFull(app, det, comp) {
   const s = SC[app.status] || { label: app.status, cls: '' };
 
   const cvBtn = app.cv_url
@@ -472,6 +504,9 @@ function renderFull(app, det) {
     app.status === 'cv_received'
       ? 'Candidate has not yet completed their application form.'
       : 'No form details on record.'}</p>`;
+
+  const mcqHtml = buildMcqCard(comp, app.status);
+  const scorecardHtml = app.status === 'interview_invited' ? buildScorecardForm(app.id, comp) : '';
 
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-header">
@@ -500,6 +535,9 @@ function renderFull(app, det) {
         </button>
       </div>
 
+      ${mcqHtml}
+      ${scorecardHtml}
+
       <div class="sec-card">
         <div class="sec-head">Status &amp; HR Notes</div>
         <div class="sec-body">
@@ -507,6 +545,7 @@ function renderFull(app, det) {
             <select class="status-select" id="statusSel" onchange="updateBadge()">
               <option value="cv_received"       ${app.status==='cv_received'       ?'selected':''}>CV Received</option>
               <option value="form1_complete"    ${app.status==='form1_complete'    ?'selected':''}>Form Complete</option>
+              <option value="test_complete"     ${app.status==='test_complete'     ?'selected':''}>Test Complete</option>
               <option value="shortlisted"       ${app.status==='shortlisted'       ?'selected':''}>Shortlisted</option>
               <option value="interview_invited" ${app.status==='interview_invited' ?'selected':''}>Interview Invited</option>
               <option value="rejected"          ${app.status==='rejected'          ?'selected':''}>Not Progressing</option>
@@ -627,6 +666,161 @@ async function sendInvite() {
   }
 }
 
+/* ---- MCQ CARD ---- */
+const SS_META = [
+  { key: 'core_values',   label: 'Core Values & Prof. Boundaries', max: 4 },
+  { key: 'safeguarding',  label: 'Safeguarding & Risk Mgmt',        max: 4 },
+  { key: 'medication',    label: 'Medication & Infection Control',   max: 4 },
+  { key: 'emergency',     label: 'Emergency & Health & Safety',      max: 3 },
+  { key: 'communication', label: 'Learning Disabilities & Comms',    max: 5 },
+];
+
+function buildMcqCard(comp, status) {
+  const showStatuses = ['test_complete','shortlisted','interview_invited','rejected'];
+  if (!showStatuses.includes(status)) return '';
+  if (!comp || comp.mcq_score == null) return `<div class="mcq-card"><div class="mcq-head">Competency Test</div><div class="mcq-body"><p class="no-data">Test not yet completed.</p></div></div>`;
+
+  const score = comp.mcq_score;
+  const passed = score >= 12;
+  const ss = comp.section_scores || {};
+
+  const rows = SS_META.map(s => {
+    const got = ss[s.key] || 0;
+    const pct = Math.round(got / s.max * 100);
+    return `<div class="ss-row">
+      <span class="ss-label">${s.label}</span>
+      <div class="ss-bar"><div class="ss-fill" style="width:${pct}%"></div></div>
+      <span class="ss-score">${got}/${s.max}</span>
+    </div>`;
+  }).join('');
+
+  let outcomeHtml = '';
+  if (comp.outcome) {
+    const oc = { PASS: '#065F46', HOLD: '#92400E', FAIL: '#9D174D' }[comp.outcome] || '#333';
+    outcomeHtml = `<div style="margin-top:14px;padding:10px 14px;background:var(--bg-soft);border-radius:8px;font-size:0.84rem;">
+      <strong>Interview Outcome:</strong> <span style="color:${oc};font-weight:700">${comp.outcome}</span>
+      ${comp.interviewer_name ? ` &mdash; ${esc(comp.interviewer_name)}` : ''}
+      ${comp.strengths ? `<div style="margin-top:8px;"><strong>Strengths:</strong> ${esc(comp.strengths)}</div>` : ''}
+      ${comp.development_areas ? `<div style="margin-top:4px;"><strong>Development Areas:</strong> ${esc(comp.development_areas)}</div>` : ''}
+    </div>`;
+  }
+
+  return `<div class="mcq-card">
+    <div class="mcq-head">
+      Competency Test
+      <span class="mcq-verdict ${passed ? 'mcq-pass' : 'mcq-fail'}">${passed ? 'PASS' : 'FAIL'}</span>
+    </div>
+    <div class="mcq-body">
+      <div class="mcq-score-big">${score} / 20</div>
+      <div class="mcq-score-sub">Pass mark: 12 &mdash; candidate ${passed ? 'passed' : 'did not pass'}</div>
+      ${rows}
+      ${outcomeHtml}
+    </div>
+  </div>`;
+}
+
+/* ---- SCORECARD FORM ---- */
+const SC_DOMAINS = [
+  { key: 'core_values',   label: 'Core Values & Professional Boundaries' },
+  { key: 'safeguarding',  label: 'Safeguarding & Risk Management' },
+  { key: 'medication',    label: 'Medication & Infection Control' },
+  { key: 'emergency',     label: 'Emergency & Health and Safety' },
+  { key: 'communication', label: 'Communication & Specialist Support' },
+];
+
+let _scAppId = null;
+let _scRatings = { core_values: 0, safeguarding: 0, medication: 0, emergency: 0, communication: 0 };
+
+function buildScorecardForm(appId, comp) {
+  _scAppId = appId;
+  _scRatings = comp?.domain_ratings || { core_values: 0, safeguarding: 0, medication: 0, emergency: 0, communication: 0 };
+
+  const domainRows = SC_DOMAINS.map(d => {
+    const cur = _scRatings[d.key] || 0;
+    const stars = [1,2,3,4,5].map(v =>
+      `<span class="sc-star${cur >= v ? ' on' : ''}" id="sc_${d.key}_${v}" onclick="setRating('${d.key}',${v})">&#9733;</span>`
+    ).join('');
+    return `<div class="sc-domain-row"><span class="sc-domain-label">${d.label}</span><div class="sc-rating-group">${stars}</div></div>`;
+  }).join('');
+
+  const ex = comp || {};
+  return `<div class="sec-card">
+    <div class="sec-head">Interviewer Scorecard</div>
+    <div class="sec-body">
+      <div class="sc-domain-grid">${domainRows}</div>
+      <div class="mf" style="margin-bottom:10px">
+        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Strengths Identified</label>
+        <textarea class="hr-notes" id="sc_strengths" placeholder="Key strengths observed during interview…" style="min-height:70px">${esc(ex.strengths || '')}</textarea>
+      </div>
+      <div class="mf" style="margin-bottom:10px">
+        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Areas for Development</label>
+        <textarea class="hr-notes" id="sc_dev" placeholder="Areas needing improvement or support…" style="min-height:70px">${esc(ex.development_areas || '')}</textarea>
+      </div>
+      <div class="mf" style="margin-bottom:10px">
+        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:5px">Interviewer Name</label>
+        <input style="width:100%;padding:9px 11px;border:1.5px solid var(--border-2);border-radius:8px;font-family:Nunito,Arial,sans-serif;font-size:0.88rem;" id="sc_interviewer" value="${esc(ex.interviewer_name || '')}" placeholder="Full name">
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:0.8rem;font-weight:700;color:var(--ink);margin-bottom:8px">Hiring Recommendation</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          ${['PASS','HOLD','FAIL'].map(o => `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.87rem;font-weight:700">
+            <input type="radio" name="sc_outcome" value="${o}" style="accent-color:var(--sage)" ${ex.outcome===o?'checked':''}>
+            <span style="color:${o==='PASS'?'#065F46':o==='HOLD'?'#92400E':'#9D174D'}">${o}</span>
+          </label>`).join('')}
+        </div>
+      </div>
+      <div class="save-row">
+        <button class="save-btn" id="scSaveBtn" onclick="saveScorecard()">Save Scorecard</button>
+        <span class="save-ok" id="scSaveOk">Saved &#10003;</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setRating(domain, val) {
+  _scRatings[domain] = val;
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`sc_${domain}_${i}`);
+    if (el) el.classList.toggle('on', i <= val);
+  }
+}
+
+async function saveScorecard() {
+  const outcome = (document.querySelector('input[name="sc_outcome"]:checked') || {}).value || null;
+  const interviewer_name = (document.getElementById('sc_interviewer') || {}).value?.trim() || '';
+  const strengths = (document.getElementById('sc_strengths') || {}).value?.trim() || '';
+  const development_areas = (document.getElementById('sc_dev') || {}).value?.trim() || '';
+
+  if (!outcome || !interviewer_name) {
+    alert('Please select a hiring recommendation and enter the interviewer name.');
+    return;
+  }
+
+  const btn = document.getElementById('scSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const session = (await sb.auth.getSession()).data.session;
+    if (!session) throw new Error('Not logged in');
+    const res = await fetch(PORTAL_CONFIG.edgeBase + '/submit-scorecard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+      body: JSON.stringify({ app_id: _scAppId, domain_ratings: _scRatings, strengths, development_areas, outcome, interviewer_name }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    // Invalidate comp cache so next open re-fetches
+    delete compCache[_scAppId];
+    btn.disabled = false; btn.textContent = 'Save Scorecard';
+    const ok = document.getElementById('scSaveOk');
+    ok.style.display = 'inline';
+    setTimeout(() => { ok.style.display = 'none'; }, 2500);
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Save Scorecard';
+    alert('Save failed: ' + e.message);
+  }
+}
+
 /* ---- FORM 1 RENDERER ---- */
 function buildForm1(d) {
   const out = [];
@@ -635,8 +829,12 @@ function buildForm1(d) {
   out.push(`<div class="f1-section">
     <div class="f1-section-title">Personal Details</div>
     <table class="data-table">
+      ${d.title ? `<tr><td>Title</td><td>${esc(d.title)}</td></tr>` : ''}
       <tr><td>NI Number</td><td>${esc(d.ni_number || '—')}</td></tr>
       <tr><td>Date of Birth</td><td>${fmtDOB(d.dob)}</td></tr>
+      ${d.mobile ? `<tr><td>Mobile</td><td><a href="tel:${esc(d.mobile)}">${esc(d.mobile)}</a></td></tr>` : ''}
+      ${d.alt_phone ? `<tr><td>Alt Phone</td><td><a href="tel:${esc(d.alt_phone)}">${esc(d.alt_phone)}</a></td></tr>` : ''}
+      ${d.email ? `<tr><td>Email (Form 1)</td><td><a href="mailto:${esc(d.email)}">${esc(d.email)}</a></td></tr>` : ''}
       <tr><td>Signed by</td><td>${d.declaration_signature ? `${esc(d.declaration_signature)} on ${fmtFull(d.declaration_signed_at)}` : '—'}</td></tr>
     </table>
   </div>`);
@@ -649,15 +847,41 @@ function buildForm1(d) {
         <div class="data-entry">
           <div class="de-title">${esc(e.qualification)}${e.grade ? ` &mdash; ${esc(e.grade)}` : ''}</div>
           <div class="de-row"><span class="de-k">Institution</span><span class="de-v">${esc(e.institution || '—')}</span></div>
-          ${e.start_year ? `<div class="de-row"><span class="de-k">Period</span><span class="de-v">${e.start_year} &ndash; ${e.end_year || 'present'}</span></div>` : ''}
+          ${(e.start_month||e.start_year) ? `<div class="de-row"><span class="de-k">Period</span><span class="de-v">${[e.start_month,e.start_year].filter(Boolean).join('/')} &ndash; ${[e.end_month,e.end_year].filter(Boolean).join('/') || 'present'}</span></div>` : ''}
         </div>`).join('')}
     </div>`);
   }
 
-  // Employment
+  // Other training
+  if (d.other_training) {
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">Other Specialised Training</div>
+      <div class="data-entry" style="white-space:pre-wrap">${esc(d.other_training)}</div>
+    </div>`);
+  }
+
+  // Current/most recent employer
+  if (d.current_employer && typeof d.current_employer === 'object') {
+    const ce = d.current_employer;
+    out.push(`<div class="f1-section">
+      <div class="f1-section-title">Current / Most Recent Employer</div>
+      <div class="data-entry">
+        ${ce.address ? `<div class="de-row"><span class="de-k">Employer</span><span class="de-v" style="white-space:pre-wrap">${esc(ce.address)}</span></div>` : ''}
+        ${ce.job_title ? `<div class="de-row"><span class="de-k">Job Title</span><span class="de-v">${esc(ce.job_title)}</span></div>` : ''}
+        ${ce.duties ? `<div class="de-row"><span class="de-k">Duties</span><span class="de-v" style="white-space:pre-wrap">${esc(ce.duties)}</span></div>` : ''}
+        ${ce.phone ? `<div class="de-row"><span class="de-k">Phone</span><span class="de-v">${esc(ce.phone)}</span></div>` : ''}
+        ${(ce.date_from||ce.date_to) ? `<div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(ce.date_from||'?')} &ndash; ${esc(ce.date_to||'Present')}</span></div>` : ''}
+        ${ce.salary ? `<div class="de-row"><span class="de-k">Salary</span><span class="de-v">${esc(ce.salary)}</span></div>` : ''}
+        ${ce.notice_period ? `<div class="de-row"><span class="de-k">Notice</span><span class="de-v">${esc(ce.notice_period)}</span></div>` : ''}
+        ${ce.reason_leaving ? `<div class="de-row"><span class="de-k">Reason leaving</span><span class="de-v">${esc(ce.reason_leaving)}</span></div>` : ''}
+      </div>
+    </div>`);
+  }
+
+  // Previous employment
   if (d.employment_history?.length) {
     out.push(`<div class="f1-section">
-      <div class="f1-section-title">Employment History</div>
+      <div class="f1-section-title">Previous Employment History</div>
       ${d.employment_history.map(e => e.type === 'gap'
         ? `<div class="data-entry gap-entry">
              <div class="de-title" style="color:#92400E;">Gap in Employment</div>
@@ -665,10 +889,11 @@ function buildForm1(d) {
              <div class="de-row"><span class="de-k">Reason</span><span class="de-v">${esc(e.reason || '—')}</span></div>
            </div>`
         : `<div class="data-entry">
-             <div class="de-title">${esc(e.employer || '—')}</div>
-             <div class="de-row"><span class="de-k">Job title</span><span class="de-v">${esc(e.title || '—')}</span></div>
-             <div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(e.start || '?')} &ndash; ${esc(e.end || 'Present')}</span></div>
-             ${e.reason ? `<div class="de-row"><span class="de-k">Reason left</span><span class="de-v">${esc(e.reason)}</span></div>` : ''}
+             ${e.employer_address ? `<div class="de-row"><span class="de-k">Employer</span><span class="de-v" style="white-space:pre-wrap">${esc(e.employer_address)}</span></div>` : (e.employer ? `<div class="de-title">${esc(e.employer)}</div>` : '')}
+             ${e.position ? `<div class="de-row"><span class="de-k">Position</span><span class="de-v">${esc(e.position)}</span></div>` : (e.title ? `<div class="de-row"><span class="de-k">Job title</span><span class="de-v">${esc(e.title)}</span></div>` : '')}
+             ${e.salary ? `<div class="de-row"><span class="de-k">Salary</span><span class="de-v">${esc(e.salary)}</span></div>` : ''}
+             ${(e.date_from||e.date_to||e.start||e.end) ? `<div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(e.date_from||e.start||'?')} &ndash; ${esc(e.date_to||e.end||'Present')}</span></div>` : ''}
+             ${e.reason_leaving||e.reason ? `<div class="de-row"><span class="de-k">Reason left</span><span class="de-v">${esc(e.reason_leaving||e.reason)}</span></div>` : ''}
            </div>`).join('')}
     </div>`);
   }
@@ -682,6 +907,8 @@ function buildForm1(d) {
           <div class="de-title">Referee ${i+1}: ${esc(r.name || '—')}</div>
           <div class="de-row"><span class="de-k">Job title</span><span class="de-v">${esc(r.title || '—')}</span></div>
           <div class="de-row"><span class="de-k">Organisation</span><span class="de-v">${esc(r.organisation || '—')}</span></div>
+          ${r.company_address ? `<div class="de-row"><span class="de-k">Address</span><span class="de-v" style="white-space:pre-wrap">${esc(r.company_address)}</span></div>` : ''}
+          ${r.post_code ? `<div class="de-row"><span class="de-k">Post Code</span><span class="de-v">${esc(r.post_code)}</span></div>` : ''}
           <div class="de-row"><span class="de-k">Email</span><span class="de-v"><a href="mailto:${esc(r.email)}" style="color:var(--sage)">${esc(r.email || '—')}</a></span></div>
           <div class="de-row"><span class="de-k">Phone</span><span class="de-v">${esc(r.phone || '—')}</span></div>
           <div class="de-row"><span class="de-k">Relationship</span><span class="de-v">${esc(r.relationship || '—')}</span></div>
@@ -695,7 +922,7 @@ function buildForm1(d) {
       <div class="f1-section-title">5-Year Address History</div>
       ${d.address_history.map(a => `
         <div class="data-entry">
-          <div class="de-title">${esc(a.street)}, ${esc(a.city)}, ${esc(a.postcode)}</div>
+          <div class="de-title">${esc(a.address || a.street || '—')}${a.postcode || a.post_code ? `, ${esc(a.postcode||a.post_code)}` : ''}</div>
           <div class="de-row"><span class="de-k">Period</span><span class="de-v">${esc(a.from || '?')} &ndash; ${a.to ? esc(a.to) : 'Present'}</span></div>
         </div>`).join('')}
     </div>`);
