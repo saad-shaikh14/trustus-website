@@ -821,11 +821,13 @@ async function saveNotes(appId) {
 }
 
 async function dlCV(cvUrl, appId) {
-  const { data, error } = await sb.storage.from('cvs').createSignedUrl(cvUrl, 120);
+  const app = allApps.find(a => a.id === appId);
+  const ext = cvUrl.split('.').pop() || 'pdf';
+  const downloadName = app ? `${app.first_name}_${app.last_name}_CV.${ext}` : undefined;
+  const { data, error } = await sb.storage.from('cvs').createSignedUrl(cvUrl, 120, downloadName ? { download: downloadName } : {});
   if (error || !data?.signedUrl) { alert('Could not generate download link: ' + (error?.message || 'Unknown error')); return; }
   window.open(data.signedUrl, '_blank');
-  const app = allApps.find(a => a.id === appId);
-  if (app && app.status !== 'cv_received' && app.status !== 'rejected') {
+  if (app && app.status !== 'rejected') {
     setTimeout(() => openInvite(appId, app.first_name + ' ' + app.last_name, app.email), 600);
   }
 }
