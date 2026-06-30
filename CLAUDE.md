@@ -119,12 +119,18 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 - DB schema in `trustus` schema (not `public`); public views `trustus_applications`, `trustus_application_details` bridge PostgREST
 - Edge Functions (Deno, project `ssbcpblfkgpgtcxifopp`): `submit-cv`, `submit-form1`, `send-invite` — all deployed with `--no-verify-jwt`
 - No candidate accounts — token-based links only; HR is only authenticated user
-- Application statuses (DB constraint): `cv_received` → `form1_complete` → `shortlisted` → `interview_invited` → `rejected`
+- Application statuses: `cv_received` → `form1_complete` → `test_complete` → `shortlisted` → `interview_invited` → `rejected`
 - Full plan + schema in memory: `project_trustus_job_portal.md`
 
-**Remaining phases:**
-- Phase 6: Competency test + scorecard (20 MCQ, pass ≥12/20, answer keys server-side only, interviewer scorecard)
-- Phase 7: Monthly Google Apps Script — auto-zip CVs + application data → Google Drive
+**Phase 6 (LIVE 2026-06-30):** Competency test + scorecard
+- `test.html` — candidate MCQ page (20 questions, token-gated, server-side answer key)
+- Edge functions: `submit-mcq` (scores + HR email), `submit-scorecard` (HR JWT, upserts domain_ratings/outcome)
+- `submit-form1` updated to email candidate test link after form save
+- Portal: `test_complete` status, MCQ score card, interviewer scorecard form
+- DB: `public.competency_results` view (PostgREST bridge to `trustus.competency_results`)
+
+**Phase 7 (pending):** Monthly Google Apps Script — `monthly_export.gs` at project root
+- Set SERVICE_ROLE_KEY and DRIVE_FOLDER_ID in the script, paste into Google Apps Script, add monthly trigger
 
 ## Contact form backend
 - **Service:** formsubmit.co (free, no backend)
