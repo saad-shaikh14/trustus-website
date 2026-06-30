@@ -136,6 +136,40 @@
     .btn-scorecard:hover { background: var(--terra); color: white; transform: translateY(-1px); }
     .btn-scorecard:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
+    /* Tabs */
+    .tab-nav { display:flex; gap:4px; margin:18px 0 0; border-bottom:2px solid var(--border); }
+    .tab-btn { padding:9px 18px; border:none; background:none; font-family:Nunito,Arial,sans-serif; font-size:0.88rem; font-weight:700; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color 0.15s,border-color 0.15s; }
+    .tab-btn.active { color:var(--terra); border-bottom-color:var(--terra); }
+    .tab-pane { display:none; }
+    .tab-pane.active { display:block; }
+
+    /* Scorecard form */
+    .sc-domain-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f3f4f6; }
+    .sc-domain-row:last-child { border-bottom:none; }
+    .sc-domain-label { font-size:0.88rem; color:#374151; }
+    .sc-stars { display:flex; gap:4px; }
+    .sc-star { font-size:1.3rem; cursor:pointer; color:#d1d5db; transition:color 0.1s; line-height:1; }
+    .sc-star.on { color:#C8526A; }
+    .sc-star:hover ~ .sc-star { color:#d1d5db !important; }
+    .outcome-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
+    .outcome-btn { padding:9px 22px; border-radius:50px; border:1.5px solid #d1d5db; background:#fff; font-family:Nunito,Arial,sans-serif; font-size:0.85rem; font-weight:700; cursor:pointer; transition:all 0.15s; color:#374151; }
+    .outcome-btn.sel-PASS { background:#dcfce7; border-color:#166534; color:#166534; }
+    .outcome-btn.sel-HOLD { background:#fef3c7; border-color:#92400e; color:#92400e; }
+    .outcome-btn.sel-FAIL { background:#fee2e2; border-color:#991b1b; color:#991b1b; }
+    .sc-save-row { display:flex; align-items:center; gap:12px; margin-top:16px; }
+    .sc-save-btn { padding:11px 28px; background:var(--terra); color:#fff; border:none; border-radius:50px; font-family:Nunito,Arial,sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+    .sc-save-btn:hover { background:#b04059; }
+    .sc-save-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .sc-save-ok { font-size:0.85rem; color:#3D6A5A; font-weight:700; display:none; }
+
+    /* MCQ score card */
+    .mcq-score-card { background:#f8f9fa; border-radius:10px; padding:16px 18px; margin-bottom:4px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+    .mcq-score-big { font-size:2rem; font-weight:800; }
+    .mcq-pass { color:#166534; } .mcq-fail { color:#991b1b; }
+    .mcq-sections { flex:1; min-width:180px; }
+    .mcq-sec-row { display:flex; justify-content:space-between; font-size:0.8rem; padding:3px 0; color:#555; }
+    .mcq-sec-row span:last-child { font-weight:700; color:#1C2B4A; }
+
     /* Toasts */
     #inviteToast, #scorecardToast { position:fixed; bottom:28px; right:28px; z-index:200; color:#fff; padding:14px 22px; border-radius:10px; font:600 14px Nunito; display:flex; align-items:center; gap:10px; box-shadow:0 8px 28px rgba(0,0,0,0.18); transform:translateY(20px); opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none; }
     #inviteToast { background:#3D6A5A; }
@@ -318,11 +352,7 @@
 <div id="scorecardModal" class="modal-backdrop" style="display:none" onclick="if(event.target===this)closeScorecardModal()">
   <div class="modal-card">
     <div class="modal-title">Generate Competency Test Link</div>
-    <div class="modal-sub">A single-use link will be created for the interviewer. It expires after 8 hours.</div>
-    <div class="mf">
-      <label>Interviewer Email *</label>
-      <input type="email" id="sc_interviewer_email" placeholder="interviewer@example.com">
-    </div>
+    <div class="modal-sub">A link to the 20-question competency test will be copied to your clipboard. Share it with the candidate before the interview.</div>
     <div class="modal-err" id="scorecardModalErr"></div>
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeScorecardModal()">Cancel</button>
@@ -520,6 +550,12 @@ function renderFull(app, det, sc) {
       ? 'Candidate has not yet completed their application form.'
       : 'No form details on record.'}</p>`;
 
+  // Initialise scorecard state from existing data
+  _ratings = (sc && sc.domain_ratings) ? Object.assign({}, sc.domain_ratings) : {};
+  _outcome = (sc && sc.outcome) || '';
+
+  const showScTab = ['shortlisted','interview_invited','rejected'].includes(app.status);
+
   document.getElementById('detailContent').innerHTML = `
     <div class="detail-header">
       <div class="detail-name">${esc(app.first_name)} ${esc(app.last_name)}</div>
@@ -530,110 +566,214 @@ function renderFull(app, det, sc) {
       </div>
     </div>
 
-    <div class="detail-body">
+    ${showScTab ? `<div class="tab-nav">
+      <button class="tab-btn active" id="tabBtnOverview" onclick="showTab('overview')">Overview</button>
+      <button class="tab-btn" id="tabBtnScorecard" onclick="showTab('scorecard')">Scorecard</button>
+    </div>` : ''}
 
-      <div class="info-row">
-        <div class="info-item"><label>Email</label><a href="mailto:${esc(app.email)}">${esc(app.email)}</a></div>
-        <div class="info-item"><label>Phone</label><a href="tel:${esc(app.phone)}">${esc(app.phone)}</a></div>
-        ${app.form1_submitted_at ? `<div class="info-item"><label>Form Submitted</label><span>${fmtFull(app.form1_submitted_at)}</span></div>` : ''}
-      </div>
+    <div class="tab-pane active" id="tab-overview">
+      <div class="detail-body">
 
-      <div class="action-row">
-        ${cvBtn}
-        <button class="btn-invite${['shortlisted','interview_invited'].includes(app.status) ? ' enabled' : ''}"
-          ${['shortlisted','interview_invited'].includes(app.status) ? `onclick="openInvite('${app.id}','${esc(app.first_name)} ${esc(app.last_name)}','${esc(app.email)}')"` : 'title="Shortlist the candidate first"'}>
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Send Interview Invite
-        </button>
-        ${app.status === 'interview_invited' ? `<button class="btn-scorecard" onclick="openScorecardModal('${app.id}')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          Generate Competency Test Link
-        </button>` : ''}
-      </div>
+        <div class="info-row">
+          <div class="info-item"><label>Email</label><a href="mailto:${esc(app.email)}">${esc(app.email)}</a></div>
+          <div class="info-item"><label>Phone</label><a href="tel:${esc(app.phone)}">${esc(app.phone)}</a></div>
+          ${app.form1_submitted_at ? `<div class="info-item"><label>Form Submitted</label><span>${fmtFull(app.form1_submitted_at)}</span></div>` : ''}
+        </div>
 
-      <div class="sec-card">
-        <div class="sec-head">Status &amp; HR Notes</div>
-        <div class="sec-body">
-          <div class="status-row">
-            <select class="status-select" id="statusSel" onchange="updateBadge()">
-              <option value="cv_received"       ${app.status==='cv_received'       ?'selected':''}>CV Received</option>
-              <option value="form1_complete"    ${app.status==='form1_complete'    ?'selected':''}>Form Complete</option>
-              <option value="test_complete"     ${app.status==='test_complete'     ?'selected':''}>Test Complete</option>
-              <option value="shortlisted"       ${app.status==='shortlisted'       ?'selected':''}>Shortlisted</option>
-              <option value="interview_invited" ${app.status==='interview_invited' ?'selected':''}>Interview Invited</option>
-              <option value="rejected"          ${app.status==='rejected'          ?'selected':''}>Not Progressing</option>
-            </select>
-          </div>
-          <textarea class="hr-notes" id="hrNotes" placeholder="HR notes…">${esc(app.hr_notes || '')}</textarea>
-          <div class="save-row">
-            <button class="save-btn" id="saveBtn" onclick="saveUpdate('${app.id}')">Save</button>
-            <span class="save-ok" id="saveOk">Saved &#10003;</span>
+        <div class="action-row">
+          ${cvBtn}
+          <button class="btn-invite${['shortlisted','interview_invited'].includes(app.status) ? ' enabled' : ''}"
+            ${['shortlisted','interview_invited'].includes(app.status) ? `onclick="openInvite('${app.id}','${esc(app.first_name)} ${esc(app.last_name)}','${esc(app.email)}')"` : 'title="Shortlist the candidate first"'}>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Send Interview Invite
+          </button>
+          ${app.status === 'interview_invited' ? `<button class="btn-scorecard" onclick="openScorecardModal('${app.id}')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Generate Competency Test Link
+          </button>` : ''}
+        </div>
+
+        <div class="sec-card">
+          <div class="sec-head">Status &amp; HR Notes</div>
+          <div class="sec-body">
+            <div class="status-row">
+              <select class="status-select" id="statusSel" onchange="updateBadge()">
+                <option value="cv_received"       ${app.status==='cv_received'       ?'selected':''}>CV Received</option>
+                <option value="form1_complete"    ${app.status==='form1_complete'    ?'selected':''}>Form Complete</option>
+                <option value="test_complete"     ${app.status==='test_complete'     ?'selected':''}>Test Complete</option>
+                <option value="shortlisted"       ${app.status==='shortlisted'       ?'selected':''}>Shortlisted</option>
+                <option value="interview_invited" ${app.status==='interview_invited' ?'selected':''}>Interview Invited</option>
+                <option value="rejected"          ${app.status==='rejected'          ?'selected':''}>Not Progressing</option>
+              </select>
+            </div>
+            <textarea class="hr-notes" id="hrNotes" placeholder="HR notes…">${esc(app.hr_notes || '')}</textarea>
+            <div class="save-row">
+              <button class="save-btn" id="saveBtn" onclick="saveUpdate('${app.id}')">Save</button>
+              <span class="save-ok" id="saveOk">Saved &#10003;</span>
+            </div>
           </div>
         </div>
+
+        ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? buildMcqCard(sc) : ''}
+
+        <div class="sec-card">
+          <div class="sec-head">Application Form Details</div>
+          <div class="sec-body">${form1Html}</div>
+        </div>
+
       </div>
+    </div>
 
-      ${sc
-        ? buildScorecard(sc)
-        : (['shortlisted','interview_invited','rejected'].includes(app.status)
-            ? `<div class="sec-card"><div class="sec-head">Competency Test Results</div><div class="sec-body" style="display:flex;align-items:center;gap:14px"><p class="no-data" style="margin:0">No results yet.</p><button class="btn-dl" onclick="refreshScorecard('${app.id}')">&#8635; Check for results</button></div></div>`
-            : '')
-      }
-
-      <div class="sec-card">
-        <div class="sec-head">Application Form Details</div>
-        <div class="sec-body">${form1Html}</div>
-      </div>
-
-    </div>`;
+    ${showScTab ? `<div class="tab-pane" id="tab-scorecard">
+      <div class="detail-body">${buildScorecardForm(app.id, sc)}</div>
+    </div>` : ''}
+  `;
 }
 
-function buildScorecard(sc) {
-  const outColour = { PASS: '#166534', HOLD: '#92400e', FAIL: '#991b1b' };
-  const outBg     = { PASS: '#dcfce7', HOLD: '#fef3c7', FAIL: '#fee2e2' };
-  const ratings   = sc.domain_ratings || {};
+function showTab(name) {
+  ['overview','scorecard'].forEach(t => {
+    const pane = document.getElementById('tab-' + t);
+    const btn  = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (!pane) return;
+    pane.classList.toggle('active', t === name);
+    if (btn) btn.classList.toggle('active', t === name);
+  });
+}
 
-  const stars = (n) => {
-    let s = '';
-    for (let i = 1; i <= 5; i++) {
-      s += `<span style="color:${i <= n ? '#C8526A' : '#d1d5db'};font-size:1.1rem">&#9733;</span>`;
-    }
-    return s;
-  };
+function buildMcqCard(sc) {
+  const score = sc.mcq_score;
+  const passed = score >= 12;
+  const cls = passed ? 'mcq-pass' : 'mcq-fail';
+  const ss = sc.section_scores || {};
+  const SNAMES = [
+    ['core_values',   'Core Values',      4],
+    ['safeguarding',  'Safeguarding',     4],
+    ['medication',    'Medication',       4],
+    ['emergency',     'Emergency',        3],
+    ['communication', 'Communication',    5],
+  ];
+  const rows = SNAMES.map(([k, label, max]) =>
+    `<div class="mcq-sec-row"><span>${label}</span><span>${ss[k] !== undefined ? ss[k] : '?'} / ${max}</span></div>`
+  ).join('');
+  return `<div class="sec-card">
+    <div class="sec-head">Competency Test Score</div>
+    <div class="sec-body">
+      <div class="mcq-score-card">
+        <div>
+          <div class="mcq-score-big ${cls}">${score}/20</div>
+          <div style="font-size:0.82rem;font-weight:700;color:${passed ? '#166534' : '#991b1b'};margin-top:2px">${passed ? 'PASS' : 'FAIL'}</div>
+          <div style="font-size:0.75rem;color:#777;margin-top:2px">Threshold: 12/20</div>
+        </div>
+        <div class="mcq-sections">${rows}</div>
+      </div>
+    </div>
+  </div>`;
+}
 
+let _ratings = {};
+let _outcome = '';
+
+function buildScorecardForm(appId, sc) {
   const domainRows = SC_DOMAINS.map(d => {
-    const r = Number(ratings[d.key] || 0);
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0">
-      <span style="font-size:0.88rem;color:#374151">${d.label}</span>
-      <span>${stars(r)}</span>
+    const r = Number((sc && sc.domain_ratings && sc.domain_ratings[d.key]) || 0);
+    const stars = Array.from({length:5}, (_,i) =>
+      `<span class="sc-star${i < r ? ' on' : ''}" onclick="setRating('${d.key}',${i+1})" data-domain="${d.key}" data-n="${i+1}">&#9733;</span>`
+    ).join('');
+    return `<div class="sc-domain-row">
+      <span class="sc-domain-label">${d.label}</span>
+      <div class="sc-stars" id="stars-${d.key}">${stars}</div>
     </div>`;
   }).join('');
 
-  const outLabel = sc.outcome || '—';
-  const oc = outColour[outLabel] || '#374151';
-  const ob = outBg[outLabel]     || '#f3f4f6';
+  const outBtns = ['PASS','HOLD','FAIL'].map(o =>
+    `<button class="outcome-btn${_outcome === o ? ' sel-' + o : ''}" onclick="setOutcome('${o}','${appId}')">${o}</button>`
+  ).join('');
 
-  return `
-    <div class="sec-card">
-      <div class="sec-head">Competency Test Results</div>
-      <div class="sec-body">
-        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px">
-          <div class="info-item">
-            <label>Outcome</label>
-            <span style="display:inline-block;padding:4px 14px;border-radius:20px;font-weight:700;font-size:0.85rem;background:${ob};color:${oc}">${esc(outLabel)}</span>
-          </div>
-          <div class="info-item"><label>Interviewer</label><span>${esc(sc.interviewer_name || '—')}</span></div>
-          <div class="info-item"><label>Completed</label><span>${fmtFull(sc.completed_at)}</span></div>
-        </div>
-        <div style="margin-bottom:16px">${domainRows}</div>
-        ${sc.strengths ? `<div class="info-item" style="margin-bottom:10px"><label>Strengths</label><p style="margin:4px 0 0;white-space:pre-wrap">${esc(sc.strengths)}</p></div>` : ''}
-        ${sc.development_areas ? `<div class="info-item"><label>Development Areas</label><p style="margin:4px 0 0;white-space:pre-wrap">${esc(sc.development_areas)}</p></div>` : ''}
+  return `<div class="sec-card">
+    <div class="sec-head">Interviewer Assessment</div>
+    <div class="sec-body">
+      <div style="margin-bottom:18px">${domainRows}</div>
+      <div class="info-item" style="margin-bottom:14px">
+        <label>Strengths</label>
+        <textarea class="hr-notes" id="sc_strengths" placeholder="Key strengths observed…" style="margin-top:6px">${esc((sc && sc.strengths) || '')}</textarea>
       </div>
-    </div>`;
+      <div class="info-item" style="margin-bottom:14px">
+        <label>Development Areas</label>
+        <textarea class="hr-notes" id="sc_dev_areas" placeholder="Areas for development…" style="margin-top:6px">${esc((sc && sc.development_areas) || '')}</textarea>
+      </div>
+      <div class="info-item" style="margin-bottom:14px">
+        <label>Overall Outcome</label>
+        <div class="outcome-row" id="outcomeRow">${outBtns}</div>
+      </div>
+      <div class="info-item" style="margin-bottom:6px">
+        <label>Interviewer Name</label>
+        <input type="text" class="f1-input" id="sc_interviewer_name" value="${esc((sc && sc.interviewer_name) || '')}" placeholder="Full name" style="margin-top:6px;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:Nunito,Arial,sans-serif;font-size:0.9rem;width:100%">
+      </div>
+      ${sc && sc.completed_at ? `<p style="font-size:0.78rem;color:#888;margin-bottom:10px">Last saved ${fmtFull(sc.completed_at)} by ${esc(sc.interviewer_name || '—')}</p>` : ''}
+      <div class="sc-save-row">
+        <button class="sc-save-btn" id="scSaveBtn" onclick="saveScorecard('${appId}')">Save Scorecard</button>
+        <span class="sc-save-ok" id="scSaveOk">Saved &#10003;</span>
+      </div>
+    </div>
+  </div>`;
 }
 
-async function refreshScorecard(appId) {
-  delete scCache[appId];
-  await openDetail(appId);
+function setRating(domainKey, n) {
+  _ratings[domainKey] = n;
+  const container = document.getElementById('stars-' + domainKey);
+  if (!container) return;
+  container.querySelectorAll('.sc-star').forEach((star, i) => {
+    star.classList.toggle('on', i < n);
+  });
+}
+
+function setOutcome(val, appId) {
+  _outcome = val;
+  const row = document.getElementById('outcomeRow');
+  if (!row) return;
+  row.querySelectorAll('.outcome-btn').forEach(btn => {
+    btn.className = 'outcome-btn' + (btn.textContent === val ? ' sel-' + val : '');
+  });
+}
+
+async function saveScorecard(appId) {
+  const btn = document.getElementById('scSaveBtn');
+  const ok  = document.getElementById('scSaveOk');
+  const name = (document.getElementById('sc_interviewer_name') || {}).value || '';
+  if (!_outcome) { alert('Please select an outcome (PASS / HOLD / FAIL).'); return; }
+  if (!name.trim()) { alert('Please enter the interviewer name.'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const session = (await sb.auth.getSession()).data.session;
+    const res = await fetch(PORTAL_CONFIG.edgeBase + '/submit-scorecard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+      body: JSON.stringify({
+        app_id: appId,
+        domain_ratings: _ratings,
+        strengths: (document.getElementById('sc_strengths') || {}).value || '',
+        development_areas: (document.getElementById('sc_dev_areas') || {}).value || '',
+        outcome: _outcome,
+        interviewer_name: name,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    // Update local cache so re-renders show saved data
+    if (!scCache[appId]) scCache[appId] = {};
+    scCache[appId].domain_ratings = Object.assign({}, _ratings);
+    scCache[appId].outcome = _outcome;
+    scCache[appId].interviewer_name = name;
+    scCache[appId].strengths = (document.getElementById('sc_strengths') || {}).value || '';
+    scCache[appId].development_areas = (document.getElementById('sc_dev_areas') || {}).value || '';
+    scCache[appId].completed_at = new Date().toISOString();
+    btn.disabled = false; btn.textContent = 'Save Scorecard';
+    ok.style.display = 'inline';
+    setTimeout(() => { ok.style.display = 'none'; }, 2500);
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Save Scorecard';
+    alert('Save failed: ' + e.message);
+  }
 }
 
 function updateBadge() {
@@ -740,7 +880,6 @@ let _scModalAppId = null;
 
 function openScorecardModal(appId) {
   _scModalAppId = appId;
-  document.getElementById('sc_interviewer_email').value = '';
   document.getElementById('scorecardModalErr').style.display = 'none';
   document.getElementById('scorecardGenBtn').disabled = false;
   document.getElementById('scorecardGenBtn').textContent = 'Generate & Copy Link';
@@ -753,11 +892,8 @@ function closeScorecardModal() {
 }
 
 async function generateScorecardLink() {
-  const email = document.getElementById('sc_interviewer_email').value.trim();
-  const err   = document.getElementById('scorecardModalErr');
-  const btn   = document.getElementById('scorecardGenBtn');
-
-  if (!email) { err.textContent = 'Please enter the interviewer\'s email address.'; err.style.display = 'block'; return; }
+  const err = document.getElementById('scorecardModalErr');
+  const btn = document.getElementById('scorecardGenBtn');
 
   btn.disabled = true; btn.textContent = 'Generating…'; err.style.display = 'none';
 
@@ -767,7 +903,7 @@ async function generateScorecardLink() {
     const res = await fetch(PORTAL_CONFIG.edgeBase + '/generate-scorecard-token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-      body: JSON.stringify({ app_id: _scModalAppId, interviewer_email: email }),
+      body: JSON.stringify({ app_id: _scModalAppId }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
@@ -778,9 +914,7 @@ async function generateScorecardLink() {
     const toast = document.getElementById('scorecardToast');
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 4000);
-    // Ensure the detail panel re-renders so "Check for results" button appears immediately
     delete scCache[savedAppId];
-    if (openId === savedAppId) renderFull(allApps.find(a => a.id === savedAppId), detCache[savedAppId] || null, null);
   } catch(e) {
     err.textContent = 'Error: ' + e.message;
     err.style.display = 'block';

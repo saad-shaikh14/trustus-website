@@ -1,328 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Competency Test &mdash; TRUSTUS Care</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --sage:    #3D6A5A;
-      --sage-dk: #2d5244;
-      --terra:   #C8526A;
-      --terra-dk:#b04460;
-      --ink:     #1C2B4A;
-      --muted:   #64748B;
-      --bg:      #FDF8F5;
-      --bg-soft: #F6EFE9;
-      --border:  #E8E0D8;
-      --white:   #FFFFFF;
-      --radius:  10px;
-    }
-    body { font-family: Nunito, Arial, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
-
-    header { background: white; border-bottom: 1px solid var(--border); padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 8px rgba(17,17,17,0.06); }
-    header img { height: 44px; }
-    .hdr-div { width: 1px; height: 28px; background: var(--border); }
-    .hdr-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--terra); padding: 4px 11px; background: #FAE8EC; border-radius: 50px; }
-
-    #gate { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 64px); padding: 32px 16px; }
-    .gate-card { background: white; border-radius: 16px; padding: 40px 36px; max-width: 440px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(17,17,17,0.09); }
-    .gate-card .spin { margin: 0 auto 20px; }
-    .gate-card h2 { font-size: 1.2rem; color: var(--ink); margin-bottom: 10px; }
-    .gate-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-    .gate-icon { font-size: 48px; margin-bottom: 16px; }
-
-    #testWrap { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; display: none; }
-
-    .test-header { margin-bottom: 28px; }
-    .test-header h1 { font-size: 1.6rem; color: var(--ink); margin-bottom: 6px; }
-    .test-header p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
-    .test-info { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
-    .tinfo-chip { background: var(--bg-soft); border: 1px solid var(--border); padding: 6px 14px; border-radius: 50px; font-size: 0.79rem; font-weight: 700; color: var(--muted); }
-    .tinfo-chip strong { color: var(--ink); }
-
-    .progress-bar-outer { height: 6px; background: var(--bg-soft); border-radius: 50px; margin-bottom: 28px; overflow: hidden; }
-    .progress-bar-inner { height: 100%; background: var(--sage); border-radius: 50px; transition: width 0.3s; width: 0%; }
-
-    .section-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--terra); margin: 32px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--bg-soft); }
-
-    .qcard { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 20px 20px 16px; margin-bottom: 12px; transition: border-color 0.2s; }
-    .qcard.answered { border-color: var(--sage); }
-    .qnum { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .qtext { font-size: 0.93rem; font-weight: 700; color: var(--ink); line-height: 1.55; margin-bottom: 14px; }
-    .options { display: flex; flex-direction: column; gap: 7px; }
-    .opt-label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 9px 12px; border-radius: 8px; border: 1.5px solid var(--border); transition: border-color 0.15s, background 0.15s; font-size: 0.87rem; color: var(--ink); }
-    .opt-label:hover { border-color: var(--sage); background: #f0f8f5; }
-    .opt-label input[type=radio] { margin-top: 1px; flex-shrink: 0; accent-color: var(--sage); width: 16px; height: 16px; }
-    .opt-label.selected { border-color: var(--sage); background: #EBF5F1; }
-    .opt-key { font-weight: 700; color: var(--sage); min-width: 16px; }
-
-    .submit-section { margin-top: 32px; }
-    .unanswered-warn { background: #FEF3C7; border: 1px solid #FDE68A; color: #92400E; padding: 12px 16px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; margin-bottom: 14px; display: none; }
-    .submit-btn { width: 100%; padding: 16px; background: var(--sage); color: white; border: none; border-radius: 50px; font-family: Nunito, Arial, sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s, transform 0.2s; letter-spacing: 0.3px; }
-    .submit-btn:hover:not(:disabled) { background: var(--sage-dk); transform: translateY(-2px); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    #resultWrap { max-width: 560px; margin: 0 auto; padding: 48px 20px; display: none; text-align: center; }
-    .result-card { background: white; border-radius: 16px; padding: 40px 36px; box-shadow: 0 8px 40px rgba(17,17,17,0.09); }
-    .result-icon { font-size: 56px; margin-bottom: 16px; }
-    .result-verdict { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; }
-    .result-score { font-size: 3rem; font-weight: 800; margin-bottom: 4px; }
-    .result-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
-    .section-scores { text-align: left; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 4px; }
-    .section-scores h3 { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
-    .ssrow { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .ssrow-label { font-size: 0.82rem; color: var(--ink); flex: 1; }
-    .ssrow-score { font-size: 0.82rem; font-weight: 700; color: var(--ink); flex-shrink: 0; min-width: 40px; text-align: right; }
-    .ssrow-bar { flex: 2; height: 6px; background: var(--bg-soft); border-radius: 50px; overflow: hidden; }
-    .ssrow-fill { height: 100%; border-radius: 50px; background: var(--sage); }
-    .result-note { background: var(--bg-soft); border-radius: 10px; padding: 14px 16px; margin-top: 20px; font-size: 0.83rem; color: var(--muted); line-height: 1.6; text-align: left; }
-
-    .spin { display: inline-block; width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--terra); border-radius: 50%; animation: _sp 0.75s linear infinite; }
-    @keyframes _sp { to { transform: rotate(360deg); } }
-
-    @media (max-width: 600px) {
-      .gate-card, .result-card { padding: 28px 20px; }
-      .result-score { font-size: 2.2rem; }
-      .test-header h1 { font-size: 1.3rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competency Test &mdash; TRUSTUS Care</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="apple-touch-icon" href="images/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Nunito,Arial,sans-serif;background:#f8f9fa;color:#1C2B4A;min-height:100vh}
+.top-bar{background:#fff;border-bottom:1px solid #eee;padding:14px 24px;display:flex;align-items:center;gap:12px}
+.top-bar img{height:36px}
+.top-bar .title{font-size:1rem;font-weight:700;color:#1C2B4A}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 80px}
+#loadScreen,#errorScreen,#doneScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:16px}
+#testScreen{display:none}
+.state-icon{font-size:3rem}
+.state-title{font-size:1.4rem;font-weight:800;color:#1C2B4A}
+.state-sub{color:#555;font-size:0.95rem;max-width:480px;line-height:1.7}
+.candidate-banner{background:#fff;border:1px solid #eee;border-radius:12px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.candidate-avatar{width:44px;height:44px;border-radius:50%;background:#C8526A;color:#fff;font-weight:800;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.candidate-info .name{font-weight:800;font-size:1rem;color:#1C2B4A}
+.candidate-info .role{font-size:0.83rem;color:#777;margin-top:2px}
+.progress-bar{height:6px;background:#eee;border-radius:3px;margin-bottom:28px;overflow:hidden}
+.progress-fill{height:100%;background:#C8526A;border-radius:3px;transition:width 0.3s}
+.section-label{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#C8526A;margin-bottom:6px}
+.section-title{font-size:1.1rem;font-weight:800;color:#1C2B4A;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #f0f0f0}
+.q-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:22px 24px;margin-bottom:14px;transition:border-color 0.2s}
+.q-card.answered{border-color:#C8526A44}
+.q-num{font-size:0.78rem;font-weight:700;color:#C8526A;margin-bottom:8px}
+.q-text{font-size:0.95rem;font-weight:600;color:#1C2B4A;line-height:1.6;margin-bottom:16px}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt-label{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px 14px;border-radius:8px;border:1.5px solid #e5e7eb;transition:border-color 0.15s,background 0.15s;font-size:0.88rem;line-height:1.5}
+.opt-label:hover{border-color:#C8526A;background:#fdf2f4}
+.opt-label.selected{border-color:#C8526A;background:#fdf2f4}
+.opt-label input[type=radio]{width:16px;height:16px;accent-color:#C8526A;flex-shrink:0;margin-top:2px}
+.opt-key{font-weight:700;color:#C8526A;min-width:14px}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:12px;flex-wrap:wrap}
+.btn-nav{padding:12px 28px;border-radius:50px;font-family:Nunito,Arial,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;border:none;transition:background 0.2s,transform 0.2s}
+.btn-back{background:#f3f4f6;color:#374151}
+.btn-back:hover{background:#e5e7eb}
+.btn-next{background:#C8526A;color:#fff}
+.btn-next:hover{background:#b04059;transform:translateY(-1px)}
+.btn-next:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.unanswered-note{font-size:0.82rem;color:#C8526A;text-align:center;margin-top:10px;display:none}
+.score-card{background:#fff;border-radius:16px;border:1px solid #eee;padding:32px;margin-bottom:24px;text-align:center}
+.score-big{font-size:3.5rem;font-weight:800;line-height:1}
+.score-label{font-size:1rem;font-weight:700;margin-top:6px}
+.score-threshold{font-size:0.82rem;color:#777;margin-top:4px}
+.score-pass{color:#166534}.score-fail{color:#991b1b}
+.section-results{background:#fff;border-radius:12px;border:1px solid #eee;overflow:hidden}
+.sr-row{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-bottom:1px solid #f0f0f0;font-size:0.88rem}
+.sr-row:last-child{border-bottom:none}
+.sr-name{color:#374151}.sr-score{font-weight:700;color:#1C2B4A}
+@media(max-width:480px){.wrap{padding:20px 14px 80px}.q-card{padding:16px}.btn-nav{padding:11px 20px}}
+</style>
 </head>
 <body>
 
-<header>
-  <a href="index.html"><img src="images/logo.png" alt="TRUSTUS Care"></a>
-  <div class="hdr-div"></div>
-  <span class="hdr-tag">Competency Test</span>
-</header>
-
-<!-- Gating state (loading / errors) -->
-<div id="gate">
-  <div class="gate-card">
-    <div class="spin"></div>
-    <h2>Verifying your link&hellip;</h2>
-    <p>Please wait a moment.</p>
-  </div>
+<div class="top-bar">
+  <img src="images/logo.png" alt="TRUSTUS Care">
+  <span class="title">Pre-Interview Competency Test</span>
 </div>
 
-<!-- Test -->
-<div id="testWrap">
-  <div class="test-header">
-    <h1>Care Worker Competency Test</h1>
-    <p>Select the single best answer for each question. You have one attempt. Your score will be shared with the recruitment team.</p>
-    <div class="test-info">
-      <span class="tinfo-chip"><strong>20</strong> Questions</span>
-      <span class="tinfo-chip">Pass mark: <strong>12 / 20</strong></span>
-      <span class="tinfo-chip">One attempt only</span>
+<div class="wrap">
+
+<div id="loadScreen">
+  <div class="state-icon">&#8987;</div>
+  <div class="state-title">Loading your test&hellip;</div>
+</div>
+
+<div id="errorScreen" style="display:none">
+  <div class="state-icon">&#9888;</div>
+  <div class="state-title" id="errTitle">Link not valid</div>
+  <div class="state-sub" id="errMsg">This test link is not valid. Please contact TRUSTUS Care on 020 3411 1218.</div>
+</div>
+
+<div id="testScreen" style="display:none">
+  <div class="candidate-banner">
+    <div class="candidate-avatar" id="candidateInitial">?</div>
+    <div class="candidate-info">
+      <div class="name" id="candidateName"></div>
+      <div class="role" id="candidateRole"></div>
     </div>
   </div>
-  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
-  <form id="testForm" onsubmit="return false;"></form>
-  <div class="submit-section">
-    <div class="unanswered-warn" id="warnBox"></div>
-    <button class="submit-btn" id="submitBtn" onclick="submitTest()">Submit Test</button>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div id="sectionContent"></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" id="btnBack" onclick="prevSection()" style="display:none">&#8592; Back</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="nextSection()">Next &rarr;</button>
   </div>
+  <p class="unanswered-note" id="unansweredNote">Please answer all questions before continuing.</p>
 </div>
 
-<!-- Result -->
-<div id="resultWrap"></div>
+<div id="doneScreen" style="display:none">
+  <div id="doneContent" style="width:100%;max-width:600px"></div>
+</div>
+
+</div>
 
 <script>
-const EDGE = 'https://ssbcpblfkgpgtcxifopp.supabase.co/functions/v1';
+const EDGE_BASE = 'https://ssbcpblfkgpgtcxifopp.supabase.co/functions/v1'
+const KEYS = ['a','b','c','d']
+const TOKEN = new URLSearchParams(location.search).get('token')
+let _firstName = ''
+let _sectionIdx = 0
+let _answers = {}
 
-const QUESTIONS = [
-  // Section A
-  { section: 'Section A: Core Values &amp; Professional Boundaries', q: 'A client asks you to use their debit card to buy groceries. What is the correct action?', opts: ['Take the card and go shopping without asking anyone.', 'Contact your office manager to report it and get authorisation.', 'Refuse to help them and leave them with no food.', 'Keep the card for your own personal use.'] },
-  { q: "How do you show the TRUSTUS Care value of 'Promoting Independence'?", opts: ['Do everything for the client so they do not have to move.', 'Give the client an easy-grip tool and encourage them to do what they can.', 'Tell the client they are too slow and take over their tasks.', "Ignore the client's requests entirely."] },
-  { q: 'What is an example of person-centred care?', opts: ['Forcing every client to wake up at exactly 6:00 AM.', "Planning care around the client's specific personal preferences.", 'Making choices for the client without asking them.', "Ignoring the client's cultural or religious background."] },
-  { q: 'Under the Mental Capacity Act, what must you assume when meeting a client?', opts: ['Assume they cannot make any decisions on their own.', 'Assume they have full capacity unless a formal test shows otherwise.', 'Assume their family makes 100% of their choices.', 'Assume the care worker makes all their legal choices.'] },
-  // Section B
-  { section: 'Section B: Safeguarding &amp; Risk Management', q: "You notice large, unexplained hand-shaped bruises on a client's arm. What should you do?", opts: ['Shout at the family members immediately.', 'Write it down factually and report it to your Safeguarding Lead immediately.', 'Hide it and tell nobody to keep things quiet.', 'Delete the care records and ignore the bruises.'] },
-  { q: "You think a coworker is asking a client with a learning disability for cash 'loans'. What is your duty?", opts: ['Mind your own business and do nothing.', 'Follow the Whistleblowing Policy to report the coworker to management.', 'Ask the coworker to split the money with you.', 'Tell the client to give away more money.'] },
-  { q: 'Which of the following is an example of organisational abuse?', opts: ['A client choosing to watch TV in their own bedroom.', 'Forcing all clients to go to bed early just to suit the staff shift change.', 'A care worker arriving five minutes late due to heavy traffic.', 'Serving lunch at 12:45 PM instead of exactly at 12:30 PM.'] },
-  { q: 'A client with autism runs toward heavy traffic when stressed. How should the team manage this risk?', opts: ['Lock the client in a room and never let them go outside.', 'Use a safe, proactive plan with travel training and calming aids.', 'Put the client in tight physical restraints all day.', 'Let the client run into the street alone.'] },
-  // Section C
-  { section: 'Section C: Medication &amp; Infection Control', q: 'A client who has full legal capacity refuses to take their evening medication. What should you do?', opts: ['Crush the pill and secretly hide it in their pudding.', 'Force their mouth open and make them swallow it.', 'Respect their choice, explain risks, record the refusal, and tell your manager.', 'Punish the client by taking away their television privileges.'] },
-  { q: "When giving medication, what is a critical safety rule?", opts: ["Follow the '6 Rights' (Right person, medication, route, dose, time, documentation).", 'Pre-sign the medication chart before you even arrive at the house.', 'Leave the pills on the bedside table for a sleeping client to take later.', 'Guess the dosage if you cannot read the prescription label clearly.'] },
-  { q: 'What is the correct rule for disposable gloves and aprons?', opts: ['Use the exact same pair of gloves for every single house you visit.', 'Change your gloves and apron between doing personal care and preparing food.', 'Wash disposable aprons in the sink so you can reuse them all week.', 'Never wear any gloves or aprons under any circumstances.'] },
-  { q: 'You have active symptoms of infectious vomiting and diarrhoea. What should you do?', opts: ['Go to your shifts normally and tell nobody.', 'Stay home, call the office immediately, and follow infection control rules.', 'Bring a friend along to do your personal care work for you.', 'Work your shift but try to avoid looking directly at the clients.'] },
-  // Section D
-  { section: 'Section D: Emergency Situations &amp; Health and Safety', q: 'You find a client lying motionless on their living room floor. What is your very first action?', opts: ['Pull them up roughly by their arms to stand up.', 'Check the area for danger, see if they respond, and check if they are breathing.', 'Pour a hot cup of tea down their throat immediately.', 'Run out of the house and ignore the situation completely.'] },
-  { q: "A client's care plan says they need a two-person hoist transfer. You are completely alone. What should you do?", opts: ['Do the hoist transfer completely by yourself to save time.', 'Manually lift the client using your back, bypassing the hoist completely.', 'Wait for your second care worker or call the office immediately for support.', 'Scream at the client for needing assistance.'] },
-  { q: 'You are running 30 minutes late for a morning visit due to a major transit delay. What should you do?', opts: ['Speed and break driving laws to rush down the street.', 'Call your office immediately so they can update the client or send a replacement.', 'Skip the visit completely and pretend you went on the digital system.', 'Do not worry and show up whenever you feel like it.'] },
-  // Section E
-  { section: 'Section E: Learning Disabilities, Dementia &amp; Communication', q: 'An autistic resident starts rocking, pacing, and humming loudly. How should you react?', opts: ['Shout at them to stop and force them to sit perfectly still.', "Turn down loud TVs, dim harsh lights, and follow their behaviour support plan.", 'Pin them to the floor with a heavy physical restraint hold.', 'Laugh at them and mock the noises they are making.'] },
-  { q: "What is 'diagnostic overshadowing' in learning disability support work?", opts: ["Blaming physical illness symptoms (like pain or a UTI) on the client's learning disability.", "Using a flashlight to check a client's eyes during a checkup.", 'Giving a client too many physical exercise options.', 'Teaching a client how to cook meals independently.'] },
-  { q: 'A client with advanced dementia angrily claims you stole their wedding ring. How should you respond?', opts: ['Scream back at them, call them a liar, and demand a written apology.', 'Stay calm, acknowledge their distress, and offer to look for the ring together.', 'Call emergency police forces to report the client for defamation.', 'Storm out of the house and leave the front doors wide open.'] },
-  { q: "Which daily log entry is written to professional care standards?", opts: ["'The client was an absolute nightmare today and acted extremely lazy.'", "'The client is sad because their family doesn't love them enough to visit.'", "'Arrived 13:00. Client took lunch medication. Ate full meal. Mood was settled.'", "'Client threw a giant temper tantrum for no clear reason whatsoever.'"] },
-  { q: 'Why must you keep client information strictly confidential under UK GDPR law?', opts: ['To prevent care workers from talking to their managers about schedules.', 'To build professional trust and protect vulnerable clients from scams or stigma.', 'To allow the company to take over all personal social media accounts of staff.', "To keep the client's own family from knowing if they are safe."] },
-];
+const SECTIONS = [
+  { key:'core_values', name:'Core Values &amp; Professional Boundaries', questions:[
+    { t:'A client asks you to use their debit card to buy groceries. What is the correct action?',
+      o:['Take the card and go shopping without asking anyone.','Contact your office manager to report it and get authorisation.','Refuse to help them and leave them with no food.','Keep the card for your own personal use.'] },
+    { t:'How do you show the TRUSTUS Care value of \u201cPromoting Independence\u201d?',
+      o:['Do everything for the client so they do not have to move.','Give the client an easy-grip tool and encourage them to do what they can.','Tell the client they are too slow and take over their tasks.','Ignore the client\u2019s requests entirely.'] },
+    { t:'What is an example of person-centred care?',
+      o:['Forcing every client to wake up at exactly 6:00 AM.','Planning care around the client\u2019s specific personal preferences.','Making choices for the client without asking them.','Ignoring the client\u2019s cultural or religious background.'] },
+    { t:'Under the Mental Capacity Act, what must you assume when meeting a client?',
+      o:['Assume they cannot make any decisions on their own.','Assume they have full capacity unless a formal test shows otherwise.','Assume their family makes 100% of their choices.','Assume the care worker makes all their legal choices.'] }
+  ]},
+  { key:'safeguarding', name:'Safeguarding &amp; Risk Management', questions:[
+    { t:'You notice large, unexplained hand-shaped bruises on a client\u2019s arm. What should you do?',
+      o:['Shout at the family members immediately.','Write it down factually and report it to your Safeguarding Lead immediately.','Hide it and tell nobody to keep things quiet.','Delete the care records and ignore the bruises.'] },
+    { t:'You think a coworker is asking a client with a learning disability for cash \u201cloans\u201d. What is your duty?',
+      o:['Mind your own business and do nothing.','Follow the Whistleblowing Policy to report the coworker to management.','Ask the coworker to split the money with you.','Tell the client to give away more money.'] },
+    { t:'Which of the following is an example of organisational abuse?',
+      o:['A client choosing to watch TV in their own bedroom.','Forcing all clients to go to bed early just to suit the staff shift change.','A care worker arriving five minutes late due to heavy traffic.','Serving lunch at 12:45 PM instead of exactly at 12:30 PM.'] },
+    { t:'A client with autism runs toward heavy traffic when stressed. How should the team manage this risk?',
+      o:['Lock the client in a room and never let them go outside.','Use a safe, proactive plan with travel training and calming aids.','Put the client in tight physical restraints all day.','Let the client run into the street alone.'] }
+  ]},
+  { key:'medication', name:'Medication &amp; Infection Control', questions:[
+    { t:'A client who has full legal capacity refuses to take their evening medication. What should you do?',
+      o:['Crush the pill and secretly hide it in their pudding.','Force their mouth open and make them swallow it.','Respect their choice, explain risks, record the refusal, and tell your manager.','Punish the client by taking away their television privileges.'] },
+    { t:'When giving medication, what is a critical safety rule?',
+      o:['Follow the \u201c6 Rights\u201d \u2014 Right person, medication, route, dose, time, documentation.','Pre-sign the medication chart before you even arrive at the house.','Leave the pills on the bedside table for a sleeping client to take later.','Guess the dosage if you cannot read the prescription label clearly.'] },
+    { t:'What is the correct rule for disposable gloves and aprons?',
+      o:['Use the exact same pair of gloves for every single house you visit.','Change your gloves and apron between doing personal care and preparing food.','Wash disposable aprons in the sink so you can reuse them all week.','Never wear any gloves or aprons under any circumstances.'] },
+    { t:'You have active symptoms of infectious vomiting and diarrhoea. What should you do?',
+      o:['Go to your shifts normally and tell nobody.','Stay home, call the office immediately, and follow infection control rules.','Bring a friend along to do your personal care work for you.','Work your shift but try to avoid looking directly at the clients.'] }
+  ]},
+  { key:'emergency', name:'Emergency Situations &amp; Health and Safety', questions:[
+    { t:'You find a client lying motionless on their living room floor. What is your very first action?',
+      o:['Pull them up roughly by their arms to stand up.','Check the area for danger, see if they respond, and check if they are breathing.','Pour a hot cup of tea down their throat immediately.','Run out of the house and ignore the situation completely.'] },
+    { t:'A client\u2019s care plan says they need a two-person hoist transfer. You are completely alone. What should you do?',
+      o:['Do the hoist transfer completely by yourself to save time.','Manually lift the client using your back, bypassing the hoist completely.','Wait for your second care worker or call the office immediately for support.','Scream at the client for needing assistance.'] },
+    { t:'You are running 30 minutes late for a morning visit due to a major transit delay. What should you do?',
+      o:['Speed and break driving laws to rush down the street.','Call your office immediately so they can update the client or send a replacement.','Skip the visit completely and pretend you went on the digital system.','Do not worry and show up whenever you feel like it.'] }
+  ]},
+  { key:'communication', name:'Learning Disabilities, Dementia &amp; Communication', questions:[
+    { t:'An autistic resident starts rocking, pacing, and humming loudly. How should you react?',
+      o:['Shout at them to stop and force them to sit perfectly still.','Turn down loud TVs, dim harsh lights, and follow their behaviour support plan.','Pin them to the floor with a heavy physical restraint hold.','Laugh at them and mock the noises they are making.'] },
+    { t:'What is \u201cdiagnostic overshadowing\u201d in learning disability support work?',
+      o:['Blaming physical illness symptoms (like pain or a UTI) on the client\u2019s learning disability.','Using a flashlight to check a client\u2019s eyes during a checkup.','Giving a client too many physical exercise options.','Teaching a client how to cook meals independently.'] },
+    { t:'A client with advanced dementia angrily claims you stole their wedding ring. How should you respond?',
+      o:['Scream back at them, call them a liar, and demand a written apology.','Stay calm, acknowledge their distress, and offer to look for the ring together.','Call emergency police forces to report the client for defamation.','Storm out of the house and leave the front doors wide open.'] },
+    { t:'Which daily log entry is written to professional care standards?',
+      o:['\u201cThe client was an absolute nightmare today and acted extremely lazy.\u201d','\u201cThe client is sad because their family doesn\u2019t love them enough to visit.\u201d','\u201cArrived 13:00. Client took lunch medication. Ate full meal. Mood was settled.\u201d','\u201cClient threw a giant temper tantrum for no clear reason whatsoever.\u201d'] },
+    { t:'Why must you keep client information strictly confidential under UK GDPR law?',
+      o:['To prevent care workers from talking to their managers about schedules.','To build professional trust and protect vulnerable clients from scams or stigma.','To allow the company to take over all personal social media accounts of staff.','To keep the client\u2019s own family from knowing if they are safe.'] }
+  ]}
+]
 
-const KEYS = ['a','b','c','d'];
-let token = null;
-let userAnswers = Array(20).fill(null);
-
-function getToken() {
-  return new URLSearchParams(window.location.search).get('token') || '';
+function globalIdx(si, li) {
+  let g = 0; for (let i = 0; i < si; i++) g += SECTIONS[i].questions.length; return g + li
 }
+function totalQ() { return SECTIONS.reduce((n,s) => n + s.questions.length, 0) }
+function answeredCount() { return Object.keys(_answers).length }
 
 async function init() {
-  token = getToken();
-  if (!token) { showGate('&#128274;', 'Invalid Link', 'This link is not valid. Please check your email for the correct link.'); return; }
-
+  if (!TOKEN) { showError('Invalid Link','No test token found in this URL.'); return }
   try {
-    const res = await fetch(`${EDGE}/validate-token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token }),
-    });
-    const data = await res.json();
-    if (!res.ok || !data.valid) { showGate('&#10060;', 'Link Expired', 'This link is invalid or has expired. Please contact us at <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>.'); return; }
-
-    if (data.status === 'test_complete') {
-      showGate('&#9989;', 'Already Submitted', `You have already completed the competency test. The recruitment team will be in touch with next steps. If you have any questions, email <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>.`);
-      return;
+    const res = await fetch(EDGE_BASE + '/validate-token?token=' + TOKEN)
+    const d = await res.json()
+    if (!d.valid) { showError('Link Not Valid','This link is not valid. Please contact TRUSTUS Care on 020 3411 1218.'); return }
+    if (d.status !== 'interview_invited') {
+      showError('Test Not Available','This test is not currently available. Please contact TRUSTUS Care on 020 3411 1218.'); return
     }
+    _firstName = d.firstName
+    document.getElementById('candidateInitial').textContent = d.firstName.charAt(0).toUpperCase()
+    document.getElementById('candidateName').textContent = d.firstName
+    document.getElementById('candidateRole').textContent = d.roleApplied
+    document.getElementById('loadScreen').style.display = 'none'
+    document.getElementById('testScreen').style.display = 'block'
+    renderSection()
+  } catch(e) { showError('Error','Could not load test. Please try again or call 020 3411 1218.') }
+}
 
-    if (data.status !== 'form1_complete') {
-      showGate('&#128274;', 'Application Form Required', 'Please complete your application form before taking the competency test. Check your email for the form link.');
-      return;
-    }
+function showError(title, msg) {
+  document.getElementById('loadScreen').style.display = 'none'
+  document.getElementById('errTitle').textContent = title
+  document.getElementById('errMsg').textContent = msg
+  document.getElementById('errorScreen').style.display = 'flex'
+}
 
-    buildTest();
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('testWrap').style.display = 'block';
+function renderSection() {
+  const s = SECTIONS[_sectionIdx]
+  const isLast = _sectionIdx === SECTIONS.length - 1
+  document.getElementById('progressFill').style.width = (answeredCount() / totalQ() * 100) + '%'
+  document.getElementById('btnBack').style.display = _sectionIdx > 0 ? 'block' : 'none'
+  const btn = document.getElementById('btnNext')
+  btn.textContent = isLast ? 'Submit Test' : 'Next \u2192'
+  btn.disabled = false
 
-  } catch (e) {
-    showGate('&#9888;&#65039;', 'Connection Error', 'Could not load your test. Please try refreshing the page or contact <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>.');
+  let html = '<div class="section-label">Section ' + (_sectionIdx+1) + ' of ' + SECTIONS.length + '</div>'
+             + '<div class="section-title">' + s.name + '</div>'
+
+  s.questions.forEach((q, li) => {
+    const gi = globalIdx(_sectionIdx, li)
+    const sel = _answers[gi]
+    html += '<div class="q-card' + (sel !== undefined ? ' answered' : '') + '" id="qcard-' + gi + '">'
+          + '<div class="q-num">Question ' + (gi+1) + '</div>'
+          + '<div class="q-text">' + q.t + '</div><div class="options">'
+    q.o.forEach((opt, oi) => {
+      const k = KEYS[oi]
+      const isSel = sel === k
+      html += '<label class="opt-label' + (isSel ? ' selected' : '') + '" onclick="pick(' + gi + ',\'' + k + '\',this)">'
+            + '<input type="radio" name="q' + gi + '" value="' + k + '"' + (isSel ? ' checked' : '') + '>'
+            + '<span class="opt-key">' + k.toUpperCase() + '.</span><span>' + opt + '</span></label>'
+    })
+    html += '</div></div>'
+  })
+
+  document.getElementById('sectionContent').innerHTML = html
+  document.getElementById('unansweredNote').style.display = 'none'
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+
+function pick(gi, key, labelEl) {
+  _answers[gi] = key
+  const card = document.getElementById('qcard-' + gi)
+  if (card) {
+    card.classList.add('answered')
+    card.querySelectorAll('.opt-label').forEach(l => l.classList.remove('selected'))
+    card.querySelectorAll('input[type=radio]').forEach(r => r.checked = false)
   }
+  labelEl.classList.add('selected')
+  labelEl.querySelector('input').checked = true
+  document.getElementById('progressFill').style.width = (answeredCount() / totalQ() * 100) + '%'
 }
 
-function showGate(icon, title, msg) {
-  const gc = document.querySelector('.gate-card');
-  gc.innerHTML = `<div class="gate-icon">${icon}</div><h2>${title}</h2><p>${msg}</p>`;
-}
-
-function buildTest() {
-  const form = document.getElementById('testForm');
-  let html = '';
-  QUESTIONS.forEach((q, qi) => {
-    if (q.section) html += `<div class="section-label">${q.section}</div>`;
-    html += `<div class="qcard" id="qcard${qi}">
-      <div class="qnum">Question ${qi+1} of 20</div>
-      <div class="qtext">${q.q}</div>
-      <div class="options">
-        ${q.opts.map((opt, oi) => `
-          <label class="opt-label" id="opt${qi}_${oi}" onclick="selectOpt(${qi},${oi})">
-            <input type="radio" name="q${qi}" value="${KEYS[oi]}" style="display:none">
-            <span class="opt-key">${KEYS[oi]})</span>
-            <span>${opt}</span>
-          </label>`).join('')}
-      </div>
-    </div>`;
-  });
-  form.innerHTML = html;
-}
-
-function selectOpt(qi, oi) {
-  userAnswers[qi] = KEYS[oi];
-  for (let i = 0; i < 4; i++) {
-    const el = document.getElementById(`opt${qi}_${i}`);
-    if (el) el.classList.toggle('selected', i === oi);
+function sectionDone() {
+  const s = SECTIONS[_sectionIdx]
+  for (let li = 0; li < s.questions.length; li++) {
+    if (_answers[globalIdx(_sectionIdx, li)] === undefined) return false
   }
-  document.getElementById(`qcard${qi}`).classList.add('answered');
-  updateProgress();
+  return true
 }
 
-function updateProgress() {
-  const answered = userAnswers.filter(a => a !== null).length;
-  document.getElementById('progressBar').style.width = (answered / 20 * 100) + '%';
+function nextSection() {
+  if (!sectionDone()) { document.getElementById('unansweredNote').style.display = 'block'; return }
+  document.getElementById('unansweredNote').style.display = 'none'
+  if (_sectionIdx < SECTIONS.length - 1) { _sectionIdx++; renderSection() } else { submitTest() }
 }
+
+function prevSection() { if (_sectionIdx > 0) { _sectionIdx--; renderSection() } }
 
 async function submitTest() {
-  const unanswered = userAnswers.map((a, i) => a === null ? i+1 : null).filter(v => v !== null);
-  const warnBox = document.getElementById('warnBox');
-
-  if (unanswered.length > 0) {
-    warnBox.textContent = `Please answer all questions before submitting. Unanswered: Q${unanswered.join(', Q')}.`;
-    warnBox.style.display = 'block';
-    warnBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-  warnBox.style.display = 'none';
-
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting…';
-
+  const btn = document.getElementById('btnNext')
+  btn.disabled = true; btn.textContent = 'Submitting\u2026'
+  const answers = []
+  for (let i = 0; i < totalQ(); i++) answers.push(_answers[i] || '')
   try {
-    const res = await fetch(`${EDGE}/submit-mcq`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, answers: userAnswers }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    showResult(data);
+    const res = await fetch(EDGE_BASE + '/submit-mcq', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: TOKEN, answers })
+    })
+    const d = await res.json()
+    if (!res.ok) throw new Error(d.error || 'HTTP ' + res.status)
+    showResults(d.score, d.passed, d.section_scores)
   } catch(e) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Test';
-    const warnBox = document.getElementById('warnBox');
-    warnBox.textContent = 'Submission failed: ' + e.message + '. Please try again.';
-    warnBox.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Submit Test'
+    const note = document.getElementById('unansweredNote')
+    note.textContent = 'Submission failed: ' + e.message
+    note.style.display = 'block'
   }
 }
 
-const SECTION_META = [
-  { key: 'core_values',   label: 'Core Values & Professional Boundaries', max: 4 },
-  { key: 'safeguarding',  label: 'Safeguarding & Risk Management',         max: 4 },
-  { key: 'medication',    label: 'Medication & Infection Control',          max: 4 },
-  { key: 'emergency',     label: 'Emergency Situations & H&S',             max: 3 },
-  { key: 'communication', label: 'Learning Disabilities & Communication',   max: 5 },
-];
-
-function showResult(data) {
-  document.getElementById('testWrap').style.display = 'none';
-  const passed = data.passed;
-  const score = data.score;
-  const ss = data.section_scores || {};
-
-  const sectionHtml = SECTION_META.map(s => {
-    const got = ss[s.key] || 0;
-    const pct = Math.round(got / s.max * 100);
-    return `<div class="ssrow">
-      <span class="ssrow-label">${s.label}</span>
-      <div class="ssrow-bar"><div class="ssrow-fill" style="width:${pct}%"></div></div>
-      <span class="ssrow-score">${got}/${s.max}</span>
-    </div>`;
-  }).join('');
-
-  document.getElementById('resultWrap').style.display = 'block';
-  document.getElementById('resultWrap').innerHTML = `
-    <div class="result-card">
-      <div class="result-icon">${passed ? '&#127881;' : '&#128531;'}</div>
-      <div class="result-verdict" style="color:${passed ? '#3D6A5A' : '#C8526A'}">${passed ? 'PASSED' : 'NOT PASSED'}</div>
-      <div class="result-score" style="color:${passed ? '#3D6A5A' : '#C8526A'}">${score} / 20</div>
-      <div class="result-sub">Pass mark is 12 &mdash; you scored ${score}</div>
-      <div class="section-scores">
-        <h3>Breakdown by section</h3>
-        ${sectionHtml}
-      </div>
-      <div class="result-note">
-        ${passed
-          ? 'Well done! Your results have been sent to the recruitment team. We will be in touch with the next steps in your application.'
-          : 'Thank you for completing the test. Your results have been sent to the recruitment team who will be in touch shortly regarding your application.'}
-        <br><br>Questions? Email <a href="mailto:info@trustuscare.com" style="color:#3D6A5A">info@trustuscare.com</a>
-      </div>
-    </div>`;
+function showResults(score, passed, ss) {
+  document.getElementById('testScreen').style.display = 'none'
+  const cls = passed ? 'score-pass' : 'score-fail'
+  const sRows = SECTIONS.map(s => {
+    const got = (ss && ss[s.key]) || 0
+    return '<div class="sr-row"><span class="sr-name">' + s.name + '</span><span class="sr-score">' + got + ' / ' + s.questions.length + '</span></div>'
+  }).join('')
+  document.getElementById('doneContent').innerHTML =
+    '<div class="score-card"><div class="score-big ' + cls + '">' + score + '/20</div>'
+    + '<div class="score-label ' + cls + '">' + (passed ? 'PASS' : 'FAIL') + '</div>'
+    + '<div class="score-threshold">Pass threshold: 12 / 20</div></div>'
+    + '<div class="section-results">' + sRows + '</div>'
+    + '<p style="text-align:center;color:#777;font-size:0.85rem;margin-top:24px;line-height:1.7">'
+    + 'Thank you, ' + _firstName + '. Your results have been sent to the TRUSTUS Care team.<br>You will be contacted regarding next steps.</p>'
+  document.getElementById('doneScreen').style.display = 'flex'
 }
 
-init();
+init()
 </script>
 </body>
 </html>
