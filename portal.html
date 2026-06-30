@@ -960,16 +960,22 @@ const OPT_KEYS = ['a','b','c','d'];
 let _mcqSc = null;
 
 function openMcqModal() {
-  if (!_mcqSc || !_mcqSc.answers) {
-    alert('No submitted answers on record for this candidate.');
-    return;
-  }
+  if (!_mcqSc) return;
   const answers = _mcqSc.answers;
+  const score = _mcqSc.mcq_score;
+  const passed = score >= 12;
   let html = `<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;padding:12px 14px;background:#f8f9fa;border-radius:8px">
-    <span style="font-size:0.88rem"><strong>Score:</strong> ${_mcqSc.mcq_score}/20</span>
-    <span style="font-size:0.88rem;color:${_mcqSc.mcq_score >= 12 ? '#166534' : '#991b1b'};font-weight:700">${_mcqSc.mcq_score >= 12 ? 'PASS' : 'FAIL'}</span>
+    <span style="font-size:0.88rem"><strong>Score:</strong> ${score}/20</span>
+    <span style="font-size:0.88rem;color:${passed ? '#166534' : '#991b1b'};font-weight:700">${passed ? 'PASS' : 'FAIL'}</span>
     <span style="font-size:0.88rem;color:#888">Pass threshold: 12/20</span>
   </div>`;
+
+  if (!answers) {
+    html += `<p style="color:#888;font-size:0.85rem;padding:12px 0">Individual answers were not recorded for this submission (test was completed before answer tracking was enabled). Only the score is available.</p>`;
+    document.getElementById('mcqModalBody').innerHTML = html;
+    document.getElementById('mcqModal').style.display = 'flex';
+    return;
+  }
 
   MCQ_SECTIONS.forEach(section => {
     html += `<div class="mcq-section-head">${section.name}</div>`;
