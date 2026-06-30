@@ -278,18 +278,14 @@ async function submitTest() {
 
 function showResults(score, passed, ss) {
   document.getElementById('testScreen').style.display = 'none'
-  const cls = passed ? 'score-pass' : 'score-fail'
-  const sRows = SECTIONS.map(s => {
-    const got = (ss && ss[s.key]) || 0
-    return '<div class="sr-row"><span class="sr-name">' + s.name + '</span><span class="sr-score">' + got + ' / ' + s.questions.length + '</span></div>'
-  }).join('')
   document.getElementById('doneContent').innerHTML =
-    '<div class="score-card"><div class="score-big ' + cls + '">' + score + '/20</div>'
-    + '<div class="score-label ' + cls + '">' + (passed ? 'PASS' : 'FAIL') + '</div>'
-    + '<div class="score-threshold">Pass threshold: 12 / 20</div></div>'
-    + '<div class="section-results">' + sRows + '</div>'
-    + '<p style="text-align:center;color:#777;font-size:0.85rem;margin-top:24px;line-height:1.7">'
-    + 'Thank you, ' + _firstName + '. Your results have been sent to the TRUSTUS Care team.<br>You will be contacted regarding next steps.</p>'
+    '<div style="background:#fff;border-radius:16px;border:1px solid #eee;padding:40px 32px;text-align:center">'
+    + '<div style="font-size:3rem;margin-bottom:16px">&#10003;</div>'
+    + '<div style="font-size:1.4rem;font-weight:800;color:#1C2B4A;margin-bottom:10px">Test Submitted</div>'
+    + '<p style="color:#555;font-size:0.95rem;line-height:1.7;max-width:400px;margin:0 auto">'
+    + 'Thank you, ' + _firstName + '. Your answers have been submitted to TRUSTUS Care.<br><br>'
+    + 'You will be contacted regarding your application. If you have any questions, please call us on <strong>020 3411 1218</strong>.</p>'
+    + '</div>'
   document.getElementById('doneScreen').style.display = 'flex'
 }
 

@@ -178,6 +178,14 @@
     #inviteToast svg, #scorecardToast svg { flex-shrink:0; }
     /* Invite modal */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(17,17,17,0.45); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .mcq-q-block { margin-bottom:16px; padding:14px 16px; border-radius:10px; border:1px solid #eee; background:#fafafa; }
+    .mcq-q-text { font-size:0.88rem; font-weight:700; color:#1C2B4A; margin-bottom:10px; line-height:1.5; }
+    .mcq-opt { display:flex; align-items:flex-start; gap:10px; padding:7px 10px; border-radius:7px; font-size:0.83rem; line-height:1.5; margin-bottom:4px; }
+    .mcq-opt.correct { background:#dcfce7; color:#166534; font-weight:700; }
+    .mcq-opt.wrong   { background:#fee2e2; color:#991b1b; font-weight:700; }
+    .mcq-opt.neutral { color:#555; }
+    .mcq-opt-key { min-width:18px; font-weight:700; }
+    .mcq-section-head { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#C8526A; margin:18px 0 8px; }
     .modal-card { background: white; border-radius: 16px; padding: 32px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(17,17,17,0.18); border-top: 4px solid var(--green); }
     .modal-title { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
     .modal-sub { font-size: 0.83rem; color: var(--muted); margin-bottom: 22px; }
@@ -361,6 +369,17 @@
   </div>
 </div>
 
+<!-- MCQ results modal -->
+<div id="mcqModal" class="modal-backdrop" style="display:none;align-items:flex-start;padding:32px 16px;overflow-y:auto" onclick="if(event.target===this)closeMcqModal()">
+  <div class="modal-card" style="max-width:680px;width:100%;max-height:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div class="modal-title" style="margin:0">Competency Test — Submitted Answers</div>
+      <button onclick="closeMcqModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;line-height:1">&times;</button>
+    </div>
+    <div id="mcqModalBody" style="margin-top:16px"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/portal.config.js"></script>
 <script>
@@ -514,7 +533,7 @@ async function openDetail(id) {
   // Fetch scorecard results if applicable
   const needsScorecard = ['shortlisted','interview_invited','rejected'].includes(app.status);
   if (needsScorecard && !scCache[id]) {
-    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at').eq('application_id', id).maybeSingle();
+    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at,mcq_score,section_scores,answers').eq('application_id', id).maybeSingle();
     scCache[id] = data || null;
   }
 
@@ -550,9 +569,10 @@ function renderFull(app, det, sc) {
       ? 'Candidate has not yet completed their application form.'
       : 'No form details on record.'}</p>`;
 
-  // Initialise scorecard state from existing data
+  // Initialise scorecard + MCQ state from existing data
   _ratings = (sc && sc.domain_ratings) ? Object.assign({}, sc.domain_ratings) : {};
   _outcome = (sc && sc.outcome) || '';
+  _mcqSc   = sc || null;
 
   const showScTab = ['shortlisted','interview_invited','rejected'].includes(app.status);
 
@@ -590,6 +610,10 @@ function renderFull(app, det, sc) {
           ${app.status === 'interview_invited' ? `<button class="btn-scorecard" onclick="openScorecardModal('${app.id}')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             Generate Competency Test Link
+          </button>` : ''}
+          ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? `<button class="btn-scorecard" onclick="openMcqModal()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            View Test Results
           </button>` : ''}
         </div>
 
@@ -873,6 +897,112 @@ async function sendInvite() {
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Send Invite';
   }
+}
+
+/* ---- MCQ RESULTS MODAL ---- */
+const MCQ_ANSWER_KEY = ['b','b','b','b','b','b','b','b','c','a','b','b','b','c','b','b','a','b','c','b'];
+const MCQ_SECTIONS = [
+  { name:'Core Values & Professional Boundaries', questions:[
+    'A client asks you to use their debit card to buy groceries. What is the correct action?',
+    'How do you show the TRUSTUS Care value of “Promoting Independence”?',
+    'What is an example of person-centred care?',
+    'Under the Mental Capacity Act, what must you assume when meeting a client?'
+  ], options:[
+    ['Take the card and go shopping without asking anyone.','Contact your office manager to report it and get authorisation.','Refuse to help them and leave them with no food.','Keep the card for your own personal use.'],
+    ['Do everything for the client so they do not have to move.','Give the client an easy-grip tool and encourage them to do what they can.','Tell the client they are too slow and take over their tasks.','Ignore the client’s requests entirely.'],
+    ['Forcing every client to wake up at exactly 6:00 AM.','Planning care around the client’s specific personal preferences.','Making choices for the client without asking them.','Ignoring the client’s cultural or religious background.'],
+    ['Assume they cannot make any decisions on their own.','Assume they have full capacity unless a formal test shows otherwise.','Assume their family makes 100% of their choices.','Assume the care worker makes all their legal choices.']
+  ], start:0 },
+  { name:'Safeguarding & Risk Management', questions:[
+    'You notice large, unexplained hand-shaped bruises on a client’s arm. What should you do?',
+    'You think a coworker is asking a client with a learning disability for cash “loans”. What is your duty?',
+    'Which of the following is an example of organisational abuse?',
+    'A client with autism runs toward heavy traffic when stressed. How should the team manage this risk?'
+  ], options:[
+    ['Shout at the family members immediately.','Write it down factually and report it to your Safeguarding Lead immediately.','Hide it and tell nobody to keep things quiet.','Delete the care records and ignore the bruises.'],
+    ['Mind your own business and do nothing.','Follow the Whistleblowing Policy to report the coworker to management.','Ask the coworker to split the money with you.','Tell the client to give away more money.'],
+    ['A client choosing to watch TV in their own bedroom.','Forcing all clients to go to bed early just to suit the staff shift change.','A care worker arriving five minutes late due to heavy traffic.','Serving lunch at 12:45 PM instead of exactly at 12:30 PM.'],
+    ['Lock the client in a room and never let them go outside.','Use a safe, proactive plan with travel training and calming aids.','Put the client in tight physical restraints all day.','Let the client run into the street alone.']
+  ], start:4 },
+  { name:'Medication & Infection Control', questions:[
+    'A client who has full legal capacity refuses to take their evening medication. What should you do?',
+    'When giving medication, what is a critical safety rule?',
+    'What is the correct rule for disposable gloves and aprons?',
+    'You have active symptoms of infectious vomiting and diarrhoea. What should you do?'
+  ], options:[
+    ['Crush the pill and secretly hide it in their pudding.','Force their mouth open and make them swallow it.','Respect their choice, explain risks, record the refusal, and tell your manager.','Punish the client by taking away their television privileges.'],
+    ['Follow the “6 Rights” — Right person, medication, route, dose, time, documentation.','Pre-sign the medication chart before you even arrive at the house.','Leave the pills on the bedside table for a sleeping client to take later.','Guess the dosage if you cannot read the prescription label clearly.'],
+    ['Use the exact same pair of gloves for every single house you visit.','Change your gloves and apron between doing personal care and preparing food.','Wash disposable aprons in the sink so you can reuse them all week.','Never wear any gloves or aprons under any circumstances.'],
+    ['Go to your shifts normally and tell nobody.','Stay home, call the office immediately, and follow infection control rules.','Bring a friend along to do your personal care work for you.','Work your shift but try to avoid looking directly at the clients.']
+  ], start:8 },
+  { name:'Emergency Situations & Health and Safety', questions:[
+    'You find a client lying motionless on their living room floor. What is your very first action?',
+    'A client’s care plan says they need a two-person hoist transfer. You are completely alone. What should you do?',
+    'You are running 30 minutes late for a morning visit due to a major transit delay. What should you do?'
+  ], options:[
+    ['Pull them up roughly by their arms to stand up.','Check the area for danger, see if they respond, and check if they are breathing.','Pour a hot cup of tea down their throat immediately.','Run out of the house and ignore the situation completely.'],
+    ['Do the hoist transfer completely by yourself to save time.','Manually lift the client using your back, bypassing the hoist completely.','Wait for your second care worker or call the office immediately for support.','Scream at the client for needing assistance.'],
+    ['Speed and break driving laws to rush down the street.','Call your office immediately so they can update the client or send a replacement.','Skip the visit completely and pretend you went on the digital system.','Do not worry and show up whenever you feel like it.']
+  ], start:12 },
+  { name:'Learning Disabilities, Dementia & Communication', questions:[
+    'An autistic resident starts rocking, pacing, and humming loudly. How should you react?',
+    'What is “diagnostic overshadowing” in learning disability support work?',
+    'A client with advanced dementia angrily claims you stole their wedding ring. How should you respond?',
+    'Which daily log entry is written to professional care standards?',
+    'Why must you keep client information strictly confidential under UK GDPR law?'
+  ], options:[
+    ['Shout at them to stop and force them to sit perfectly still.','Turn down loud TVs, dim harsh lights, and follow their behaviour support plan.','Pin them to the floor with a heavy physical restraint hold.','Laugh at them and mock the noises they are making.'],
+    ['Blaming physical illness symptoms (like pain or a UTI) on the client’s learning disability.','Using a flashlight to check a client’s eyes during a checkup.','Giving a client too many physical exercise options.','Teaching a client how to cook meals independently.'],
+    ['Scream back at them, call them a liar, and demand a written apology.','Stay calm, acknowledge their distress, and offer to look for the ring together.','Call emergency police forces to report the client for defamation.','Storm out of the house and leave the front doors wide open.'],
+    ['“The client was an absolute nightmare today and acted extremely lazy.”','“The client is sad because their family doesn’t love them enough to visit.”','“Arrived 13:00. Client took lunch medication. Ate full meal. Mood was settled.”','“Client threw a giant temper tantrum for no clear reason whatsoever.”'],
+    ['To prevent care workers from talking to their managers about schedules.','To build professional trust and protect vulnerable clients from scams or stigma.','To allow the company to take over all personal social media accounts of staff.','To keep the client’s own family from knowing if they are safe.']
+  ], start:15 }
+];
+const OPT_KEYS = ['a','b','c','d'];
+let _mcqSc = null;
+
+function openMcqModal() {
+  if (!_mcqSc || !_mcqSc.answers) {
+    alert('No submitted answers on record for this candidate.');
+    return;
+  }
+  const answers = _mcqSc.answers;
+  let html = `<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;padding:12px 14px;background:#f8f9fa;border-radius:8px">
+    <span style="font-size:0.88rem"><strong>Score:</strong> ${_mcqSc.mcq_score}/20</span>
+    <span style="font-size:0.88rem;color:${_mcqSc.mcq_score >= 12 ? '#166534' : '#991b1b'};font-weight:700">${_mcqSc.mcq_score >= 12 ? 'PASS' : 'FAIL'}</span>
+    <span style="font-size:0.88rem;color:#888">Pass threshold: 12/20</span>
+  </div>`;
+
+  MCQ_SECTIONS.forEach(section => {
+    html += `<div class="mcq-section-head">${section.name}</div>`;
+    section.questions.forEach((qText, li) => {
+      const gi = section.start + li;
+      const chosen = (answers[gi] || '').toLowerCase();
+      const correct = MCQ_ANSWER_KEY[gi];
+      const isRight = chosen === correct;
+      html += `<div class="mcq-q-block">
+        <div class="mcq-q-text">Q${gi+1}. ${qText}</div>`;
+      section.options[li].forEach((opt, oi) => {
+        const k = OPT_KEYS[oi];
+        const isChosen = k === chosen;
+        const isCorrect = k === correct;
+        let cls = 'neutral';
+        let suffix = '';
+        if (isChosen && isRight)  { cls = 'correct'; suffix = ' &#10003; Correct'; }
+        if (isChosen && !isRight) { cls = 'wrong';   suffix = ' &#10007; Selected'; }
+        if (!isChosen && isCorrect && !isRight) { cls = 'correct'; suffix = ' (correct answer)'; }
+        html += `<div class="mcq-opt ${cls}"><span class="mcq-opt-key">${k.toUpperCase()}.</span><span>${opt}${suffix}</span></div>`;
+      });
+      html += `</div>`;
+    });
+  });
+
+  document.getElementById('mcqModalBody').innerHTML = html;
+  document.getElementById('mcqModal').style.display = 'flex';
+}
+
+function closeMcqModal() {
+  document.getElementById('mcqModal').style.display = 'none';
 }
 
 /* ---- SCORECARD LINK ---- */
