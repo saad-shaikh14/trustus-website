@@ -114,23 +114,32 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 ## Job portal (LIVE 2026-06-30)
 - Stack: Supabase (Postgres + Auth + Storage) + Resend — all free tier
 - Supabase project: `ssbcpblfkgpgtcxifopp`, dashboard: https://supabase.com/dashboard/project/ssbcpblfkgpgtcxifopp
-- CV files: Supabase Storage bucket `cvs` (signed URLs, 1hr expiry)
+- CV files: Supabase Storage bucket `cvs` (signed URLs, 120s expiry); downloaded as `FirstName_LastName_CV.ext`
 - Emails: Resend via noreply@trustuscare.com (API key held by Saad, set as Edge Function secret)
-- DB schema in `trustus` schema (not `public`); public views `trustus_applications`, `trustus_application_details` bridge PostgREST
-- Edge Functions (Deno, project `ssbcpblfkgpgtcxifopp`): `submit-cv`, `submit-form1`, `send-invite` — all deployed with `--no-verify-jwt`
-- No candidate accounts — token-based links only; HR is only authenticated user
+- DB schema in `trustus` schema (not `public`); public views bridge PostgREST: `trustus_applications`, `trustus_application_details`, `competency_results`
+- Edge Functions (Deno, all `--no-verify-jwt`): `submit-cv`, `submit-form1`, `send-invite`, `submit-mcq`, `submit-scorecard`, `generate-scorecard-token`
+- No candidate accounts — token-based links only; HR is only authenticated user (hr@trustuscare.com)
 - Application statuses: `cv_received` → `form1_complete` → `test_complete` → `shortlisted` → `interview_invited` → `rejected`
-- Full plan + schema in memory: `project_trustus_job_portal.md`
 
-**Phase 6 (LIVE 2026-06-30):** Competency test + scorecard
-- `test.html` — candidate MCQ page (20 questions, token-gated, server-side answer key)
-- Edge functions: `submit-mcq` (scores + HR email), `submit-scorecard` (HR JWT, upserts domain_ratings/outcome)
-- `submit-form1` updated to email candidate test link after form save
-- Portal: `test_complete` status, MCQ score card, interviewer scorecard form
-- DB: `public.competency_results` view (PostgREST bridge to `trustus.competency_results`)
+**DB schema — `trustus.applications`:**
+id, token, status, first_name, last_name, phone, email, role_applied, cv_url, submitted_at, created_at, updated_at, form1_submitted_at, hr_notes, cv_downloaded_at, invited_at
+
+**DB schema — `trustus.competency_results`:**
+application_id (FK), mcq_score, section_scores (jsonb), answers (jsonb), mcq_submitted_at, domain_ratings (jsonb), strengths, development_areas, outcome, interviewer_name, completed_at, score_viewed_at
+- `outcome` check constraint: `'PASS'`, `'HOLD'`, `'FAIL'` (uppercase — must match exactly)
+
+**Portal UX (as of 2026-06-30):**
+- Status: read-only badge; only manual action is "✖ Not Progressing" (confirm dialog → `rejected`)
+- Send Invite: enabled for all statuses except `cv_received` and `rejected`; CV download auto-opens invite modal 600ms after (all non-rejected candidates)
+- Generate Competency Test Link: visible for `form1_complete`, `test_complete`, `shortlisted`, `interview_invited`; copies `test.html?token=xxx` to clipboard
+- View Test Results: shown when `mcq_score` is not null; opens answer-review modal (if `answers` null, shows score summary only)
+- Scorecard tab: appears for `shortlisted`, `interview_invited`, `rejected` — 5 domain ratings + outcome + save
+- Application Timeline: always shown; 6 events — CV submitted, Form 1 complete, HR downloaded CV, invite sent, test submitted, HR viewed results
 
 **Phase 7 (pending):** Monthly Google Apps Script — `monthly_export.gs` at project root
 - Set SERVICE_ROLE_KEY and DRIVE_FOLDER_ID in the script, paste into Google Apps Script, add monthly trigger
+
+**GDPR note:** Supabase free tier is US-hosted (AWS us-east-1). GDPR-compliant via SCCs + UK-US Data Bridge. For strict EU data residency: upgrade to Pro ($25/mo) and select Frankfurt region.
 
 ## Contact form backend
 - **Service:** formsubmit.co (free, no backend)
