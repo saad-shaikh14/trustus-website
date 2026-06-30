@@ -1099,7 +1099,7 @@ async function generateScorecardLink() {
 /* ---- TIMELINE ---- */
 function buildTimeline(app, sc) {
   const events = [
-    { id: 'tl-cv-submitted',    label: 'CV Submitted',              ts: app.submitted_at,            who: 'candidate' },
+    { id: 'tl-cv-submitted',    label: 'CV Submitted',              ts: app.submitted_at || app.created_at, who: 'candidate' },
     { id: 'tl-form1-completed', label: 'Application Form Completed', ts: app.form1_submitted_at,      who: 'candidate' },
     { id: 'tl-cv-downloaded',   label: 'CV Downloaded by HR',        ts: app.cv_downloaded_at,        who: 'hr'        },
     { id: 'tl-invite-sent',     label: 'Interview Invite Sent',      ts: app.invited_at,              who: 'hr'        },
