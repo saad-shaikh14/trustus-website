@@ -239,6 +239,20 @@
     .spin { display: inline-block; width: 22px; height: 22px; border: 3px solid var(--border-2); border-top-color: var(--terra); border-radius: 50%; animation: _spin 0.75s linear infinite; }
     @keyframes _spin { to { transform: rotate(360deg); } }
 
+    /* Timeline */
+    .timeline { padding: 4px 0; }
+    .tl-item { display: flex; gap: 14px; padding-bottom: 16px; position: relative; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-item:not(:last-child)::before { content: ''; position: absolute; left: 9px; top: 22px; width: 2px; bottom: 0; background: #e5e7eb; }
+    .tl-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; }
+    .tl-dot.done { background: #3D6A5A; }
+    .tl-dot.pending { background: #fff; border: 2px solid #d1d5db; }
+    .tl-label { font-size: 0.85rem; font-weight: 700; color: #111; line-height: 1.3; }
+    .tl-time { font-size: 0.77rem; color: #888; margin-top: 2px; }
+    .tl-time.pending { color: #bbb; font-style: italic; }
+    .tl-who-hr { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #C8526A; margin-top: 1px; }
+    .tl-who-cand { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #3D6A5A; margin-top: 1px; }
+
     @media (max-width: 768px) {
       body { overflow: auto; }
       .adm-layout { flex-direction: column; }
@@ -535,7 +549,7 @@ async function openDetail(id) {
   // Fetch scorecard results if applicable
   const needsScorecard = ['form1_complete','test_complete','shortlisted','interview_invited','rejected'].includes(app.status);
   if (needsScorecard && !scCache[id]) {
-    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at,mcq_score,section_scores,answers').eq('application_id', id).maybeSingle();
+    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at,mcq_score,section_scores,answers,mcq_submitted_at,score_viewed_at').eq('application_id', id).maybeSingle();
     scCache[id] = data || null;
   }
 
@@ -618,6 +632,8 @@ function renderFull(app, det, sc) {
             View Test Results
           </button>` : ''}
         </div>
+
+        ${buildTimeline(app, sc)}
 
         <div class="sec-card">
           <div class="sec-head">Status &amp; HR Notes</div>
@@ -827,6 +843,17 @@ async function dlCV(cvUrl, appId) {
   const { data, error } = await sb.storage.from('cvs').createSignedUrl(cvUrl, 120, downloadName ? { download: downloadName } : {});
   if (error || !data?.signedUrl) { alert('Could not generate download link: ' + (error?.message || 'Unknown error')); return; }
   window.open(data.signedUrl, '_blank');
+  if (app && !app.cv_downloaded_at) {
+    const ts = new Date().toISOString();
+    sb.from('trustus_applications').update({ cv_downloaded_at: ts }).eq('id', appId);
+    app.cv_downloaded_at = ts;
+    const tlEl = document.getElementById('tl-cv-downloaded');
+    if (tlEl) {
+      tlEl.querySelector('.tl-dot').className = 'tl-dot done';
+      tlEl.querySelector('.tl-dot').innerHTML = '&#10003;';
+      const tm = tlEl.querySelector('.tl-time'); tm.className = 'tl-time'; tm.textContent = fmtTimeline(ts);
+    }
+  }
   if (app && app.status !== 'rejected') {
     setTimeout(() => openInvite(appId, app.first_name + ' ' + app.last_name, app.email), 600);
   }
@@ -1005,6 +1032,17 @@ function openMcqModal() {
 
   document.getElementById('mcqModalBody').innerHTML = html;
   document.getElementById('mcqModal').style.display = 'flex';
+  if (_mcqSc && !_mcqSc.score_viewed_at) {
+    const ts = new Date().toISOString();
+    sb.from('competency_results').update({ score_viewed_at: ts }).eq('application_id', openId);
+    _mcqSc.score_viewed_at = ts;
+    const tlEl = document.getElementById('tl-score-viewed');
+    if (tlEl) {
+      tlEl.querySelector('.tl-dot').className = 'tl-dot done';
+      tlEl.querySelector('.tl-dot').innerHTML = '&#10003;';
+      const tm = tlEl.querySelector('.tl-time'); tm.className = 'tl-time'; tm.textContent = fmtTimeline(ts);
+    }
+  }
 }
 
 function closeMcqModal() {
@@ -1056,6 +1094,39 @@ async function generateScorecardLink() {
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Generate & Copy Link';
   }
+}
+
+/* ---- TIMELINE ---- */
+function buildTimeline(app, sc) {
+  const events = [
+    { id: 'tl-cv-submitted',    label: 'CV Submitted',              ts: app.submitted_at,            who: 'candidate' },
+    { id: 'tl-form1-completed', label: 'Application Form Completed', ts: app.form1_submitted_at,      who: 'candidate' },
+    { id: 'tl-cv-downloaded',   label: 'CV Downloaded by HR',        ts: app.cv_downloaded_at,        who: 'hr'        },
+    { id: 'tl-invite-sent',     label: 'Interview Invite Sent',      ts: app.invited_at,              who: 'hr'        },
+    { id: 'tl-mcq-submitted',   label: 'Competency Test Submitted',  ts: sc && sc.mcq_submitted_at,   who: 'candidate' },
+    { id: 'tl-score-viewed',    label: 'Test Results Viewed by HR',  ts: sc && sc.score_viewed_at,    who: 'hr'        },
+  ];
+  const rows = events.map(e => {
+    const done = !!e.ts;
+    const whoClass = e.who === 'hr' ? 'tl-who-hr' : 'tl-who-cand';
+    const whoLabel = e.who === 'hr' ? 'HR' : 'Candidate';
+    return `<div class="tl-item" id="${e.id}">
+      <div class="tl-dot ${done ? 'done' : 'pending'}">${done ? '&#10003;' : ''}</div>
+      <div>
+        <div class="tl-label">${e.label}</div>
+        <div class="tl-time${done ? '' : ' pending'}">${done ? fmtTimeline(e.ts) : 'Not yet'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="sec-card">
+    <div class="sec-head">Application Timeline</div>
+    <div class="sec-body"><div class="timeline">${rows}</div></div>
+  </div>`;
+}
+
+function fmtTimeline(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 /* ---- FORM 1 RENDERER ---- */
