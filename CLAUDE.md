@@ -100,7 +100,7 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 
 ## Admin portal login
 - URL: https://trustuscare.com/portal
-- Login email: hr@trustuscare.com (updated 2026-06-30)
+- Login email: info@trustuscare.com (updated 2026-07-01, was hr@trustuscare.com)
 - HR notification emails (new CV, Form 1 complete) → info@trustuscare.com
 
 ## Careers page
@@ -118,7 +118,7 @@ Dropdown under Our Services: Domiciliary Care, Supported Living, Complex Care (3
 - Emails: Resend via noreply@trustuscare.com (API key held by Saad, set as Edge Function secret)
 - DB schema in `trustus` schema (not `public`); public views bridge PostgREST: `trustus_applications`, `trustus_application_details`, `competency_results`
 - Edge Functions (Deno, all `--no-verify-jwt`): `submit-cv`, `submit-form1`, `send-invite`, `submit-mcq`, `submit-scorecard`, `generate-scorecard-token`
-- No candidate accounts — token-based links only; HR is only authenticated user (hr@trustuscare.com)
+- No candidate accounts — token-based links only; HR is only authenticated user (info@trustuscare.com)
 - Application statuses: `cv_received` → `form1_complete` → `test_complete` → `shortlisted` → `interview_invited` → `rejected`
 
 **DB schema — `trustus.applications`:**

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Complete Your Application &mdash; TRUSTUS Care</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -577,8 +578,9 @@ let currentStep = 1;
 
 // ---- Init ----
 (async () => {
+  const hashParams = new URLSearchParams(window.location.hash.slice(1));
   const params = new URLSearchParams(window.location.search);
-  const urlToken = params.get('token');
+  const urlToken = hashParams.get('token') || params.get('token');
 
   if (urlToken) {
     sessionStorage.setItem('trustus_token', urlToken);
@@ -591,7 +593,9 @@ let currentStep = 1;
   if (!appToken) { showTokenError(); return; }
 
   try {
-    const res  = await fetch(`${EDGE_BASE}/validate-token?token=${encodeURIComponent(appToken)}`);
+    const res  = await fetch(`${EDGE_BASE}/validate-token`, {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ token: appToken })
+    });
     const json = await res.json();
 
     if (!json.valid) { showTokenError(); return; }

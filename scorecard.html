@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Interviewer Scorecard &mdash; TRUSTUS Care</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -348,7 +349,12 @@ const DOMAINS = [
   { key: 'boundaries',    label: 'Professional Boundaries' },
 ]
 
-const token = new URLSearchParams(window.location.search).get('token')
+const urlToken = new URLSearchParams(window.location.hash.slice(1)).get('token') || new URLSearchParams(window.location.search).get('token')
+if (urlToken) {
+  sessionStorage.setItem('trustus_scorecard_token', urlToken)
+  history.replaceState(null, '', window.location.pathname)
+}
+const token = urlToken || sessionStorage.getItem('trustus_scorecard_token')
 let _email = ''
 let _ratings = {}
 let _selectedOutcome = null
