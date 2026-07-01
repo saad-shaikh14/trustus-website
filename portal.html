@@ -120,9 +120,9 @@
     .detail-body { padding: 20px 24px; max-width: 760px; }
 
     .info-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 18px; }
-    .info-item { background: white; border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); }
+    .info-item { background: white; border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); min-width: 0; }
     .info-item label { display: block; font-size: 0.71rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-    .info-item span, .info-item a { font-size: 0.9rem; color: var(--ink); font-weight: 600; text-decoration: none; }
+    .info-item span, .info-item a { display: block; font-size: 0.9rem; color: var(--ink); font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
     .info-item a:hover { color: var(--terra); }
 
     .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -845,13 +845,18 @@ async function dlCV(cvUrl, appId) {
   window.open(data.signedUrl, '_blank');
   if (app && !app.cv_downloaded_at) {
     const ts = new Date().toISOString();
-    sb.from('trustus_applications').update({ cv_downloaded_at: ts }).eq('id', appId);
-    app.cv_downloaded_at = ts;
-    const tlEl = document.getElementById('tl-cv-downloaded');
-    if (tlEl) {
-      tlEl.querySelector('.tl-dot').className = 'tl-dot done';
-      tlEl.querySelector('.tl-dot').innerHTML = '&#10003;';
-      const tm = tlEl.querySelector('.tl-time'); tm.className = 'tl-time'; tm.textContent = fmtTimeline(ts);
+    const { error: updErr } = await sb.from('trustus_applications').update({ cv_downloaded_at: ts }).eq('id', appId);
+    if (updErr) {
+      console.error('Failed to record CV-downloaded timestamp:', updErr.message);
+      alert('CV downloaded, but the timeline could not be updated (will retry on next download): ' + updErr.message);
+    } else {
+      app.cv_downloaded_at = ts;
+      const tlEl = document.getElementById('tl-cv-downloaded');
+      if (tlEl) {
+        tlEl.querySelector('.tl-dot').className = 'tl-dot done';
+        tlEl.querySelector('.tl-dot').innerHTML = '&#10003;';
+        const tm = tlEl.querySelector('.tl-time'); tm.className = 'tl-time'; tm.textContent = fmtTimeline(ts);
+      }
     }
   }
   if (app && app.status !== 'rejected') {
@@ -988,7 +993,7 @@ const MCQ_SECTIONS = [
 const OPT_KEYS = ['a','b','c','d'];
 let _mcqSc = null;
 
-function openMcqModal() {
+async function openMcqModal() {
   if (!_mcqSc) return;
   const answers = _mcqSc.answers;
   const score = _mcqSc.mcq_score;
@@ -1034,7 +1039,8 @@ function openMcqModal() {
   document.getElementById('mcqModal').style.display = 'flex';
   if (_mcqSc && !_mcqSc.score_viewed_at) {
     const ts = new Date().toISOString();
-    sb.from('competency_results').update({ score_viewed_at: ts }).eq('application_id', openId);
+    const { error } = await sb.from('competency_results').update({ score_viewed_at: ts }).eq('application_id', openId);
+    if (error) { console.error('Failed to record score-viewed timestamp:', error.message); return; }
     _mcqSc.score_viewed_at = ts;
     const tlEl = document.getElementById('tl-score-viewed');
     if (tlEl) {
