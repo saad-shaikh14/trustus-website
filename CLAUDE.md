@@ -135,6 +135,8 @@ application_id (FK), mcq_score, section_scores (jsonb), answers (jsonb), mcq_sub
 - View Test Results: shown when `mcq_score` is not null; opens answer-review modal (if `answers` null, shows score summary only)
 - Scorecard tab: appears for `shortlisted`, `interview_invited`, `rejected` — 5 domain ratings + outcome + save
 - Application Timeline: always shown; 6 events — CV submitted, Form 1 complete, HR downloaded CV, invite sent, test submitted, HR viewed results
+- Overview info cards (`.info-row`/`.info-item`, Email/Phone/Form Submitted): flexbox, not grid — each card sizes to its own content instead of stretching to equal widths, so a long email gets a wide card on one line instead of wrapping; wraps to a new row only if the row runs out of space, with ellipsis+tooltip as a last-resort fallback on very narrow screens (fixed 2026-07-01)
+- `cv_downloaded_at` and `score_viewed_at` timeline writes must always be `await`ed with the error checked — these were originally fire-and-forget, so a failed write would show the checkmark for the rest of that session but silently revert to "Not yet" on the next login/reload since it was never actually persisted (fixed 2026-07-01)
 
 **Phase 7 (pending):** Monthly Google Apps Script — `monthly_export.gs` at project root
 - Set SERVICE_ROLE_KEY and DRIVE_FOLDER_ID in the script, paste into Google Apps Script, add monthly trigger
