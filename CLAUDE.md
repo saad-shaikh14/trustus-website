@@ -131,13 +131,15 @@ application_id (FK), mcq_score, section_scores (jsonb), answers (jsonb), mcq_sub
 **Portal UX (as of 2026-06-30):**
 - Status: read-only badge; only manual action is "✖ Not Progressing" (confirm dialog → `rejected`)
 - Send Invite: enabled for all statuses except `cv_received` and `rejected`; CV download auto-opens invite modal 600ms after (all non-rejected candidates)
-- Generate Competency Test Link: visible for `form1_complete`, `test_complete`, `shortlisted`, `interview_invited`; copies `test.html?token=xxx` to clipboard
+- Generate Competency Test Link: visible for `form1_complete`, `test_complete`, `shortlisted`, `interview_invited`; copies `test.html#token=xxx` to clipboard (fragment, not query string — see Security note below)
 - View Test Results: shown when `mcq_score` is not null; opens answer-review modal (if `answers` null, shows score summary only)
 - Scorecard tab: appears for `shortlisted`, `interview_invited`, `rejected` — 5 domain ratings + outcome + save
 - Application Timeline: always shown; 6 events — CV submitted, Form 1 complete, HR downloaded CV, invite sent, test submitted, HR viewed results
 
 **Phase 7 (pending):** Monthly Google Apps Script — `monthly_export.gs` at project root
 - Set SERVICE_ROLE_KEY and DRIVE_FOLDER_ID in the script, paste into Google Apps Script, add monthly trigger
+
+**Security — token delivery (fixed 2026-07-01):** Candidate/interviewer links (`apply#token=`, `test.html#token=`, `scorecard.html#token=`) use a URL **fragment**, not a `?token=` query string. Fragments are never sent to any server (not logged by GitHub Pages/CDN, not included in `Referer` headers to third-party resources like Google Fonts). Client JS moves the token to `sessionStorage` and strips it from the address bar via `history.replaceState` on load; old query-string links still work via fallback. `validate-token` edge function is POST-only (token in JSON body) — GET+query-param was removed so the token never appears in a request URL/logs. All pages carry `<meta name="referrer" content="no-referrer">` as defense in depth. `scorecard.html` + `validate-scorecard-token`/`submit-scorecard-token` are currently orphaned (not linked from anywhere; portal.html's Scorecard tab replaced them) but were fixed to the same standard and kept per Sajid's/Saad's call 2026-07-01.
 
 **GDPR note:** Supabase free tier is US-hosted (AWS us-east-1). GDPR-compliant via SCCs + UK-US Data Bridge. For strict EU data residency: upgrade to Pro ($25/mo) and select Frankfurt region.
 
