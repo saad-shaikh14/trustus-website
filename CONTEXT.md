@@ -67,6 +67,10 @@ Static HTML/CSS/JS site for TRUSTUS Group (client: Sajid Mamu), live at https://
   guide section (1.4) telling him exactly what to check for (the test message, subject "Activation
   Check — Please Disregard," vs. an unclicked FormSubmit confirmation email) and what to do either
   way. Don't re-mark this fully resolved in memory until Sajid confirms which one he actually found.
+- **Status (2026-07-27): waiting on Sajid's feedback on the guide + everything fixed today.** Saad's
+  plan — if Sajid confirms it all looks good (including the form-activation check above), this
+  project moves toward being closed out. Don't start new speculative work on this repo until that
+  feedback lands.
 
 ## Conventions
 - Push via the `saad-shaikh14` GitHub account (`gh auth switch -u saad-shaikh14` first — default account 403s).
