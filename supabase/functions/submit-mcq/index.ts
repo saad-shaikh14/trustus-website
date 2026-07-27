@@ -66,20 +66,48 @@ serve(async (req) => {
     }
     const passed = totalScore >= 12
 
-    // check-then-insert-or-update
-    const { data: existing } = await supabase
+    // Find the current (non-superseded) attempt, if any — a candidate may be
+    // given a second chance, in which case the previous attempt is archived
+    // (superseded_at set) rather than overwritten, and a new row is inserted.
+    const { data: current } = await supabase
       .from('competency_results')
-      .select('application_id')
+      .select('id, attempt_number, domain_ratings, strengths, development_areas, outcome, interviewer_name, completed_at')
       .eq('application_id', app.id)
+      .is('superseded_at', null)
       .maybeSingle()
 
-    const resultRow = { application_id: app.id, mcq_score: totalScore, section_scores, answers, mcq_submitted_at: new Date().toISOString() }
-    let dbErr
-    if (existing) {
-      ;({ error: dbErr } = await supabase.from('competency_results').update(resultRow).eq('application_id', app.id))
-    } else {
-      ;({ error: dbErr } = await supabase.from('competency_results').insert(resultRow))
+    if (current) {
+      const { error: supersedeErr } = await supabase
+        .from('competency_results')
+        .update({ superseded_at: new Date().toISOString() })
+        .eq('id', current.id)
+      if (supersedeErr) {
+        return new Response(JSON.stringify({ error: supersedeErr.message }), {
+          status: 500, headers: { ...CORS, 'Content-Type': 'application/json' },
+        })
+      }
     }
+
+    const nextAttempt = current ? current.attempt_number + 1 : 1
+
+    // Carry forward any existing interviewer scorecard — it assesses the
+    // candidate overall, not this specific MCQ attempt, so a retake shouldn't
+    // wipe it.
+    const resultRow = {
+      application_id: app.id,
+      attempt_number: nextAttempt,
+      mcq_score: totalScore,
+      section_scores,
+      answers,
+      mcq_submitted_at: new Date().toISOString(),
+      domain_ratings: current?.domain_ratings ?? {},
+      strengths: current?.strengths ?? null,
+      development_areas: current?.development_areas ?? null,
+      outcome: current?.outcome ?? null,
+      interviewer_name: current?.interviewer_name ?? null,
+      completed_at: current?.completed_at ?? null,
+    }
+    const { error: dbErr } = await supabase.from('competency_results').insert(resultRow)
 
     if (dbErr) {
       return new Response(JSON.stringify({ error: dbErr.message }), {
@@ -92,19 +120,19 @@ serve(async (req) => {
       `<tr><td style="padding:6px 0;color:#666;font-size:13px">${s.name}</td><td style="color:#1C2B4A;font-weight:700;text-align:right;font-size:13px">${section_scores[s.key]} / ${s.idx.length}</td></tr>`
     ).join('')
 
-    await fetch('https://api.resend.com/emails', {
+    const hrEmailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'TRUSTUS Portal <noreply@trustuscare.com>',
         to: 'info@trustuscare.com',
-        subject: `Competency Test ${passed ? 'PASS' : 'FAIL'} — ${app.first_name} ${app.last_name} (${totalScore}/20)`,
+        subject: `Competency Test ${passed ? 'PASS' : 'FAIL'} — ${app.first_name} ${app.last_name} (${totalScore}/20)${nextAttempt > 1 ? ` — Attempt ${nextAttempt}` : ''}`,
         html: `<div style="font-family:Nunito,Arial,sans-serif;max-width:560px;margin:0 auto;border:1px solid #eee;border-radius:8px;overflow:hidden">
           <div style="background:${passed ? '#3D6A5A' : '#C8526A'};padding:20px 28px">
             <img src="https://trustuscare.com/images/logo.png" alt="TRUSTUS Care" style="height:40px">
           </div>
           <div style="padding:32px 28px">
-            <h2 style="color:#1C2B4A;margin:0 0 6px">Competency Test ${passed ? 'Passed' : 'Failed'}</h2>
+            <h2 style="color:#1C2B4A;margin:0 0 6px">Competency Test ${passed ? 'Passed' : 'Failed'}${nextAttempt > 1 ? ` (Attempt ${nextAttempt})` : ''}</h2>
             <p style="font-size:2rem;font-weight:800;color:${passed ? '#3D6A5A' : '#C8526A'};margin:0 0 20px">${totalScore} / 20</p>
             <table style="width:100%;border-collapse:collapse;margin-bottom:16px">${sectionRows}</table>
             <p style="color:#555;font-size:14px;line-height:1.7">${app.first_name} ${app.last_name} &mdash; ${app.role_applied}<br>Pass threshold: 12 / 20</p>
@@ -115,8 +143,11 @@ serve(async (req) => {
         </div>`,
       }),
     })
+    if (!hrEmailRes.ok) {
+      console.error('Resend HR notification failed (submit-mcq):', await hrEmailRes.text())
+    }
 
-    return new Response(JSON.stringify({ success: true, score: totalScore, passed, section_scores }), {
+    return new Response(JSON.stringify({ success: true, score: totalScore, passed, section_scores, attempt: nextAttempt }), {
       status: 200, headers: { ...CORS, 'Content-Type': 'application/json' },
     })
 

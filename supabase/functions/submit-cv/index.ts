@@ -73,7 +73,7 @@ serve(async (req) => {
     }
 
     // Notify HR
-    await fetch('https://api.resend.com/emails', {
+    const hrEmailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${Deno.env.get('RESEND_API_KEY')}`,
@@ -86,6 +86,9 @@ serve(async (req) => {
         html: buildHrEmail(firstName, lastName, email, phone, role),
       }),
     })
+    if (!hrEmailRes.ok) {
+      console.error('Resend HR notification failed (submit-cv):', await hrEmailRes.text())
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200, headers: { ...CORS, 'Content-Type': 'application/json' },

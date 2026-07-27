@@ -39,10 +39,13 @@ serve(async (req) => {
       })
     }
 
+    // Scorecard assesses the candidate overall, not a specific MCQ attempt —
+    // always write to the current (non-superseded) row.
     const { data: existing } = await supabase
       .from('competency_results')
-      .select('application_id')
+      .select('id')
       .eq('application_id', app_id)
+      .is('superseded_at', null)
       .maybeSingle()
 
     const fields = {
@@ -59,11 +62,11 @@ serve(async (req) => {
       ;({ error: writeErr } = await supabase
         .from('competency_results')
         .update(fields)
-        .eq('application_id', app_id))
+        .eq('id', existing.id))
     } else {
       ;({ error: writeErr } = await supabase
         .from('competency_results')
-        .insert({ application_id: app_id, ...fields }))
+        .insert({ application_id: app_id, attempt_number: 1, ...fields }))
     }
 
     if (writeErr) {

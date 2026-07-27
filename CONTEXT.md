@@ -35,6 +35,21 @@ Static HTML/CSS/JS site for TRUSTUS Group (client: Sajid Mamu), live at https://
   including a new gotcha: pushing workflow files via the `saad-shaikh14` account needed its gh token
   re-authorized with the `workflow` OAuth scope, which it didn't have by default.
 
+## Current state (2026-07-27, continued) — test attempt history + HR-email fix (ADR 0003)
+- `competency_results` now supports multiple attempts per application (`attempt_number` +
+  `superseded_at`), so HR can give a candidate a second chance on the competency test without
+  losing the first attempt's score. The interviewer scorecard fields carry forward across a retake
+  since they assess the candidate overall, not one specific attempt.
+- The "Generate Competency Test Link" button in the portal relabels to "Give Second Chance
+  (Regenerate Test)" with different modal copy once a result already exists — no new button, same
+  underlying link-generation call.
+- Fixed the silent HR-notification-email failure gap found while investigating this (`submit-cv`,
+  `submit-form1`, `submit-mcq` all now check `.ok` and log on failure — previously none of them did).
+- Verified end-to-end against the live project (real second submission, confirmed exactly one
+  current + one superseded row, confirmed the portal's exact anon-key queries return the right data).
+- See ADR 0003 for full detail, including why the interviewer-scorecard/MCQ-attempt split into
+  separate tables was deferred rather than done now.
+
 ## Conventions
 - Push via the `saad-shaikh14` GitHub account (`gh auth switch -u saad-shaikh14` first — default account 403s).
 - Always read/write HTML with Python `encoding='utf-8'` — never PowerShell `Get-Content`/`Set-Content` (double-encodes).

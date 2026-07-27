@@ -375,8 +375,8 @@
 <!-- Scorecard link modal -->
 <div id="scorecardModal" class="modal-backdrop" style="display:none" onclick="if(event.target===this)closeScorecardModal()">
   <div class="modal-card">
-    <div class="modal-title">Generate Competency Test Link</div>
-    <div class="modal-sub">A link to the 20-question competency test will be copied to your clipboard. Share it with the candidate before the interview.</div>
+    <div class="modal-title" id="scorecardModalTitle">Generate Competency Test Link</div>
+    <div class="modal-sub" id="scorecardModalSub">A link to the 20-question competency test will be copied to your clipboard. Share it with the candidate before the interview.</div>
     <div class="modal-err" id="scorecardModalErr"></div>
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeScorecardModal()">Cancel</button>
@@ -408,6 +408,7 @@ let curSearch  = '';
 let openId     = null;
 let detCache   = {};
 let scCache    = {};
+let scHistoryCache = {};
 
 const SC = {
   cv_received:       { label: 'CV Received',      cls: 'b-cv_received'       },
@@ -546,14 +547,20 @@ async function openDetail(id) {
     detCache[id] = data || null;
   }
 
-  // Fetch scorecard results if applicable
+  // Fetch scorecard results if applicable — only the current (non-superseded) attempt
   const needsScorecard = ['form1_complete','test_complete','shortlisted','interview_invited','rejected'].includes(app.status);
   if (needsScorecard && !scCache[id]) {
-    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at,mcq_score,section_scores,answers,mcq_submitted_at,score_viewed_at').eq('application_id', id).maybeSingle();
+    const { data } = await sb.from('competency_results').select('domain_ratings,strengths,development_areas,outcome,interviewer_name,completed_at,mcq_score,section_scores,answers,mcq_submitted_at,score_viewed_at,attempt_number').eq('application_id', id).is('superseded_at', null).maybeSingle();
     scCache[id] = data || null;
   }
 
-  renderFull(app, detCache[id] || null, scCache[id] || null);
+  // Prior (superseded) attempts, only if the current attempt isn't the first
+  if (needsScorecard && scCache[id] && scCache[id].attempt_number > 1 && !scHistoryCache[id]) {
+    const { data } = await sb.from('competency_results').select('attempt_number,mcq_score,mcq_submitted_at').eq('application_id', id).not('superseded_at', 'is', null).order('attempt_number');
+    scHistoryCache[id] = data || [];
+  }
+
+  renderFull(app, detCache[id] || null, scCache[id] || null, scHistoryCache[id] || []);
 }
 
 function renderHeader(app) {
@@ -570,7 +577,8 @@ function renderHeader(app) {
     <div class="detail-body"><div style="text-align:center;padding:48px 0;"><div class="spin"></div></div></div>`;
 }
 
-function renderFull(app, det, sc) {
+function renderFull(app, det, sc, scHistory) {
+  scHistory = scHistory || [];
   const s = SC[app.status] || { label: app.status, cls: '' };
 
   const cvBtn = app.cv_url
@@ -623,9 +631,9 @@ function renderFull(app, det, sc) {
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Send Interview Invite
           </button>
-          ${['form1_complete','test_complete','shortlisted','interview_invited'].includes(app.status) ? `<button class="btn-scorecard" onclick="openScorecardModal('${app.id}')">
+          ${['form1_complete','test_complete','shortlisted','interview_invited'].includes(app.status) ? `<button class="btn-scorecard" onclick="openScorecardModal('${app.id}', ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined})">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            Generate Competency Test Link
+            ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? 'Give Second Chance (Regenerate Test)' : 'Generate Competency Test Link'}
           </button>` : ''}
           ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? `<button class="btn-scorecard" onclick="openMcqModal()">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
@@ -650,7 +658,7 @@ function renderFull(app, det, sc) {
           </div>
         </div>
 
-        ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? buildMcqCard(sc) : ''}
+        ${sc && sc.mcq_score !== null && sc.mcq_score !== undefined ? buildMcqCard(sc, scHistory) : ''}
 
         <div class="sec-card">
           <div class="sec-head">Application Form Details</div>
@@ -676,11 +684,13 @@ function showTab(name) {
   });
 }
 
-function buildMcqCard(sc) {
+function buildMcqCard(sc, scHistory) {
+  scHistory = scHistory || [];
   const score = sc.mcq_score;
   const passed = score >= 12;
   const cls = passed ? 'mcq-pass' : 'mcq-fail';
   const ss = sc.section_scores || {};
+  const attempt = sc.attempt_number || 1;
   const SNAMES = [
     ['core_values',   'Core Values',      4],
     ['safeguarding',  'Safeguarding',     4],
@@ -691,8 +701,14 @@ function buildMcqCard(sc) {
   const rows = SNAMES.map(([k, label, max]) =>
     `<div class="mcq-sec-row"><span>${label}</span><span>${ss[k] !== undefined ? ss[k] : '?'} / ${max}</span></div>`
   ).join('');
+  const historyHtml = scHistory.length ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eee">
+      <div style="font-size:0.78rem;color:#888;font-weight:700;margin-bottom:6px">PREVIOUS ATTEMPTS</div>
+      ${scHistory.map(h => `<div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#666;padding:2px 0">
+        <span>Attempt ${h.attempt_number} &mdash; ${fmtFull(h.mcq_submitted_at)}</span><span style="font-weight:700">${h.mcq_score}/20</span>
+      </div>`).join('')}
+    </div>` : '';
   return `<div class="sec-card">
-    <div class="sec-head">Competency Test Score</div>
+    <div class="sec-head">Competency Test Score${attempt > 1 ? ` <span style="font-weight:400;color:#888;font-size:0.85em">(Attempt ${attempt})</span>` : ''}</div>
     <div class="sec-body">
       <div class="mcq-score-card">
         <div>
@@ -702,6 +718,7 @@ function buildMcqCard(sc) {
         </div>
         <div class="mcq-sections">${rows}</div>
       </div>
+      ${historyHtml}
     </div>
   </div>`;
 }
@@ -1002,6 +1019,7 @@ async function openMcqModal() {
     <span style="font-size:0.88rem"><strong>Score:</strong> ${score}/20</span>
     <span style="font-size:0.88rem;color:${passed ? '#166534' : '#991b1b'};font-weight:700">${passed ? 'PASS' : 'FAIL'}</span>
     <span style="font-size:0.88rem;color:#888">Pass threshold: 12/20</span>
+    ${_mcqSc.attempt_number > 1 ? `<span style="font-size:0.88rem;color:#888">Attempt ${_mcqSc.attempt_number}</span>` : ''}
   </div>`;
 
   if (!answers) {
@@ -1058,11 +1076,15 @@ function closeMcqModal() {
 /* ---- SCORECARD LINK ---- */
 let _scModalAppId = null;
 
-function openScorecardModal(appId) {
+function openScorecardModal(appId, isRetake) {
   _scModalAppId = appId;
   document.getElementById('scorecardModalErr').style.display = 'none';
   document.getElementById('scorecardGenBtn').disabled = false;
   document.getElementById('scorecardGenBtn').textContent = 'Generate & Copy Link';
+  document.getElementById('scorecardModalTitle').textContent = isRetake ? 'Give Second Chance — Regenerate Test' : 'Generate Competency Test Link';
+  document.getElementById('scorecardModalSub').textContent = isRetake
+    ? 'This candidate already has a test result on file. Generating a new link lets them retake it — their current score will be kept on file as a previous attempt, and the new attempt will become the official result.'
+    : 'A link to the 20-question competency test will be copied to your clipboard. Share it with the candidate before the interview.';
   document.getElementById('scorecardModal').style.display = 'flex';
 }
 
