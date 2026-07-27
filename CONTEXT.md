@@ -57,6 +57,16 @@ Static HTML/CSS/JS site for TRUSTUS Group (client: Sajid Mamu), live at https://
   against the actual current code (statuses, button labels, email content) rather than written from
   memory — confirmed e.g. that `test_complete`/`shortlisted` statuses exist only as unused filter
   options, nothing ever sets them.
+- **Contact/careers-interest form activation status resolved, not just documented (2026-07-27).**
+  This had been an unresolved "UNKNOWN" open item since 2026-06-19 (see
+  `project-trustus-contact-form` in memory). Sent a real test submission through the live
+  `formsubmit.co/ajax/info@trustuscare.com` endpoint (spoofing the `Referer`/`Origin` headers
+  `curl` doesn't send by default, which formsubmit.co requires) and got back a plain success
+  response, not a "confirm your email" message — suggesting it's likely already activated, but
+  this can't be fully confirmed without checking the actual inbox, which only Sajid can do. Added a
+  guide section (1.4) telling him exactly what to check for (the test message, subject "Activation
+  Check — Please Disregard," vs. an unclicked FormSubmit confirmation email) and what to do either
+  way. Don't re-mark this fully resolved in memory until Sajid confirms which one he actually found.
 
 ## Conventions
 - Push via the `saad-shaikh14` GitHub account (`gh auth switch -u saad-shaikh14` first — default account 403s).

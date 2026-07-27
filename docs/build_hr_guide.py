@@ -175,6 +175,14 @@ h2("1.3 The Careers Page (where candidates apply)")
 link_line("Careers page URL", "https://trustuscare.com/careers.html")
 body("This is the public page candidates use to apply. They pick a role (Care Coordinator, Field Care Worker, or Learning Disability Support Worker), fill in their name, phone, email, and upload their CV. You don't need to do anything on this page yourself — it's just useful to know what candidates see before they reach you.")
 
+h2("1.4 One-Time Setup: Activating the Contact & Careers-Interest Forms")
+body("Two separate forms on the website — the Contact Us form and the short \"careers interest\" form on the careers page (a quick enquiry form, separate from the full job application) — use a free service called FormSubmit to email their submissions to info@trustuscare.com. Both forms use the same setup, so this only needs doing once for both.")
+body("FormSubmit requires a one-time confirmation before it will deliver anything to a new email address, as a spam-prevention measure:")
+numbered("Check the inbox at info@trustuscare.com for an email from FormSubmit (sender may show as \"FormSubmit\" or \"noreply@formsubmit.co\") with a subject like \"Please activate your form!\" or similar.")
+numbered("Open it and click the confirmation link inside.")
+numbered("That's it — from that point on, both the Contact Us form and the careers interest form will deliver to info@trustuscare.com automatically. No further setup is needed.")
+note("As part of writing this guide, a real test submission was sent through the Contact Us form's live endpoint on 27 July 2026, subject \"Activation Check — Please Disregard\". Check info@trustuscare.com now: if that test message is sitting in the inbox, activation is already done and there's nothing further to do. If instead you find an unclicked FormSubmit confirmation email (and not the test message), click it, then submit a real enquiry through the Contact Us page once to confirm it now arrives.", label="ACTION NEEDED")
+
 # ---------- 2. Dashboard ----------
 h1("2. The Dashboard")
 body("Once logged in, you'll see the main dashboard:")
