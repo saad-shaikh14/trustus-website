@@ -49,6 +49,14 @@ Static HTML/CSS/JS site for TRUSTUS Group (client: Sajid Mamu), live at https://
   current + one superseded row, confirmed the portal's exact anon-key queries return the right data).
 - See ADR 0003 for full detail, including why the interviewer-scorecard/MCQ-attempt split into
   separate tables was deferred rather than done now.
+- Produced `docs/TRUSTUS_Portal_HR_Guide.docx` (generator: `docs/build_hr_guide.py`) — a full,
+  non-technical A-to-Z walkthrough for Sajid covering login, every portal button, the competency
+  test (including the new second-chance flow), the scorecard, statuses, the candidate timeline,
+  what each automated email means (including the new health-check-failure alert from ADR 0002 —
+  told to forward that one to Saad immediately), and who to contact for each failure mode. Verified
+  against the actual current code (statuses, button labels, email content) rather than written from
+  memory — confirmed e.g. that `test_complete`/`shortlisted` statuses exist only as unused filter
+  options, nothing ever sets them.
 
 ## Conventions
 - Push via the `saad-shaikh14` GitHub account (`gh auth switch -u saad-shaikh14` first — default account 403s).
