@@ -72,6 +72,18 @@ Static HTML/CSS/JS site for TRUSTUS Group (client: Sajid Mamu), live at https://
   project moves toward being closed out. Don't start new speculative work on this repo until that
   feedback lands.
 
+## Current state (2026-08-04) — one-week full-site maintenance takedown (ADR 0004)
+- **Site is deliberately offline as of 2026-08-04**, at Sajid's request, expected back
+  ~2026-08-11. All 11 top-level pages (marketing pages + `apply.html`/`portal.html`/`test.html`/
+  `scorecard.html`) were overwritten with a single static "we'll be back soon" maintenance page
+  (brand-consistent, phone/email for urgent enquiries, `noindex` so it doesn't get crawled in
+  place of real content). DNS/SSL/GitHub Pages settings and the Supabase project/Edge
+  Functions/keep-alive workflow (ADR 0002) were **not** touched — only page content changed, so
+  restoring is a single `git revert` of the takedown commit. See ADR 0004 for full detail.
+- **Nobody can apply, log into the HR portal, or use the contact/careers forms during this
+  window.** No automated restore is scheduled — someone must manually revert on/after
+  2026-08-11 once Sajid confirms.
+
 ## Conventions
 - Push via the `saad-shaikh14` GitHub account (`gh auth switch -u saad-shaikh14` first — default account 403s).
 - Always read/write HTML with Python `encoding='utf-8'` — never PowerShell `Get-Content`/`Set-Content` (double-encodes).

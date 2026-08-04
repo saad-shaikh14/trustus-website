@@ -1,251 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Supported Living &mdash; TRUSTUS Care</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
-  <link rel="stylesheet" href="css/styles.css?v=4">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>TRUSTUS Care &mdash; Temporarily Unavailable</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Nunito', sans-serif;
+    background:#FAE8EC;
+    color:#1C2B4A;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card {
+    background:#FFFFFF;
+    border-radius:16px;
+    box-shadow:0 10px 40px rgba(28,43,74,0.12);
+    border-top:4px solid #C8526A;
+    max-width:520px;
+    width:100%;
+    padding:48px 40px;
+    text-align:center;
+  }
+  .card img { max-width:180px; margin-bottom:28px; }
+  h1 { font-size:1.6rem; font-weight:800; color:#3D6A5A; margin-bottom:14px; }
+  p { font-size:1rem; line-height:1.6; color:#44506b; margin-bottom:12px; }
+  .contact { margin-top:24px; padding-top:20px; border-top:1px solid #eee; font-size:0.95rem; }
+  .contact a { color:#3D6A5A; font-weight:700; text-decoration:none; }
+  .contact a:hover { text-decoration:underline; }
+</style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="nav-logo" href="/"><img src="images/logo.png" alt="TRUSTUS Care"></a>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li class="has-dropdown">
-        <button>Our Services &#9662;</button>
-        <div class="dropdown-menu">
-          <a href="domiciliary-care">Domiciliary Care</a>
-          <a href="supported-living" class="active">Supported Living</a>
-          <a href="complex-care">Complex Care</a>
-        </div>
-      </li>
-      <li><a href="about-us">About Us</a></li>
-      <li><a href="contact-us">Contact Us</a></li>
-      <li><a href="careers">Careers</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a class="nav-phone" href="tel:02034111218">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-        020 3411 1218
-      </a>
-      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
-
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-header">
+  <div class="card">
     <img src="images/logo.png" alt="TRUSTUS Care">
-    <button class="mobile-nav-close" id="mobileClose">&times;</button>
-  </div>
-  <nav class="mobile-nav-links">
-    <a href="/">Home</a>
-    <button id="mobileServicesBtn">Our Services &#9662;</button>
-    <div class="mobile-submenu" id="mobileSubmenu">
-      <a href="domiciliary-care">Domiciliary Care</a>
-      <a href="supported-living">Supported Living</a>
-      <a href="complex-care">Complex Care</a>
-    </div>
-    <a href="about-us">About Us</a>
-    <a href="contact-us">Contact Us</a>
-    <a href="careers">Careers</a>
-  </nav>
-  <div class="mobile-nav-actions">
-    <a href="tel:02034111218" class="btn-secondary btn-lg">Call Us Now</a>
-  </div>
-</div>
-
-<!-- PAGE HERO -->
-<section class="page-hero">
-  <div class="page-hero-slides">
-    <div class="page-hero-slide active" style="background-image:url('images/care-new16.jpg')"></div>
-  </div>
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
-    <h1>Supported Living</h1>
-    <p>We provide tailored supported living services for adults who require varying levels of support while maintaining their independence within our homes or shared living environments.</p>
-    <p>Our support includes:</p>
-    <ul class="checklist">
-      <li>Daily living support</li>
-      <li>Medication assistance</li>
-      <li>Emotional wellbeing support</li>
-      <li>Community access and social inclusion</li>
-      <li>Budgeting and tenancy support</li>
-      <li>Meal preparation and household tasks</li>
-      <li>Positive behaviour support</li>
-      <li>Appointment and activity support</li>
-    </ul>
-  </div>
-</section>
-
-<!-- OUR PROPERTIES — STANMORE -->
-<section class="section" style="background:var(--bg-soft);">
-  <div class="container">
-    <div class="section-header">
-      <span class="eyebrow">Our Properties</span>
-    </div>
-    <div class="property-block" style="margin-top:40px;">
-      <div class="property-gallery property-gallery-block"
-           data-images='["images/stanmore-2.jpg","images/stanmore-1.jpg","images/stanmore-3.jpg","images/stanmore-8.jpg","images/stanmore-6.jpg","images/stanmore-5.jpg"]'>
-        <div class="property-main-img">
-          <img src="images/stanmore-2.jpg" alt="Stanmore Supported Living &mdash; en-suite bedroom">
-        </div>
-        <div class="property-thumbs">
-          <div class="property-thumb"><img src="images/stanmore-1.jpg" alt="Bedroom"></div>
-          <div class="property-thumb"><img src="images/stanmore-3.jpg" alt="Attic room with skylight"></div>
-          <div class="property-thumb"><img src="images/stanmore-8.jpg" alt="Master bedroom"></div>
-          <div class="property-thumb"><img src="images/stanmore-6.jpg" alt="Double bedroom"><span class="more-overlay">+1</span></div>
-        </div>
-      </div>
-      <div class="property-info">
-        <h2>Stanmore Supported Living</h2>
-        <div class="property-address">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          16 Stanmore Road, Watford, WD24 5ET
-        </div>
-        <p>Our Stanmore home provides comfortable, purpose-adapted accommodation for up to 4 residents &mdash; with shared communal spaces, a welcoming environment and 24-hour on-site support.</p>
-        <div class="property-tags">
-          <span class="property-tag">4 Deluxe En-Suite Rooms</span>
-          <span class="property-tag">24/7 On-Site Support</span>
-          <span class="property-tag">Communal Areas</span>
-        </div>
-        <div class="property-features">
-          <div class="property-feature-item">Spacious, fully furnished bedrooms</div>
-          <div class="property-feature-item">Shared kitchen and lounge areas</div>
-          <div class="property-feature-item">Secure, accessible environment</div>
-          <div class="property-feature-item">Regular community access activities</div>
-          <div class="property-feature-item">Person-centred support plans</div>
-        </div>
-        <a href="contact-us" class="btn-primary">Enquire About Stanmore</a>
-      </div>
+    <h1>We&rsquo;ll be back soon</h1>
+    <p>Our website is temporarily unavailable while we carry out scheduled updates.</p>
+    <p>Thank you for your patience &mdash; please check back shortly.</p>
+    <div class="contact">
+      <p>For urgent enquiries, please contact us directly:</p>
+      <p><a href="tel:02034111218">020 3411 1218</a> &middot; <a href="mailto:info@trustuscare.com">info@trustuscare.com</a></p>
     </div>
   </div>
-</section>
-
-<!-- OUR PROPERTIES — MONICA -->
-<section class="section" style="background:var(--terracotta-soft);" id="monica">
-  <div class="container">
-    <div class="property-block">
-      <div class="property-info">
-        <h2>Monica Supported Living</h2>
-        <div class="property-address">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Monica Close, Watford
-        </div>
-        <p>Monica Supported Living is a warm, modern, and purpose-designed home providing a safe, comfortable, and supportive environment for up to 6 residents. Each individual benefits from their own high-quality private studio, complete with an ensuite bathroom and kitchenette, while also enjoying access to welcoming shared communal areas that encourage social interaction, independence, and community living.</p>
-        <p>Our dedicated support team is available 24 hours a day to provide person-centred care tailored to individual needs, promoting dignity, wellbeing, and independent living.</p>
-        <div class="property-tags">
-          <span class="property-tag">6 Residents</span>
-          <span class="property-tag">Private Studios</span>
-          <span class="property-tag">Ensuite &amp; Kitchenette</span>
-          <span class="property-tag">24/7 Support</span>
-        </div>
-        <div class="property-features">
-          <div class="property-feature-item">Private mini studios with ensuite &amp; kitchenette</div>
-          <div class="property-feature-item">Comfortable shared communal areas</div>
-          <div class="property-feature-item">Community access &amp; integration</div>
-          <div class="property-feature-item">Safe, supportive &amp; homely environment</div>
-          <div class="property-feature-item">Person-centred support &amp; 24/7 on-site team</div>
-        </div>
-        <a href="contact-us" class="btn-primary">Enquire About Monica</a>
-      </div>
-      <div class="property-gallery property-gallery-block"
-           data-images='["images/monica-8.jpg","images/monica-1.jpg","images/monica-2.jpg","images/monica-3.jpg","images/monica-6.jpg","images/monica-7.jpg","images/monica-4.jpg","images/monica-5.jpg"]'>
-        <div class="property-main-img">
-          <img src="images/monica-8.jpg" alt="Monica Supported Living &mdash; communal lounge">
-        </div>
-        <div class="property-thumbs">
-          <div class="property-thumb"><img src="images/monica-1.jpg" alt="Studio bedroom with garden view"></div>
-          <div class="property-thumb"><img src="images/monica-2.jpg" alt="Dining area"></div>
-          <div class="property-thumb"><img src="images/monica-3.jpg" alt="Open-plan kitchen and living"></div>
-          <div class="property-thumb"><img src="images/monica-6.jpg" alt="En-suite bedroom"><span class="more-overlay">+3</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <img src="images/logo.png" alt="TRUSTUS Care" class="footer-logo-img">
-        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support.</p>
-        <div class="social-links">
-          <a href="https://www.facebook.com/share/p/1922eTM4nW/" class="social-link" aria-label="Facebook">f</a>
-          <a href="https://www.linkedin.com/in/trustus-limited-629128418" class="social-link" aria-label="LinkedIn">in</a>
-          <a href="https://www.instagram.com/trustuscare" class="social-link" aria-label="Instagram">ig</a>
-        </div>
-        <div class="footer-badges">
-          <img src="images/badge-cqc.png" alt="Regulated by Care Quality Commission" class="footer-badge">
-          <img src="images/badge-disability.png" alt="Disability Confident Committed" class="footer-badge">
-          <img src="images/badge-dbs.png" alt="DBS Checked" class="footer-badge">
-          <img src="images/badge-accreditation.svg" alt="" class="footer-badge">
-        </div>
-      </div>
-      <div class="footer-col">
-        <h5>Our Services</h5>
-        <ul>
-          <li><a href="domiciliary-care">Domiciliary Care</a></li>
-          <li><a href="supported-living">Supported Living</a></li>
-          <li><a href="complex-care">Complex Care</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Quick Links</h5>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="about-us">About Us</a></li>
-          <li><a href="contact-us">Contact Us</a></li>
-          <li><a href="careers">Careers</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Contact</h5>
-        <div class="footer-contact">
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:02034111218">020 3411 1218</a>
-          </div>
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>
-          </div>
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>Office G24, 47 Clarendon Road, Watford, Hertfordshire, WD17 1HP</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 TRUSTUS Care. All rights reserved.</p>
-      <p>Care &middot; Trust &middot; Independence</p>
-    </div>
-  </div>
-</footer>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose">&times;</button>
-  <button class="lightbox-prev" id="lightboxPrev">&#8249;</button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt="Property photo">
-  <button class="lightbox-next" id="lightboxNext">&#8250;</button>
-  <span class="lightbox-counter" id="lightboxCounter"></span>
-</div>
-
-<a href="contact-us" class="float-cta">Contact Us <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-<script src="js/main.js"></script>
 </body>
 </html>
-

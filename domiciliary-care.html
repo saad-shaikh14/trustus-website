@@ -1,248 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Domiciliary Care &mdash; TRUSTUS Care</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
-  <link rel="stylesheet" href="css/styles.css?v=4">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>TRUSTUS Care &mdash; Temporarily Unavailable</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Nunito', sans-serif;
+    background:#FAE8EC;
+    color:#1C2B4A;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card {
+    background:#FFFFFF;
+    border-radius:16px;
+    box-shadow:0 10px 40px rgba(28,43,74,0.12);
+    border-top:4px solid #C8526A;
+    max-width:520px;
+    width:100%;
+    padding:48px 40px;
+    text-align:center;
+  }
+  .card img { max-width:180px; margin-bottom:28px; }
+  h1 { font-size:1.6rem; font-weight:800; color:#3D6A5A; margin-bottom:14px; }
+  p { font-size:1rem; line-height:1.6; color:#44506b; margin-bottom:12px; }
+  .contact { margin-top:24px; padding-top:20px; border-top:1px solid #eee; font-size:0.95rem; }
+  .contact a { color:#3D6A5A; font-weight:700; text-decoration:none; }
+  .contact a:hover { text-decoration:underline; }
+</style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="nav-logo" href="/"><img src="images/logo.png" alt="TRUSTUS Care"></a>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li class="has-dropdown">
-        <button>Our Services &#9662;</button>
-        <div class="dropdown-menu">
-          <a href="domiciliary-care" class="active">Domiciliary Care</a>
-          <a href="supported-living">Supported Living</a>
-          <a href="complex-care">Complex Care</a>
-        </div>
-      </li>
-      <li><a href="about-us">About Us</a></li>
-      <li><a href="contact-us">Contact Us</a></li>
-      <li><a href="careers">Careers</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a class="nav-phone" href="tel:02034111218">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-        020 3411 1218
-      </a>
-      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
-
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-header">
+  <div class="card">
     <img src="images/logo.png" alt="TRUSTUS Care">
-    <button class="mobile-nav-close" id="mobileClose">&times;</button>
-  </div>
-  <nav class="mobile-nav-links">
-    <a href="/">Home</a>
-    <button id="mobileServicesBtn">Our Services &#9662;</button>
-    <div class="mobile-submenu" id="mobileSubmenu">
-      <a href="domiciliary-care">Domiciliary Care</a>
-      <a href="supported-living">Supported Living</a>
-      <a href="complex-care">Complex Care</a>
-    </div>
-    <a href="about-us">About Us</a>
-    <a href="contact-us">Contact Us</a>
-    <a href="careers">Careers</a>
-  </nav>
-  <div class="mobile-nav-actions">
-    <a href="tel:02034111218" class="btn-secondary btn-lg">Call Us Now</a>
-  </div>
-</div>
-
-<!-- PAGE HERO -->
-<section class="page-hero">
-  <div class="page-hero-slides">
-    <div class="page-hero-slide active" style="background-image:url('images/care-new18.jpg')"></div>
-    <div class="page-hero-slide" style="background-image:url('images/care-new19.jpg')"></div>
-    <div class="page-hero-slide" style="background-image:url('images/care-new20.jpg')"></div>
-  </div>
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
-    <h1>Domiciliary / Home Care</h1>
-    <p>TRUSTUS Care's professional domiciliary / home care service delivers compassionate, person-centred support to adults across the UK. Our trained carers provide flexible assistance tailored around each individual's lifestyle, preferences, routines and personal goals.</p>
-    <p>Whether you require a few hours of support each week, daily visits, overnight assistance or full live-in care, we create a personalised care package that evolves alongside your changing needs.</p>
-    <p class="hero-services-label">Services include:</p>
-    <ul class="checklist hero-checklist">
-      <li>Personal care</li>
-      <li>Medication support</li>
-      <li>Meal preparation</li>
-      <li>Domestic assistance</li>
-      <li>Companionship</li>
-      <li>Welfare checks</li>
-      <li>Shopping and community support</li>
-      <li>Overnight and live-in care</li>
-    </ul>
-  </div>
-</section>
-
-<!-- INTRO -->
-<section class="section" style="background:var(--bg-soft);">
-  <div class="container">
-    <div class="section-header">
-      <span class="eyebrow">Domiciliary / Home Care</span>
-      <p>Our domiciliary care services enable individuals to remain safe, comfortable, and independent within their own homes while receiving the support they need.</p>
-    </div>
-    <div class="check-cards-grid" style="margin-top:24px;">
-      <div class="check-card">Flexible care arrangements &mdash; from short daily visits to full live-in care</div>
-      <div class="check-card">Personalised support tailored to individual needs, routines and independence goals</div>
-      <div class="check-card">Consistent carers who build trusted, meaningful relationships</div>
-      <div class="check-card">Support with personal care, medication, meals, appointments and companionship</div>
-      <div class="check-card">Available 24/7, including evenings, nights, weekends and bank holidays</div>
-      <div class="check-card">Promoting dignity, wellbeing, choice and independent living at home</div>
+    <h1>We&rsquo;ll be back soon</h1>
+    <p>Our website is temporarily unavailable while we carry out scheduled updates.</p>
+    <p>Thank you for your patience &mdash; please check back shortly.</p>
+    <div class="contact">
+      <p>For urgent enquiries, please contact us directly:</p>
+      <p><a href="tel:02034111218">020 3411 1218</a> &middot; <a href="mailto:info@trustuscare.com">info@trustuscare.com</a></p>
     </div>
   </div>
-</section>
-
-<!-- WHO WE SUPPORT -->
-<section class="section" style="background:var(--terracotta-soft);">
-  <div class="container">
-    <div class="section-header">
-      <span class="eyebrow">Who We Support</span>
-      <p>Our domiciliary care team is experienced in supporting individuals with a wide variety of care needs &mdash; all within the comfort and familiarity of their own home.</p>
-    </div>
-    <div class="support-grid">
-      <div class="support-card">
-        <img src="images/icon-learning.png" alt="">
-        <p>Person-centred home support enabling individuals with learning disabilities to live independently.</p>
-      </div>
-      <div class="support-card">
-        <img src="images/icon-autism.png" alt="">
-        <p>Consistent, structured support delivered sensitively around individual routines and sensory needs.</p>
-      </div>
-      <div class="support-card">
-        <img src="images/icon-mental-health.png" alt="">
-        <p>Compassionate support promoting positive mental wellbeing and everyday independence at home.</p>
-      </div>
-      <div class="support-card">
-        <img src="images/icon-partnership.png" alt="">
-        <p>Collaborative care with families, GPs, social workers and other healthcare professionals.</p>
-      </div>
-      <div class="support-card">
-        <img src="images/icon-behaviour.png" alt="">
-        <p>Empowerment and well-being strategies delivered in the home environment to promote positive outcomes.</p>
-      </div>
-      <div class="support-card">
-        <img src="images/icon-complex-support.png" alt="">
-        <p>Specialist domiciliary support for individuals with complex health and care requirements.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GETTING STARTED -->
-<section class="section" style="background:var(--bg-soft);">
-  <div class="container">
-    <div class="section-header">
-      <span class="eyebrow">Getting Started</span>
-      <p>We make it simple and stress-free to arrange the right care package &mdash; at a pace that suits you.</p>
-    </div>
-    <div class="process-grid">
-      <div class="process-step">
-        <div class="step-num">1</div>
-        <div class="process-step-icon"><img src="images/icon-get-in-touch.png" alt=""></div>
-        <p>Call us or send a message. We'll listen carefully, answer your questions and arrange a free, no-obligation care assessment.</p>
-      </div>
-      <div class="process-step">
-        <div class="step-num">2</div>
-        <div class="process-step-icon"><img src="images/icon-free-assessment.png" alt=""></div>
-        <p>A care manager visits to understand exactly what is needed. We create a personalised care plan with you &mdash; not just for you.</p>
-      </div>
-      <div class="process-step">
-        <div class="step-num">3</div>
-        <div class="process-step-icon"><img src="images/icon-care-begins-2.png" alt=""></div>
-        <p>We match the right carer, begin at a comfortable pace and check in regularly to make sure everything is working perfectly.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- FOOTER -->
-<footer class="footer" style="background:var(--terracotta-soft);">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <img src="images/logo.png" alt="TRUSTUS Care" class="footer-logo-img">
-        <p>TRUSTUS Care is committed to delivering compassionate, reliable, and person-centred care that promotes independence, dignity, and quality of life for every individual we support.</p>
-        <div class="social-links">
-          <a href="https://www.facebook.com/share/p/1922eTM4nW/" class="social-link" aria-label="Facebook">f</a>
-          <a href="https://www.linkedin.com/in/trustus-limited-629128418" class="social-link" aria-label="LinkedIn">in</a>
-          <a href="https://www.instagram.com/trustuscare" class="social-link" aria-label="Instagram">ig</a>
-        </div>
-        <div class="footer-badges">
-          <img src="images/badge-cqc.png" alt="Regulated by Care Quality Commission" class="footer-badge">
-          <img src="images/badge-disability.png" alt="Disability Confident Committed" class="footer-badge">
-          <img src="images/badge-dbs.png" alt="DBS Checked" class="footer-badge">
-          <img src="images/badge-accreditation.svg" alt="" class="footer-badge">
-        </div>
-      </div>
-      <div class="footer-col">
-        <h5>Our Services</h5>
-        <ul>
-          <li><a href="domiciliary-care">Domiciliary Care</a></li>
-          <li><a href="supported-living">Supported Living</a></li>
-          <li><a href="complex-care">Complex Care</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Quick Links</h5>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="about-us">About Us</a></li>
-          <li><a href="contact-us">Contact Us</a></li>
-          <li><a href="careers">Careers</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Contact</h5>
-        <div class="footer-contact">
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.4 10.81 19.79 19.79 0 01.33 2.22 2 2 0 012.31 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-            <a href="tel:02034111218">020 3411 1218</a>
-          </div>
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <a href="mailto:info@trustuscare.com">info@trustuscare.com</a>
-          </div>
-          <div class="footer-contact-item">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>Office G24, 47 Clarendon Road, Watford, Hertfordshire, WD17 1HP</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 TRUSTUS Care. All rights reserved.</p>
-      <p>Care &middot; Trust &middot; Independence</p>
-    </div>
-  </div>
-</footer>
-
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose">&times;</button>
-  <button class="lightbox-prev" id="lightboxPrev">&#8249;</button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt="">
-  <button class="lightbox-next" id="lightboxNext">&#8250;</button>
-  <span class="lightbox-counter" id="lightboxCounter"></span>
-</div>
-
-<a href="contact-us" class="float-cta">Contact Us <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-<script src="js/main.js"></script>
 </body>
 </html>
-
